@@ -8,7 +8,7 @@ import de.verschwiegener.atero.command.commands.BindsCommand;
 import de.verschwiegener.atero.command.commands.TestCommand;
 
 import de.verschwiegener.atero.module.modules.Test;
-import de.verschwiegener.atero.util.ChatUtil;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 
 public class CommandManager {
 	
@@ -16,8 +16,8 @@ public class CommandManager {
 	
 	public CommandManager() {
 		commands.add(new TestCommand());
-		commands.add(new BindsCommand());
 		commands.add(new BindCommand());
+		commands.add(new BindsCommand());
 	}
 	
 	

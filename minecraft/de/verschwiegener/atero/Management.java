@@ -9,6 +9,7 @@ import de.verschwiegener.atero.design.DesignManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
+import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -22,19 +23,21 @@ public class Management {
 	
 	public boolean modulechange;
 	
-	public ModuleManager mdlmgr;
-	public CommandManager cmdmgr;
-	public DesignManager dsnmgr;
-	public FontManager fntmgr;
-	public ClickGUI clckgui;
+	public FontManager fontmgr;
+	public SettingsManager settingsmgr;
+	public ModuleManager modulemgr;
+	public CommandManager commandmgr;
+	public DesignManager designmgr;
+	public ClickGUI clickgui;
 	
 	public void start() {
-		mdlmgr = new ModuleManager();
-		cmdmgr = new CommandManager();
-		dsnmgr = new DesignManager();
-		fntmgr = new FontManager();
+		fontmgr = new FontManager();
+		settingsmgr = new SettingsManager();
+		modulemgr = new ModuleManager();
+		commandmgr = new CommandManager();
+		designmgr = new DesignManager();
 		
-		clckgui = new ClickGUI();
+		clickgui = new ClickGUI();
 	}
 	
 	public String getTitle() {
@@ -43,7 +46,7 @@ public class Management {
 	
 	public void onKey(int key) {
 		if(Keyboard.isKeyDown(key)) {
-			mdlmgr.onKey(key);
+			modulemgr.onKey(key);
 		}
 	}
 

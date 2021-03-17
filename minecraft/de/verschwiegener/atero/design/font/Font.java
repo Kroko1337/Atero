@@ -9,7 +9,12 @@ public abstract class Font {
 	
 	public Font(String name, java.awt.Font font, float fontsize, float antiAliasing, String chars) {
 		this.name = name;
-		this.fontrenderer = new Fontrenderer(font, fontsize, antiAliasing, chars);
+		this.fontrenderer = new Fontrenderer(font, fontsize, antiAliasing, chars, false, false);
+	}
+	
+	public Font(String name, java.awt.Font font, float fontsize, float antiAliasing, String chars, boolean bold, boolean italic) {
+		this.name = name;
+		this.fontrenderer = new Fontrenderer(font, fontsize, antiAliasing, chars, bold, italic);
 	}
 	
 	public String getName() {

@@ -178,6 +178,7 @@ public class GuiPlayerTabOverlay extends Gui
 
                 if (flag)
                 {
+                	//Get Skin Julius
                     EntityPlayer entityplayer = this.mc.theWorld.getPlayerEntityByUUID(gameprofile.getId());
                     boolean flag1 = entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.CAPE) && (gameprofile.getName().equals("Dinnerbone") || gameprofile.getName().equals("Grumm"));
                     this.mc.getTextureManager().bindTexture(networkplayerinfo1.getLocationSkin());

@@ -350,7 +350,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
         }
         
-        Management.instance.dsnmgr.getDesignByName(Management.instance.selectedDesign).drawGUIIngame(this);
+        Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign).drawGUIIngame(this);
         
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

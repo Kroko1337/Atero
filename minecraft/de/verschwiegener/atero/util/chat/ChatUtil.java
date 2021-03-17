@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.util;
+package de.verschwiegener.atero.util.chat;
 
 import java.awt.Color;
 import java.util.ArrayList;

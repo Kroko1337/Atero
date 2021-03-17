@@ -16,14 +16,14 @@ public class AutoComplete {
 		
 		final String[] args = text.substring(1).split(" ");
 		if (args.length > 1) {
-			final Command c = Management.instance.cmdmgr.getCommandByName(args[0]);
+			final Command c = Management.instance.commandmgr.getCommandByName(args[0]);
 			if (c != null) {
 				final String[] args2 = c.getComplete().split(" ");
 				final String lastArgument = args2[args.length - 2];
 				if (lastArgument != null) {
 					switch (lastArgument) {
 					case "<module>":
-						final Module m = Management.instance.mdlmgr.getModulebyStartsWith(args[args.length - 1]);
+						final Module m = Management.instance.modulemgr.getModulebyStartsWith(args[args.length - 1]);
 						try {
 							if (m != null) {
 								if(text.endsWith(" ")) {
@@ -43,7 +43,7 @@ public class AutoComplete {
 				}
 			}
 		} else if (!args[0].isEmpty()) {
-			final Command c = Management.instance.cmdmgr.getCommandByStartsWith(args[0]);
+			final Command c = Management.instance.commandmgr.getCommandByStartsWith(args[0]);
 			if (c != null) {
 				if(text.endsWith(" ")) {
 					hasAutoComplete = true;

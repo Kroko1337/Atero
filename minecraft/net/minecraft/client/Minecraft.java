@@ -489,6 +489,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcResourceManager.registerReloadListener(this.renderEngine);
         
         //Draw SplashScreen
+        Management.instance.start();
         this.drawSplashScreen(this.renderEngine);
         
         this.initStream();
@@ -560,10 +561,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         
-        Management.instance.start();
         
-        
-        /*this.ingameGUI = new GuiIngame(this);
+        this.ingameGUI = new GuiIngame(this);
         
         
         if (this.serverName != null)
@@ -594,7 +593,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.gameSettings.saveOptions();
         }
 
-        this.renderGlobal.makeEntityOutlineShader();*/
+        this.renderGlobal.makeEntityOutlineShader();
     }
 
     private void registerMetadataSerializers()
@@ -626,7 +625,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         try
         {
-            Display.create((new PixelFormat()).withDepthBits(24));
+            //Display.create((new PixelFormat()).withDepthBits(24));
+        	 Display.create();
         }
         catch (LWJGLException lwjglexception)
         {
@@ -910,7 +910,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     	
     	ssru = new StartSplashScreenRenderer();
         
-    	StartSplashScreenRenderer.draw(this, Display.getDrawable());
+    	ssru.draw(this, Display.getDrawable());
     	
     	
     	/*ScaledResolution scaledresolution = new ScaledResolution(this);

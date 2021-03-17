@@ -560,7 +560,8 @@ public class CustomChatTextField extends Gui {
 				k = s.length();
 			}
 			
-			Fontrenderer fr = Management.instance.fntmgr.getFontByName("Inter2").getFontrenderer();
+			Fontrenderer fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
+			//System.err.println("Fontrenderer: " + fr.get);
 			
 			if (s.length() > 0) {
 				//Draws the text

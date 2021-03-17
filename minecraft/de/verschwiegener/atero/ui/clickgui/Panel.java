@@ -9,17 +9,20 @@ import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.Module;
+import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class Panel {
 	
-	String name, selectedModule;
+	String name;
 	int x, y, width, yOffset, animationHeight, extensionX;
 	ArrayList<Button> modules = new ArrayList<>();
 	Fontrenderer fr;
-	boolean animate, candrag, animateExtension;
-	int state = 2, stateextension = 2, extensionXMax;
+	boolean animate, candrag;
+	int state = 2;
 	double dragx, dragy;
+	PanelExtendet pExtendet;
+	ArrayList<PanelExtendet> ePanels = new ArrayList<>();
 	
 	Design d;
 	
@@ -27,20 +30,21 @@ public class Panel {
 		this.name = name;
 		this.x = x;
 		this.y = y;
-		fr = Management.instance.fntmgr.getFontByName("Inter2").getFontrenderer();
+		fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
 		yOffset = 15;
 		width = 100;
 		animationHeight = 15;
-		for(Module m : Management.instance.mdlmgr.modules) {
+		for(Module m : Management.instance.modulemgr.modules) {
 			if(m.getCategory().toString().equalsIgnoreCase(name)) {
 				modules.add(new Button(m.getName(), yOffset, this));
+				ePanels.add(new PanelExtendet(m.getName(), yOffset, this));
 				yOffset = yOffset + 15;
 				if(fr.getStringWidth(m.getName()) > width) {
 					width = fr.getStringWidth(m.getName());
 				}
 			}
 		}
-		d = Management.instance.dsnmgr.getDesignByName(Management.instance.selectedDesign);
+		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
 	}
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -48,17 +52,22 @@ public class Panel {
 			this.x = (int) (this.dragx + mouseX);
 			this.y = (int) this.dragy + mouseY;
 		}
-		
+		for(PanelExtendet pe : ePanels) {
+			pe.drawScreen(mouseX, mouseY);
+		}
 		d.drawClickGuiPanel(this);
 	}
 	
 	public void onMouseClicked(int x, int y, int mouseButton) {
+		for(PanelExtendet pe : ePanels) {
+			pe.onMouseClicked(x, y, mouseButton);
+		}
 		switch (mouseButton) {
 		case 0:
 			Button br = getButtonByPosition(this, x, y);
 			if(br != null) {
 				if(state == 1) {
-					Management.instance.mdlmgr.getModuleByName(br.name).toggle();
+					Management.instance.modulemgr.getModuleByName(br.name).toggle();
 				}
 			}else if(isHovered(x, y)) {
 				candrag = true;
@@ -69,8 +78,12 @@ public class Panel {
 		case 1:
 			Button bl = getButtonByPosition(this, x, y);
 			if(bl != null) {
-				animateExtension = true;
-				extensionXMax = 50;
+				if(pExtendet != null && !pExtendet.getName().equalsIgnoreCase(bl.getName())) {
+					pExtendet.setState(2);
+					pExtendet.setAnimate(true);
+				}
+				pExtendet = getPanelByModuleName(bl.getName());
+				pExtendet.switchState();
 			}
 			break;
 		}
@@ -93,6 +106,13 @@ public class Panel {
 	
 	private boolean isHovered(int mouseX, int mouseY) {
 		return mouseX > (x - 6) && mouseX < (x + width - 15) && mouseY > y - 10 && mouseY < (y + 5);
+	}
+	
+	public void colapseAll() {
+		for(PanelExtendet pe : ePanels) {
+			pe.setState(2);
+			pe.setAnimate(true);
+		}
 	}
 
 	public String getName() {
@@ -151,25 +171,14 @@ public class Panel {
 	public void setState(int state) {
 		this.state = state;
 	}
-	public boolean isAnimateextension() {
-		return animateExtension;
+	
+	public PanelExtendet getPanelByModuleName(final String name) {
+		return ePanels.stream().filter(new Predicate<PanelExtendet>() {
+			@Override
+			public boolean test(PanelExtendet module) {
+				return module.getName().equalsIgnoreCase(name);
+			}
+		}).findFirst().orElse(null);
 	}
-	public int getStateextension() {
-		return stateextension;
-	}
-	public void setAnimateextension(boolean animateextension) {
-		this.animateExtension = animateextension;
-	}
-	public void setStateextension(int stateextension) {
-		this.stateextension = stateextension;
-	}
-	public void setExtensionX(int extensionX) {
-		this.extensionX = extensionX;
-	}
-	public int getExtensionX() {
-		return extensionX;
-	}
-	public int getExtensionXMax() {
-		return extensionXMax;
-	}
+
 }

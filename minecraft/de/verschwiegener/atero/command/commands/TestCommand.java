@@ -3,7 +3,7 @@ package de.verschwiegener.atero.command.commands;
 import java.util.Arrays;
 
 import de.verschwiegener.atero.command.Command;
-import de.verschwiegener.atero.util.ChatUtil;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 
 public class TestCommand extends Command{
 

@@ -16,7 +16,7 @@ public class Button {
 		this.name = name;
 		this.y = y;
 		this.p = p;
-		d = Management.instance.dsnmgr.getDesignByName(Management.instance.selectedDesign);
+		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
 	}
 	
 	public void drawButton() {

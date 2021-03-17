@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.util.splashscreen.splashscreen;
+package de.verschwiegener.atero.util.splashscreen;
 
 import java.awt.Color;
 
@@ -7,20 +7,20 @@ import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.render.RenderUtil;
+import de.verschwiegener.atero.util.splashscreen.splashscreen.RenderCommand;
 
 public class CurveRenderer {
 	
 	float cx,cy, diameter, heightoffset, widthoffset;
 	Color color;
-	TimeUtils timer = new TimeUtils();
 	
 	public void setValues(RenderCommand ec) {
 		System.out.println("Command: " + ec);
-		cx = ec.x1;
-		cy = ec.y1;
+		cx = ec.getX1();
+		cy = ec.getY1();
 		this.heightoffset = ec.getHeightoffset();
 		this.widthoffset = ec.getWidthoffset();
-		diameter = ec.diameter;
+		diameter = ec.getDiameter();
 		color = Color.WHITE;
 	}
 	
@@ -39,7 +39,7 @@ public class CurveRenderer {
 
 		GL11.glBegin(GL11.GL_POINTS);
 		while (i >= 0) {
-			i -= 0.01;
+			i -= 0.02;
 			GL11.glVertex2d(cx + (Math.sin(i) * diameter), cy + (Math.cos(i) * diameter));
 		}
 		Display.update();
@@ -57,7 +57,7 @@ public class CurveRenderer {
 		
 		double i = Math.PI;
 		while(i >= 0) {
-				i-= 0.01;
+				i-= 0.02;
 				GL11.glVertex2d(x + (Math.sin(i) * diameter), y + (Math.cos(i) * diameter));
 				Display.update();
 		}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Module;
-import de.verschwiegener.atero.util.ChatUtil;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -22,7 +22,7 @@ public class BindsCommand extends Command{
 	@Override
 	public void onCommand(String[] args) {
 		ChatUtil.sendMessage("§6------§fBinds §6------");
-		for(Module m : Management.instance.mdlmgr.getModules()) {
+		for(Module m : Management.instance.modulemgr.getModules()) {
 			System.out.println("Key: " + m.getKey());
 			if(m.getKey() != 0) {
 				ArrayList<IChatComponent> components = new ArrayList<>();

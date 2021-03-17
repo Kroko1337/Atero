@@ -19,10 +19,11 @@ public class Fontrenderer {
 	private final float antiAliasingFactor;
 	private final float fontSize;
 	
-	public Fontrenderer(Font font, float fontSize, float antiAliasingFactor, String chars) {
+	public Fontrenderer(Font font, float fontSize, float antiAliasingFactor, String chars, boolean bold, boolean italic) {
 		this.antiAliasingFactor = antiAliasingFactor;
 		this.fontSize = fontSize;
-		unicodefont = new UnicodeFont(font.deriveFont(fontSize * antiAliasingFactor));
+		//unicodefont = new UnicodeFont(font.deriveFont(fontSize * antiAliasingFactor));
+		unicodefont = new UnicodeFont(font, (int) (fontSize * antiAliasingFactor), bold, italic);
 		//unicodefont.addAsciiGlyphs();
 		unicodefont.addGlyphs(chars);
 		unicodefont.getEffects().add(new ColorEffect(Color.white));
@@ -48,25 +49,18 @@ public class Fontrenderer {
 		GL11.glBlendFunc(770, 771);
 		
 		GL11.glScaled(0.5F, 0.5F, 0.5F);
-		//unicodefont.addGlyphs(text);
-		//try {
-			//unicodefont.loadGlyphs();
-		//}catch(Exception e) {	
-		//}
+		
+		
+		unicodefont.addGlyphs(text);
+		
+		try {
+			unicodefont.loadGlyphs();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		unicodefont.drawString(x, y, text, new org.newdawn.slick.Color(color));
 		
-		/*boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
-		boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
-		boolean texture = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
-		if(!blend)
-			GL11.glEnable(GL11.GL_BLEND);
-		if(lighting)
-			GL11.glDisable(GL11.GL_LIGHTING);
-		if(texture)
-			GL11.glDisable(GL11.GL_TEXTURE_2D);*/
-		
-		
-		//GL11.glEnd();
 		GL11.glDisable(3042);
 		GL11.glEnable(3553);
 		GL11.glEnable(2929);

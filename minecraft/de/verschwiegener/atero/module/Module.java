@@ -23,6 +23,8 @@ public abstract class Module {
 		this.description = description;
 		this.key = key;
 		this.category = category;
+		
+		setup();
 	}
 
 	public Category getCategory() {
@@ -48,6 +50,7 @@ public abstract class Module {
 	public void setKey(int key) {
 		this.key = key;
 	}
+	public void setup() {}
 
 	public void onDisable() {
 		EventManager.unregister(this);
@@ -57,8 +60,7 @@ public abstract class Module {
 		EventManager.register(this);
 	}
 
-	public void onUpdate() {
-	}
+	public void onUpdate() {}
 
 	public void toggle() {
 		enabled = !enabled;

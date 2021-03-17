@@ -13,7 +13,6 @@ import org.newdawn.slick.opengl.GLUtils;
 
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.render.ShaderRenderer;
-import de.verschwiegener.atero.util.splashscreen.BezierCurveRenderer;
 import de.verschwiegener.atero.util.splashscreen.LineRenderer;
 
 import org.lwjgl.opengl.Drawable;
@@ -61,8 +60,7 @@ public class StartSplashScreenRenderer {
 
 					GlStateManager.matrixMode(5889);
 					GlStateManager.loadIdentity();
-					GlStateManager.ortho(0.0D, (double) scaledresolution.getScaledWidth(),
-							(double) scaledresolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
+					GlStateManager.ortho(0.0D, (double) scaledresolution.getScaledWidth(),(double) scaledresolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
 					GlStateManager.matrixMode(5888);
 					GlStateManager.loadIdentity();
 					GlStateManager.translate(0.0F, 0.0F, -2000.0F);
@@ -72,26 +70,13 @@ public class StartSplashScreenRenderer {
 
 					renderer = new SplashScreenRenderUtil();
 					ShaderRenderer sr = new ShaderRenderer(fragment, vertex);
-
-					BezierCurveRenderer bzr = new BezierCurveRenderer();
-					LineRenderer lr = new LineRenderer();
-					lr.setValues(new RenderCommand(20, 20, 60, 60, 10));
-					Color c = Color.red;
-					int count = 0;
-
-					float startx = 20, starty = 20, endx = 60, endy = 60;
-					float xoffset = (endx - startx) / 10;
-					float yoffset = (endy - starty) / 10;
-					float x = startx;
-					float y = starty;
-
+					
 					while (!renderer.finish) {
 						if (timer.hasReached(20)) {
 							timer.reset();
 							renderer.draw();
 							sr.render();
 							Display.update();
-							//mc.updateDisplay();
 						}
 					}
 					framebuffer.unbindFramebuffer();
@@ -101,8 +86,10 @@ public class StartSplashScreenRenderer {
 				} catch (LWJGLException ex) {
 				}
 				Display.update();
-
-				mc.ingameGUI = new GuiIngame(mc);
+				
+				
+				//Das wird nur benötigt, wenn man den ganzen Text rendert, dann diesen code auf in der Minecraft Klasse ausklammern
+				/*mc.ingameGUI = new GuiIngame(mc);
 
 				if (mc.serverName != null) {
 					mc.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), mc, mc.serverName, mc.serverPort));
@@ -125,7 +112,7 @@ public class StartSplashScreenRenderer {
 					mc.gameSettings.saveOptions();
 				}
 
-				mc.renderGlobal.makeEntityOutlineShader();
+				mc.renderGlobal.makeEntityOutlineShader();*/
 				Thread.currentThread().interrupt();
 
 			}

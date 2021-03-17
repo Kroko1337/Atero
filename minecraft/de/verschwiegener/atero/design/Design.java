@@ -2,6 +2,9 @@ package de.verschwiegener.atero.design;
 
 import de.verschwiegener.atero.ui.clickgui.Button;
 import de.verschwiegener.atero.ui.clickgui.Panel;
+import de.verschwiegener.atero.ui.clickgui.component.Component;
+import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 import net.minecraft.client.gui.GuiIngame;
 
 public abstract class Design {
@@ -19,5 +22,7 @@ public abstract class Design {
 	
 	public abstract void drawClickGuiPanel(Panel p);
 	public abstract void drawClickGuiButton(Button b);
+	public abstract void drawPanelExtendet(PanelExtendet p, int x, int y);
+	public abstract void drawCheckbox(ComponentCheckBox c, int y);
 
 }

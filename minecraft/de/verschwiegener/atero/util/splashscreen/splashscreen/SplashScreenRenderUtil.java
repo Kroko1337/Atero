@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.Display;
 
 import de.verschwiegener.atero.util.render.RenderUtil;
-import de.verschwiegener.atero.util.splashscreen.BezierCurveRenderer;
+import de.verschwiegener.atero.util.splashscreen.CurveRenderer;
 import de.verschwiegener.atero.util.splashscreen.LineRenderer;
 
 public class SplashScreenRenderUtil {
@@ -16,14 +16,12 @@ public class SplashScreenRenderUtil {
 	ArrayList<RenderCommand> rendercommands = new ArrayList<>();
 	int count;
 	static LineRenderer lr;
-	static BezierCurveRenderer bcr;
 	CurveRenderer cr;
 	RenderCommand current;
 	public boolean finish;
 	
 	public SplashScreenRenderUtil() {
 		lr = new LineRenderer();
-		bcr = new BezierCurveRenderer();
 		cr = new CurveRenderer();
 		int x = 10;
 		int y = 200;
@@ -57,7 +55,7 @@ public class SplashScreenRenderUtil {
 		add(new RenderCommand(5,-18, 2.5F, -8, 12));
 		
 		//Render T
-		add(new RenderCommand(20, 0, 20, -18, 9));
+		/*add(new RenderCommand(20, 0, 20, -18, 9));
 		add(new RenderCommand(20, -18, 14, -18, 5));
 		add(new RenderCommand(14, -18, 14, -20, 2));
 		add(new RenderCommand(14, -20, 28, -20, 10));
@@ -96,7 +94,7 @@ public class SplashScreenRenderUtil {
 		add(new RenderCommand(55, -12, 50, -12, 0));
 		//Draw O
 		add(new RenderCommand(70, -10, 7, 10));
-		add(new RenderCommand(70, -10, 5, 8));
+		add(new RenderCommand(70, -10, 5, 8));*/
 
 		current = rendercommands.get(0);
 		rendercommands.remove(0);

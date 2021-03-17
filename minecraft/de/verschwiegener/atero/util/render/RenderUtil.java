@@ -78,24 +78,23 @@ public class RenderUtil {
 	 */
 	public static void drawStringCircle(float x, float y, float diameter, boolean fill, Color color) {
 
-        double twicePi = Math.PI * 2;
+		double twicePi = Math.PI * 2;
 
-        int triageAmount = (int) Math.max(4, diameter * twicePi / 4);
-        
-       enable();
-       
-        GL11.glColor4f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F,
-                (float) color.getBlue() / 255.0F, (float) color.getAlpha() / 255.0F);
-        GL11.glBegin(GL11.GL_LINE_LOOP);
+		int triageAmount = (int) Math.max(4, diameter * twicePi / 4);
 
-        for (int i = 0; i <= triageAmount; i++) {
-            GL11.glVertex2d(
-                    x + (diameter * Math.sin(i * twicePi / triageAmount)),
-                    y + (diameter * Math.cos(i * twicePi / triageAmount)));
-        }
+		enable();
 
-        disable();
-    }
+		GL11.glLineWidth(1f);
+		GL11.glColor4f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F, (float) color.getBlue() / 255.0F, (float) color.getAlpha() / 255.0F);
+		GL11.glScaled(0.5f, 0.5f, 0.5f);
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+
+		for (int i = 0; i <= triageAmount; i++) {
+			GL11.glVertex2d((x * 2) + (diameter * Math.sin(i * twicePi / triageAmount)), (y * 2) + (diameter * Math.cos(i * twicePi / triageAmount)));
+		}
+
+		disable();
+	}
 	
 	public static void fillCircle(float x, float y, float diameter, boolean fill, Color color) {
 
@@ -105,14 +104,14 @@ public class RenderUtil {
         
        enable();
        
-        GL11.glColor4f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F,
-                (float) color.getBlue() / 255.0F, (float) color.getAlpha() / 255.0F);
+        GL11.glColor4f((float) color.getRed() / 255.0F, (float) color.getGreen() / 255.0F, (float) color.getBlue() / 255.0F, (float) color.getAlpha() / 255.0F);
+        GL11.glScaled(0.5f, 0.5f, 0.5f);
         GL11.glBegin(GL11.GL_TRIANGLE_FAN);
 
         for (int i = 0; i <= triageAmount; i++) {
             GL11.glVertex2d(
-                    x + (diameter * Math.sin(i * twicePi / triageAmount)),
-                    y + (diameter * Math.cos(i * twicePi / triageAmount)));
+                    (x * 2) + (diameter * Math.sin(i * twicePi / triageAmount)),
+                    (y * 2) + (diameter * Math.cos(i * twicePi / triageAmount)));
         }
 
         disable();
@@ -177,6 +176,25 @@ public class RenderUtil {
 		disable();
 
 	}
+	public static void drawRect(int x, int y, int width, int height, Color color, float thickness) {
+		
+		enable();
+		
+		GL11.glColor4f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F, color.getAlpha() / 255.0F);
+		
+		GL11.glLineWidth(thickness);
+		
+		GL11.glBegin(GL11.GL_LINE_LOOP);
+		
+		GL11.glVertex2f(x, y + height);
+		GL11.glVertex2f(x + width, y + height);
+		GL11.glVertex2f(x + width, y);
+		GL11.glVertex2f(x, y);
+		
+		disable();
+
+	}
+	
 	private static void drawCircle(float x, float y, float diameter, int start, int stop, Color color) {
 		 double twicePi = Math.PI * 2;
 		 

@@ -2,6 +2,9 @@ package de.verschwiegener.atero.util.chat;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.Random;
+
+import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
@@ -9,9 +12,12 @@ import de.verschwiegener.atero.design.font.Fontrenderer;
 public class ChatRenderer {
 	
 	HashMap<String, Color> colorCodes = new HashMap<>();
-	Fontrenderer fr;
-	String chars = "0123456789abcdef";
-	
+	Fontrenderer fr, frbold, fritalic;
+	String colorcodes = "0123456789abcdef";
+	Color c = new Color(255, 255, 255);
+	Color messagecolor;
+	boolean bold, italic, underline, strikethrough, noise, effekt;
+	Random rnd = new Random();
 	String illegalchars = "n";
 	
 	public ChatRenderer() {
@@ -31,7 +37,101 @@ public class ChatRenderer {
 		colorCodes.putIfAbsent("d", new Color(255, 85, 255));
 		colorCodes.putIfAbsent("e", new Color(255, 255, 85));
 		colorCodes.putIfAbsent("f", new Color(255, 255, 255));
-		fr = Management.instance.fntmgr.getFontByName("InterChat").getFontrenderer();
+		fr = Management.instance.fontmgr.getFontByName("InterChat").getFontrenderer();
+		frbold = Management.instance.fontmgr.getFontByName("InterChatBold").getFontrenderer();
+		fritalic = Management.instance.fontmgr.getFontByName("InterChatItalic").getFontrenderer();
+		messagecolor = Color.white;
+	}
+	
+	
+	public void drawchat2(String line, int x, int y) {
+		String[] args = line.replace("§", "#§").split("#");
+		int xoffset = 0;
+		messagecolor = Color.white;
+		bold = false;
+		italic = false;
+		underline = false;
+		strikethrough = false;
+		noise = false;
+		effekt = false;
+		for(String str : args) {
+			if(str.length() > 0) {
+				if(colorcodes.contains(str.substring(1, 2))) {
+					messagecolor = colorCodes.get(str.substring(1,2).toLowerCase());
+				}else {
+					switch (str.substring(1, 2)) {
+					case "k":
+						effekt = true;
+						noise = true;
+						break;
+					case "m":
+						effekt = true;
+						strikethrough = true;
+						break;
+					case "o":
+						effekt = true;
+						italic = true;
+						bold = false;
+						break;
+					case "l":
+						effekt = true;
+						bold = true;
+						italic = false;
+						break;
+					case "n":
+						effekt = true;
+						underline = true;
+						break;
+					case "r":
+						messagecolor = Color.white;
+						bold = false;
+						italic = false;
+						underline = false;
+						strikethrough = false;
+						noise = false;
+						effekt = false;
+						break;
+					}
+				}
+				if(effekt) {
+					if(bold) {
+						if(str.startsWith("§")) {
+							frbold.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+							xoffset += frbold.getStringWidth(str.substring(2));
+						}else {
+							frbold.drawString(str, x + xoffset, y, messagecolor.getRGB());
+							xoffset += frbold.getStringWidth(str);
+						}
+					}else if(italic) {
+						if(str.startsWith("§")) {
+							fritalic.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
+							xoffset += fritalic.getStringWidth(str.substring(2));
+						}else {
+							fritalic.drawString(str, x + xoffset, y, messagecolor.getRed());
+							xoffset += fritalic.getStringWidth(str);
+						}
+					}else if (noise) {
+						fr.drawString(getrandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
+						xoffset += fr.getStringWidth(str);
+					}
+					if(underline) {
+						drawLine(x + xoffset, y + 1, fr.getStringWidth(str.substring(2)));
+					}
+					if(strikethrough) {
+						drawLine(x + xoffset, y - 2, fr.getStringWidth(str.substring(2)));
+					}
+				}else {
+					if(str.startsWith("§")) {
+						fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+						xoffset += fr.getStringWidth(str.substring(2));
+					}else {
+						fr.drawString(str, x + xoffset, y, messagecolor.getRGB());
+						xoffset += fr.getStringWidth(str);
+					}
+				}
+			}else {
+			}
+		}
 	}
 	
 	public void drawChat(String line, int x, int y) {
@@ -40,10 +140,37 @@ public class ChatRenderer {
 		for(int i = 0; i < colorargs.length;i++) {
 			String args = colorargs[i];
 			if(args.startsWith("§")) {
-				if(!illegalchars.contains((args.substring(1,2).toLowerCase()))){
+				switch ((args.substring(1,2).toLowerCase())) {
+				case "n":
+					//Underline
+					break;
+				case "m":
+					//durchgestrichen
+					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
+					drawLine(x + xoffset, y - 2, fr.getStringWidth(args.substring(2)));
+					xoffset += fr.getStringWidth(args.substring(2));
+					break;
+				case "k":
+					//cancer mode
+					break;
+				case "o":
+					//italik
+					break;
+				case "l":
+					//Bold
+					break;
+				case "r":
+					//Wird nicht benötigt, da die standart Farbe weiß ist
+					break;
+				default:
 					Color c = colorCodes.get(args.substring(1,2).toLowerCase());
 					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
 					xoffset += fr.getStringWidth(args.substring(2));
+					break;
+				}
+				
+				
+				if(!illegalchars.contains((args.substring(1,2).toLowerCase()))){
 				}else {
 					Color c = new Color(255, 255, 255);
 					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
@@ -57,6 +184,23 @@ public class ChatRenderer {
 			}
 			
 		}
+	}
+	
+	public void drawLine(int x, int y, int width) {
+		GL11.glScaled(0.5f, 0.5f, 0.5f);
+		GL11.glLineWidth(2F);
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex2d(x, y);
+		GL11.glVertex2d(x + width, y);
+		GL11.glEnd();
+	}
+	
+	public String getrandomString(int count) {
+		String str = "";
+		for(int i = 0; i < count;i++) {
+			str += (char) (rnd.nextInt(26) + 'a');
+		}
+		return str;
 	}
 
 }
