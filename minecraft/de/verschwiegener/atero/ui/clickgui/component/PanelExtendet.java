@@ -1,6 +1,7 @@
 package de.verschwiegener.atero.ui.clickgui.component;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
@@ -76,6 +77,39 @@ public class PanelExtendet {
 		for(Component c : components) {
 			c.onMouseReleased(mouseX, mouseY, state);
 		}
+	}
+	public void extendPanel(String name) {
+		int count = components.indexOf(getComponentByName(name));
+		System.out.println("Count: " + count + " Size: " + components.size());
+		for(int i = count; i < components.size();i++) {
+			try {
+				Component c = components.get(i);
+				c.y += 12;
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public void collapsePanel(String name) {
+		System.out.println("Comp: " + name);
+		int count = components.indexOf(getComponentByName(name));
+		System.out.println("Count: " + count + " Size: " + components.size());
+		for(int i = count + 1; i < components.size();i++) {
+			try {
+				Component c = components.get(i);
+				c.y -= 12;
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public Component getComponentByName(final String name) {
+		return components.stream().filter(new Predicate<Component>() {	
+			@Override
+			public boolean test(Component module) {
+				return module.getName().equalsIgnoreCase(name);
+			}
+		}).findFirst().orElse(null);
 	}
 	public void switchState() {
 		animate = true;

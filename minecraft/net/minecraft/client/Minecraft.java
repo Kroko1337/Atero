@@ -231,7 +231,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private RenderManager renderManager;
     private RenderItem renderItem;
     private ItemRenderer itemRenderer;
-    public EntityPlayerSP thePlayer;
+    public static EntityPlayerSP thePlayer;
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
@@ -1526,7 +1526,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
     }
 
-    private void clickMouse()
+    public void clickMouse()
     {
         if (this.leftClickCounter <= 0)
         {

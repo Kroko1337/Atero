@@ -21,11 +21,11 @@ public class Test extends Module {
 	public void setup() {
 		super.setup();
 		ArrayList<SettingsItem> items = new ArrayList<>();
-		items.add(new SettingsItem("TEst", false));
-		items.add(new SettingsItem("TEst2", true));
-		items.add(new SettingsItem("TEst3", false));
-		items.add(new SettingsItem("TEst4", true));
-		items.add(new SettingsItem("TEst5", 0, 100, 50));
+		items.add(new SettingsItem("TEst", false,""));
+		items.add(new SettingsItem("TEst2", true,"TEst"));
+		items.add(new SettingsItem("TEst3", false,""));
+		items.add(new SettingsItem("TEst4", true,""));
+		items.add(new SettingsItem("TEst5", 0, 100, 50,""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}
 	

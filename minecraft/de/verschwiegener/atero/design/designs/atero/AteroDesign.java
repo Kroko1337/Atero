@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
+import de.verschwiegener.atero.settings.SettingsItem.Category;
 import de.verschwiegener.atero.ui.clickgui.Button;
 import de.verschwiegener.atero.ui.clickgui.Panel;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
@@ -135,11 +136,22 @@ public class AteroDesign extends Design {
 
 	@Override
 	public void drawCheckbox(ComponentCheckBox c, int y) {
-		frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-		if(Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName()).isState()) {
-			RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorBlue);
+		if(c.getParent() != null) {
+			if(c.getParent().getCategory() == Category.Checkbox && c.getParent().isState()) {
+				frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
+				if(Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName()).isState()) {
+					RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorBlue);
+				}else {
+					RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorGray);
+				}
+			}
 		}else {
-			RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorGray);
+			frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
+			if(Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName()).isState()) {
+				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorBlue);
+			}else {
+				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorGray);
+			}
 		}
 	}
 	@Override
@@ -149,9 +161,17 @@ public class AteroDesign extends Design {
 
 	@Override
 	public void drawSlider(ComponentSlider c, int y) {
-		frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-		RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
-		RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, ((c.getPanelExtendet().getWidth() / c.getItem().getMaxValue()) * c.getItem().getCurrentValue()), 1.5D, colorBlue);
+		if(c.getParent() != null) {
+			if(c.getParent().getCategory() == Category.Checkbox && c.getParent().isState()) {
+				frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
+				RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
+				RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, ((c.getPanelExtendet().getWidth() / c.getItem().getMaxValue()) * c.getItem().getCurrentValue()), 1.5D, colorBlue);
+			}
+		}else {
+			frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
+			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
+			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, ((c.getPanelExtendet().getWidth() / c.getItem().getMaxValue()) * c.getItem().getCurrentValue()), 1.5D, colorBlue);
+		}
 	}
 	
 	@Override

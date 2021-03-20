@@ -2,6 +2,7 @@ package de.verschwiegener.atero.ui.clickgui.component.components;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
+import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 
