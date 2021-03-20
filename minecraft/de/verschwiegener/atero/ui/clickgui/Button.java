@@ -20,13 +20,13 @@ public class Button {
 	}
 	
 	public void drawButton() {
-		d.drawClickGuiButton(this);
+		d.drawClickGuiModuleButton(this);
 	}
 	
 	public String getName() {
 		return name;
 	}
-	public Panel getP() {
+	public Panel getPanel() {
 		return p;
 	}
 	public int getY() {

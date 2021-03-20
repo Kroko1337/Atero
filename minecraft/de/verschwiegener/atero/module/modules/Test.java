@@ -25,7 +25,14 @@ public class Test extends Module {
 		items.add(new SettingsItem("TEst2", true));
 		items.add(new SettingsItem("TEst3", false));
 		items.add(new SettingsItem("TEst4", true));
+		items.add(new SettingsItem("TEst5", 0, 100, 50));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		
 	}
 
 }

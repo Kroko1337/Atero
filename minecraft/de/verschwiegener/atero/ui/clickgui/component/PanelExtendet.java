@@ -7,6 +7,7 @@ import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.Panel;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
 
 public class PanelExtendet {
 	
@@ -27,12 +28,13 @@ public class PanelExtendet {
 		animate = true;
 		width = 100;
 		height = 100;
-		int yoffset = 8;
+		int yoffset = -3;
 		if(Management.instance.settingsmgr.getSettingByName(ModuleName) != null && !Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().isEmpty()) {
 			for(SettingsItem si : Management.instance.settingsmgr.getSettingByName(ModuleName).getItems()) {
 				System.out.println("Items");
 				switch (si.getCategory()) {
 				case Checkbox:
+					yoffset += 12;
 					components.add(new ComponentCheckBox(si.getName(), yoffset, this));
 					break;
 					
@@ -41,10 +43,10 @@ public class PanelExtendet {
 					break;
 					
 				case Slider:
-					
+					yoffset += 12;
+					components.add(new ComponentSlider(si.getName(), yoffset, this));
 					break;
 				}
-				yoffset += 12;
 			}
 		}else {
 			isEmpty = true;
@@ -54,7 +56,7 @@ public class PanelExtendet {
 	public void drawScreen(int x, int y) {
 		if(!isEmpty) {
 			d.drawPanelExtendet(this, x, y);
-			if((getState() == 2 && !isAnimate()) && getP().getState() == 1) {
+			if((getState() == 2 && !isAnimate()) && getPanel().getState() == 1) {
 				for(Component c : components) {
 					c.drawComponent(x, y);
 				}
@@ -63,11 +65,16 @@ public class PanelExtendet {
 	}
 	public void onMouseClicked(int x, int y, int mousebutton) {
 		if(!isEmpty) {
-			if((getState() == 2 && !isAnimate()) && getP().getState() == 1) {
+			if((getState() == 2 && !isAnimate()) && getPanel().getState() == 1) {
 				for(Component c : components) {
 					c.onMouseClicked(x, y, mousebutton);
 				}
 			}
+		}
+	}
+	public void onMouseReleased(int mouseX, int mouseY, int state) {
+		for(Component c : components) {
+			c.onMouseReleased(mouseX, mouseY, state);
 		}
 	}
 	public void switchState() {
@@ -94,7 +101,7 @@ public class PanelExtendet {
 	public int getHeight() {
 		return height;
 	}
-	public Panel getP() {
+	public Panel getPanel() {
 		return p;
 	}
 	public int getY() {

@@ -24,20 +24,16 @@ public class ComponentCheckBox extends Component {
 	public void onMouseClicked(int x, int y, int button) {
 		super.onMouseClicked(x, y, button);
 		if(button == 0) {
-			if(isHovered(x, y)) {
-				Management.instance.settingsmgr.getSettingByName(getPe().getName()).getItemByName(getName()).toggleState();
+			if(d.isCheckboxHovered(x, y, this)) {
+				Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName()).getItemByName(getName()).toggleState();
 			}
 		}
 	}
 	public int getXPos() {
-		return getPe().getP().getX() + (getPe().getWidth() * 2);
+		return getPanelExtendet().getPanel().getX() + getPanelExtendet().getAnimationX() + getPanelExtendet().getWidth();
 	}
 	public int getYPos() {
-		return getPe().getP().getY() + getY();
-	}
-	
-	public boolean isHovered(int mouseX, int mouseY) {
-		return mouseX > (getXPos() - 40) && mouseX < (getXPos() - 30) && mouseY > getYPos() && mouseY < getYPos() + 10;
+		return getPanelExtendet().getPanel().getY() + getPanelExtendet().getY() + getY();
 	}
 	
 }

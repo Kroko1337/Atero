@@ -30,31 +30,36 @@ public class Panel {
 		this.name = name;
 		this.x = x;
 		this.y = y;
+		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
 		fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
-		yOffset = 15;
+		yOffset = d.getClickGuiPanelYOffset();
+		animationHeight = yOffset;
+		//Sets the base Width
 		width = 100;
-		animationHeight = 15;
 		for(Module m : Management.instance.modulemgr.modules) {
 			if(m.getCategory().toString().equalsIgnoreCase(name)) {
-				modules.add(new Button(m.getName(), yOffset, this));
-				ePanels.add(new PanelExtendet(m.getName(), yOffset, this));
-				yOffset = yOffset + 15;
-				if(fr.getStringWidth(m.getName()) > width) {
+				//passt die Panel Width an die Module Name Width an
+				if((fr.getStringWidth(m.getName()) + 10) > width) {
 					width = fr.getStringWidth(m.getName());
 				}
+				modules.add(new Button(m.getName(), yOffset, this));
+				ePanels.add(new PanelExtendet(m.getName(), yOffset, this));
+				yOffset += 15;
 			}
 		}
-		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
 	}
 	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		//Drags the panel
 		if(candrag) {
 			this.x = (int) (this.dragx + mouseX);
-			this.y = (int) this.dragy + mouseY;
+			this.y = (int) (this.dragy + mouseY);
 		}
+		//draws panel extendet
 		for(PanelExtendet pe : ePanels) {
 			pe.drawScreen(mouseX, mouseY);
 		}
+		//draws the panel
 		d.drawClickGuiPanel(this);
 	}
 	
@@ -66,10 +71,13 @@ public class Panel {
 		case 0:
 			Button br = getButtonByPosition(this, x, y);
 			if(br != null) {
+				System.out.println("Toggle");
+				//Toggles the module
 				if(state == 1) {
 					Management.instance.modulemgr.getModuleByName(br.name).toggle();
 				}
-			}else if(isHovered(x, y)) {
+			}else if(d.isClickGUIPanelHovered(x, y, this)) {
+				//Drags
 				candrag = true;
 				dragx = this.x - x;
 				dragy = this.y - y;
@@ -93,19 +101,18 @@ public class Panel {
 		if(state == 0){
 			candrag = false;
 		}
+		for(PanelExtendet pe: ePanels) {
+			pe.onMouseReleased(x, y, state);
+		}
 	}
 	
 	public Button getButtonByPosition(final Panel p, final int x, final int y) {
 		return modules.stream().filter(new Predicate<Button>() {	
 			@Override
 			public boolean test(Button module) {
-				return x > (p.x - 6) && x < (p.x + p.width - 15) && y > (p.y + module.y - 15) && y < (p.y + module.y);
+				return x > (p.getX()) && x < (p.getX() + p.getWidth()) && y > (p.getY() + module.getY()) && y < (p.getY() + module.getY() + p.d.getClickGuiPanelYOffset());
 			}
 		}).findFirst().orElse(null);
-	}
-	
-	private boolean isHovered(int mouseX, int mouseY) {
-		return mouseX > (x - 6) && mouseX < (x + width - 15) && mouseY > y - 10 && mouseY < (y + 5);
 	}
 	
 	public void colapseAll() {
@@ -143,23 +150,13 @@ public class Panel {
 		return modules;
 	}
 
-	public Fontrenderer getFr() {
-		return fr;
-	}
-
 	public boolean isAnimate() {
 		return animate;
-	}
-
-	public boolean isCandrag() {
-		return candrag;
 	}
 
 	public int getState() {
 		return state;
 	}
-
-	
 	public void setAnimationheight(int animationheight) {
 		this.animationHeight = animationheight;
 	}
@@ -170,6 +167,9 @@ public class Panel {
 	
 	public void setState(int state) {
 		this.state = state;
+	}
+	public Design getD() {
+		return d;
 	}
 	
 	public PanelExtendet getPanelByModuleName(final String name) {

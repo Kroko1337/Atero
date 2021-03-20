@@ -18,11 +18,12 @@ public class Component {
 	public int getY() {
 		return y;
 	}
-	public PanelExtendet getPe() {
+	public PanelExtendet getPanelExtendet() {
 		return pe;
 	}
 	
 	public void drawComponent(int x, int y) {}
 	public void onMouseClicked(int x, int y, int button) {}
+	public void onMouseReleased(int mouseX, int mouseY, int state) {}
 
 }

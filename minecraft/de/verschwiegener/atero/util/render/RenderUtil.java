@@ -160,7 +160,7 @@ public class RenderUtil {
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
-	public static void fillRect(int x, int y, int width, int height, Color color) {
+	public static void fillRect(double x, double y, double width, double height, Color color) {
 		
 		enable();
 		
@@ -168,10 +168,10 @@ public class RenderUtil {
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		
-		GL11.glVertex2f(x, y + height);
-		GL11.glVertex2f(x + width, y + height);
-		GL11.glVertex2f(x + width, y);
-		GL11.glVertex2f(x, y);
+		GL11.glVertex2d(x, y + height);
+		GL11.glVertex2d(x + width, y + height);
+		GL11.glVertex2d(x + width, y);
+		GL11.glVertex2d(x, y);
 		
 		disable();
 

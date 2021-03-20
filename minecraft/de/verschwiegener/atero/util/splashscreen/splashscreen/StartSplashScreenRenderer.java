@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.SharedDrawable;
-import org.newdawn.slick.opengl.GLUtils;
 
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.render.ShaderRenderer;
@@ -80,13 +79,17 @@ public class StartSplashScreenRenderer {
 						}
 					}
 					framebuffer.unbindFramebuffer();
-					framebuffer.framebufferRender(scaledresolution.getScaledWidth() * i,
-							scaledresolution.getScaledHeight() * i);
+					framebuffer.framebufferRender(scaledresolution.getScaledWidth() * i,scaledresolution.getScaledHeight() * i);
 					mc.updateDisplay();
 				} catch (LWJGLException ex) {
+					ex.printStackTrace();
 				}
 				Display.update();
-				
+				try {
+					sharedD.releaseContext();
+				} catch (LWJGLException e) {
+					e.printStackTrace();
+				}
 				
 				//Das wird nur benötigt, wenn man den ganzen Text rendert, dann diesen code auf in der Minecraft Klasse ausklammern
 				/*mc.ingameGUI = new GuiIngame(mc);

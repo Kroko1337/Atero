@@ -400,6 +400,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         ImageIO.setUseCache(false);
         Bootstrap.register();
+        
     }
 
 	public void run() {

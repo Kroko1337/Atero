@@ -42,6 +42,19 @@ public class SettingsItem {
 		state = !state;
 	}
 	
+	public float getCurrentValue() {
+		return currentValue;
+	}
+	public float getMaxValue() {
+		return maxValue;
+	}
+	public float getMinValue() {
+		return minValue;
+	}
+	public void setCurrentValue(float currentValue) {
+		this.currentValue = currentValue;
+	}
+	
 	public enum Category{
 		
 		Slider, Combobox, Checkbox
