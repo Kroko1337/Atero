@@ -28,7 +28,7 @@ public class PanelExtendet {
 		state = 2;
 		animate = true;
 		width = 100;
-		height = 100;
+		//height = 100;
 		int yoffset = -3;
 		if(Management.instance.settingsmgr.getSettingByName(ModuleName) != null && !Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().isEmpty()) {
 			for(SettingsItem si : Management.instance.settingsmgr.getSettingByName(ModuleName).getItems()) {
@@ -49,6 +49,7 @@ public class PanelExtendet {
 					break;
 				}
 			}
+			height = yoffset + 9;
 		}else {
 			isEmpty = true;
 		}

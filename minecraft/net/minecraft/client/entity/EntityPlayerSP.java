@@ -1,5 +1,8 @@
 package net.minecraft.client.entity;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
+
 import de.verschwiegener.atero.Management;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
@@ -187,8 +190,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
     /**
      * called every tick when the player is on foot. Performs all the things that normally happen during movement.
      */
-    public void onUpdateWalkingPlayer()
-    {
+    public void onUpdateWalkingPlayer() {
+    	EventPreMotionUpdate preMotion = new EventPreMotionUpdate(this.rotationYaw, this.rotationPitch, this.onGround, this.posX, this.boundingBox.minY, this.posZ, this.motionX, this.motionZ);
+        EventManager.call(preMotion);
+        if (preMotion.isCancelled()) {
+            return;
+        }
+    	
         boolean flag = this.isSprinting();
 
         if (flag != this.serverSprintState)

@@ -2158,7 +2158,19 @@ public abstract class EntityLivingBase extends Entity
     /**
      * interpolated look vector
      */
-    public Vec3 getLook(float partialTicks) {
+	public Vec3 getLook(float partialTicks) {
+		// MouseDelayFix https://github.com/prplz/MouseDelayFix
+		if (this instanceof EntityPlayerSP)
+			return super.getLook(partialTicks);
+
+		if (partialTicks == 1.0f) {
+			return this.getVectorForRotation(this.rotationPitch, this.rotationYawHead);
+		}
+		float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+		float f2 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
+		return this.getVectorForRotation(f, f2);
+	}
+    /*public Vec3 getLook(float partialTicks) {
     	//MouseDelayFix https://github.com/prplz/MouseDelayFix
 		if (this instanceof EntityPlayerSP) {
 			return super.getLook(partialTicks);
@@ -2173,7 +2185,7 @@ public abstract class EntityLivingBase extends Entity
             float f1 = this.prevRotationYawHead + (this.rotationYawHead - this.prevRotationYawHead) * partialTicks;
             return this.getVectorForRotation(f, f1);
         }
-    }
+    }*/
 
     /**
      * Returns where in the swing animation the living entity is (from 0 to 1).  Args: partialTickTime

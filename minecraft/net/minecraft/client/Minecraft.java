@@ -1197,6 +1197,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         long k = System.nanoTime();
         this.field_181542_y.func_181747_a(k - this.field_181543_z);
         this.field_181543_z = k;
+        
+        Management.instance.modulemgr.onUpdate();
 
         while (getSystemTime() >= this.debugUpdateTime + 1000L)
         {

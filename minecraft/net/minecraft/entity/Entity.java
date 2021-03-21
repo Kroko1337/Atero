@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
+
+import de.verschwiegener.atero.Management;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -100,7 +104,7 @@ public abstract class Entity implements ICommandSender
     public float prevRotationPitch;
 
     /** Axis aligned bounding box. */
-    private AxisAlignedBB boundingBox;
+    protected AxisAlignedBB boundingBox;
     public boolean onGround;
 
     /**
@@ -1446,7 +1450,25 @@ public abstract class Entity implements ICommandSender
     /**
      * interpolated look vector
      */
-    public Vec3 getLook(float partialTicks)
+    public Vec3 getLook(float partialTicks) {
+    	//TODO Scaffold adden
+    	//Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled() &&
+        if (!(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled())) {
+            if (partialTicks == 1.0F) {
+                return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
+            } else {
+
+                    float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+                    float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
+                    return this.getVectorForRotation(f, f1);
+
+
+            }
+        } else {
+            return this.getVectorForRotation(EventPreMotionUpdate.getInstance.getPitch(),EventPreMotionUpdate.getInstance.getYaw());
+        }
+    }
+    /*public Vec3 getLook(float partialTicks)
     {
         if (partialTicks == 1.0F)
         {
@@ -1458,7 +1480,7 @@ public abstract class Entity implements ICommandSender
             float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
             return this.getVectorForRotation(f, f1);
         }
-    }
+    }*/
 
     /**
      * Creates a Vec3 using the pitch and yaw of the entities rotation.

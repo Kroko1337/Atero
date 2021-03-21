@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 
 import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.module.modules.Test;
+import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.module.modules.combat.Target;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import net.minecraft.client.Minecraft;
 
@@ -16,6 +18,8 @@ public class ModuleManager {
 	public ModuleManager() {
 		modules.add(new Test());
 		modules.add(new ClickGui());
+		modules.add(new Killaura());
+		modules.add(new Target());
 	}
 	
 	public Module getModuleByName(final String name) {
@@ -43,6 +47,13 @@ public class ModuleManager {
 				if(m.getKey() == key) {
 					m.toggle();
 				}
+			}
+		}
+	}
+	public void onUpdate() {
+		for(Module m : modules) {
+			if(m.isEnabled()) {
+				m.onUpdate();
 			}
 		}
 	}
