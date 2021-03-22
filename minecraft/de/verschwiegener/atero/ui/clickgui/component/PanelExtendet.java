@@ -8,6 +8,7 @@ import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.Panel;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
 
 public class PanelExtendet {
@@ -29,27 +30,28 @@ public class PanelExtendet {
 		animate = true;
 		width = 100;
 		//height = 100;
-		int yoffset = -3;
+		int yoffset = 8;
 		if(Management.instance.settingsmgr.getSettingByName(ModuleName) != null && !Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().isEmpty()) {
 			for(SettingsItem si : Management.instance.settingsmgr.getSettingByName(ModuleName).getItems()) {
 				System.out.println("Items");
 				switch (si.getCategory()) {
 				case Checkbox:
-					yoffset += 12;
 					components.add(new ComponentCheckBox(si.getName(), yoffset, this));
+					yoffset += 13;
 					break;
 					
 				case Combobox:
-					
+					components.add(new ComponentCombobox(si.getName(), yoffset, this));
+					yoffset += 13;
 					break;
 					
 				case Slider:
-					yoffset += 12;
 					components.add(new ComponentSlider(si.getName(), yoffset, this));
+					yoffset += 15;
 					break;
 				}
 			}
-			height = yoffset + 9;
+			height = yoffset - 4;
 		}else {
 			isEmpty = true;
 		}
@@ -79,29 +81,100 @@ public class PanelExtendet {
 			c.onMouseReleased(mouseX, mouseY, state);
 		}
 	}
-	public void extendPanel(String name) {
+	public void extendPanelByItemName(String name) {
 		int count = components.indexOf(getComponentByName(name));
-		System.out.println("Count: " + count + " Size: " + components.size());
 		for(int i = count; i < components.size();i++) {
 			try {
-				Component c = components.get(i);
-				c.y += 12;
+				if(count == 2) {
+					Component c = components.get(i);
+					if(c instanceof ComponentSlider) {
+						c.y += 15;
+					}else if(c instanceof ComponentCheckBox) {
+						c.y += 15;
+					}else if(c instanceof ComponentCombobox) {
+						c.y += 15;
+					}
+				}else {
+					Component c = components.get(i);
+					if(c instanceof ComponentSlider) {
+						c.y += 15;
+					}else if(c instanceof ComponentCheckBox) {
+						c.y += 12;
+					}else if(c instanceof ComponentCombobox) {
+						c.y += 12;
+					}
+				}
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
+		Component c = getComponentByName(name);
+		if(c instanceof ComponentCheckBox) {
+			height += 12;
+		}else if(c instanceof ComponentSlider) {
+			height += 15;
+		}else if(c instanceof ComponentCombobox) {
+			height += 12;
+		}
 	}
-	public void collapsePanel(String name) {
-		System.out.println("Comp: " + name);
+	public void extendPanelByYOffset(int yoffset, String name) {
 		int count = components.indexOf(getComponentByName(name));
-		System.out.println("Count: " + count + " Size: " + components.size());
 		for(int i = count + 1; i < components.size();i++) {
 			try {
 				Component c = components.get(i);
-				c.y -= 12;
+				c.y += yoffset;
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
+		}
+		height += yoffset;
+	}
+	public void collapsePanelByYOffse(int yoffset, String name) {
+		int count = components.indexOf(getComponentByName(name));
+		for(int i = count + 1; i < components.size();i++) {
+			try {
+				Component c = components.get(i);
+				c.y -= yoffset;
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		height -= yoffset;
+	}
+	public void collapsePanelByItemName(String name) {
+		int count = components.indexOf(getComponentByName(name));
+		for(int i = count; i < components.size();i++) {
+			try {
+				if(count == 2) {
+					Component c = components.get(i);
+					if(c instanceof ComponentSlider) {
+						c.y -= 15;
+					}else if (c instanceof ComponentCheckBox) {
+						c.y -= 15;
+					}else if (c instanceof ComponentCombobox) {
+						c.y -= 15;
+					}
+				}else {
+					Component c = components.get(i);
+					if(c instanceof ComponentSlider) {
+						c.y -= 15;
+					}else if (c instanceof ComponentCheckBox) {
+						c.y -= 12;
+					}else if(c instanceof ComponentCombobox) {
+						c.y -= 12;
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		Component c = getComponentByName(name);
+		if(c instanceof ComponentCheckBox) {
+			height -= 12;
+		}else if(c instanceof ComponentSlider) {
+			height -= 15;
+		}else if(c instanceof ComponentSlider) {
+			height -= 12;
 		}
 	}
 	public Component getComponentByName(final String name) {

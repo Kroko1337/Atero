@@ -222,7 +222,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public int displayWidth;
     public int displayHeight;
     private boolean field_181541_X = false;
-    private Timer timer = new Timer(20.0F);
+    public Timer timer = new Timer(20.0F);
 
     /** Instance of PlayerUsageSnooper. */
     private PlayerUsageSnooper usageSnooper = new PlayerUsageSnooper("client", this, MinecraftServer.getCurrentTimeMillis());
@@ -232,7 +232,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private RenderItem renderItem;
     private ItemRenderer itemRenderer;
     public static EntityPlayerSP thePlayer;
-    private Entity renderViewEntity;
+    public Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
     private final Session session;

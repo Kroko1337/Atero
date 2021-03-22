@@ -26,6 +26,7 @@ public class ComponentCheckBox extends Component {
 		super.onMouseClicked(x, y, button);
 		if(button == 0) {
 			if(d.isCheckboxHovered(x, y, this)) {
+				setChange(true);
 				Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName()).getItemByName(getName()).toggleState();
 			}
 		}

@@ -4,31 +4,32 @@ import java.util.ArrayList;
 
 public class SettingsItem {
 	
-	String name, current, parent;
+	String name, current, child, childselect;
 	float minValue, maxValue, currentValue;
 	ArrayList<String> modes;
 	boolean state;
 	Category category;
 	
-	public SettingsItem(String name, float minValue, float maxValue, float currentValue, String parent) {
+	public SettingsItem(String name, float minValue, float maxValue, float currentValue, String child) {
 		this.name = name;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.currentValue = currentValue;
-		this.parent = parent;
+		this.child = child;
 		this.category = Category.Slider;
 	}
-	public SettingsItem(String name, ArrayList<String> modes, String current, String parent) {
+	public SettingsItem(String name, ArrayList<String> modes, String current, String child, String childselect) {
 		this.name = name;
 		this.modes = modes;
 		this.current = current;
-		this.parent = parent;
+		this.child = child;
+		this.childselect = childselect;
 		this.category = Category.Combobox;
 	}
-	public SettingsItem(String name, boolean state, String parent) {
+	public SettingsItem(String name, boolean state, String child) {
 		this.name = name;
 		this.state = state;
-		this.parent = parent;
+		this.child = child;
 		this.category = Category.Checkbox;
 	}
 	
@@ -57,8 +58,14 @@ public class SettingsItem {
 	public void setCurrentValue(float currentValue) {
 		this.currentValue = currentValue;
 	}
-	public String getParent() {
-		return parent;
+	public String getChild() {
+		return child;
+	}
+	public ArrayList<String> getModes() {
+		return modes;
+	}
+	public String getCurrent() {
+		return current;
 	}
 	
 	public enum Category{

@@ -5,6 +5,7 @@ import de.verschwiegener.atero.ui.clickgui.Panel;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
 import net.minecraft.client.gui.GuiIngame;
 
@@ -35,6 +36,9 @@ public abstract class Design {
 	public abstract boolean isSliderHovered(int mouseX, int mouseY, ComponentSlider slider);
 	public abstract boolean isSliderHoveredNoneY(int mouseX, int mouseY, ComponentSlider slider);
 	public abstract float getSliderValue(int mouseX, int mouseY, ComponentSlider slider);
+	
+	public void drawCombobox(ComponentCombobox ccb, int y) {}
+	public abstract boolean isComboboxHovered(int mouseX, int mouseY, ComponentCombobox ccb);
 	
 	public int getClickGuiPanelYOffset() {
 		return clickGuiPanelYOffset;

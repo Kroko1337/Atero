@@ -26,6 +26,11 @@ public class Test extends Module {
 		items.add(new SettingsItem("TEst3", false,""));
 		items.add(new SettingsItem("TEst4", true,""));
 		items.add(new SettingsItem("TEst5", 0, 100, 50,""));
+		ArrayList<String> items2 = new ArrayList<>();
+		items2.add("Test");
+		items2.add("LOLOLOLOLO");
+		items2.add("Hallo");
+		items.add(new SettingsItem("Combobox", items2, "Test", "", ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}
 	

@@ -461,6 +461,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
             double d0 = (double)this.mc.playerController.getBlockReachDistance();
+            //Raytrace JULIUS
             this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
             double d1 = d0;
             Vec3 vec3 = entity.getPositionEyes(partialTicks);
@@ -548,15 +549,14 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, (EnumFacing)null, new BlockPos(vec33));
             }
 
-            if (this.pointedEntity != null && (d2 < d1 || this.mc.objectMouseOver == null))
-            {
-                this.mc.objectMouseOver = new MovingObjectPosition(this.pointedEntity, vec33);
+			if (this.pointedEntity != null && (d2 < d1 || this.mc.objectMouseOver == null)) {
+				this.mc.objectMouseOver = new MovingObjectPosition(this.pointedEntity, vec33);
 
-                if (this.pointedEntity instanceof EntityLivingBase || this.pointedEntity instanceof EntityItemFrame)
-                {
-                    this.mc.pointedEntity = this.pointedEntity;
-                }
-            }
+				if (this.pointedEntity instanceof EntityLivingBase || this.pointedEntity instanceof EntityItemFrame) {
+					this.mc.pointedEntity = this.pointedEntity;
+				}
+			}
+            //System.err.println("EntityHit: " + this.mc.objectMouseOver.entityHit);
 
             this.mc.mcProfiler.endSection();
         }

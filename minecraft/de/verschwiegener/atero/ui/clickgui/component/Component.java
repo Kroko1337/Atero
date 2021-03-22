@@ -10,30 +10,20 @@ public class Component {
 	int y;
 	PanelExtendet pe;
 	
-	SettingsItem item, parent;
+	SettingsItem item, child;
 	boolean parentextendet, parentvalid;
+	private boolean change;
 	
 	public Component(String name, int y, PanelExtendet pe) {
 		this.name = name;
 		this.y = y;
 		this.pe = pe;
 		item = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(name);
-		parent = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getParent());
-		if((parent != null) && parent.getCategory() == Category.Checkbox) {
+		child = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getChild());
+		if((child != null)) {
 			parentvalid = true;
+			change = true;
 		}
-		//TODO PanelExtend und PanelRetract adden
-		//Hier nicht, da die anderen Components noch nicht in der ArrayList sind
-		/*if((parent != null) && parent.getCategory() == Category.Checkbox) {
-			if(parent.isState()) {
-				System.out.println("Extend");
-				pe.extendPanel(name);
-				parentextendet = true;
-			}else {
-				//pe.collapsePanel(name);
-				parentextendet = false;
-			}
-		}*/
 	}
 	
 	public String getName() {
@@ -48,12 +38,40 @@ public class Component {
 	public SettingsItem getItem() {
 		return item;
 	}
-	public SettingsItem getParent() {
-		return parent;
+	public SettingsItem getChild() {
+		return child;
 	}
 	
-	public void drawComponent(int x, int y) {}
+	public void drawComponent(int x, int y) {
+		if(parentvalid && isChange()) {
+			setChange(false);
+			if(item.isState()) {
+				Component c = pe.getComponentByName(child.getName());
+				if(c.parentextendet) {
+					c.parentextendet = false;
+					pe.extendPanelByItemName(child.getName());
+				}
+			}else {
+				Component c = pe.getComponentByName(child.getName());
+				if(!c.parentextendet) {
+					c.parentextendet = true;
+					pe.collapsePanelByItemName(c.getName());
+				}
+			}
+		}
+	}
 	public void onMouseClicked(int x, int y, int button) {}
 	public void onMouseReleased(int mouseX, int mouseY, int state) {}
+
+	public boolean isChange() {
+		return change;
+	}
+
+	public void setChange(boolean change) {
+		this.change = change;
+	}
+	public boolean isParentextendet() {
+		return parentextendet;
+	}
 
 }

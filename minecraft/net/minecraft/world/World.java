@@ -3309,7 +3309,6 @@ public abstract class World implements IBlockAccess
                 }
             }
         }
-
         return entityplayer;
     }
 

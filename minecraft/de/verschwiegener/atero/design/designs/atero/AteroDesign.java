@@ -1,6 +1,7 @@
 package de.verschwiegener.atero.design.designs.atero;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
@@ -10,6 +11,7 @@ import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.settings.SettingsItem.Category;
@@ -18,6 +20,7 @@ import de.verschwiegener.atero.ui.clickgui.Panel;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
 
 public class AteroDesign extends Design {
@@ -26,6 +29,7 @@ public class AteroDesign extends Design {
 	Fontrenderer frText;
 	
 	Color colorBlue, colorBlack, colorGray;
+	private static DecimalFormat df = new DecimalFormat("0.0");
 
 	public AteroDesign() {
 		super("AteroDesign");
@@ -136,21 +140,16 @@ public class AteroDesign extends Design {
 
 	@Override
 	public void drawCheckbox(ComponentCheckBox c, int y) {
-		if(c.getParent() != null) {
-			if(c.getParent().getCategory() == Category.Checkbox && c.getParent().isState()) {
-				frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-				if(Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName()).isState()) {
-					RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorBlue);
-				}else {
-					RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorGray);
-				}
-			}
-		}else {
-			frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-			if(Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName()).isState()) {
-				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorBlue);
-			}else {
-				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 6, 9, 9, colorGray);
+		if(!c.isParentextendet()) {
+			frText.drawString(c.getName(),
+					(c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2,
+					(c.getYPos()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(),
+					Color.white.getRGB());
+			if (Management.instance.settingsmgr.getSettingByName(c.getPanelExtendet().getName()).getItemByName(c.getName())
+					.isState()) {
+				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 5, 9, 9, colorBlue);
+			} else {
+				RenderUtil.fillRect(c.getXPos() - 12, c.getYPos() - 5, 9, 9, colorGray);
 			}
 		}
 	}
@@ -161,16 +160,13 @@ public class AteroDesign extends Design {
 
 	@Override
 	public void drawSlider(ComponentSlider c, int y) {
-		if(c.getParent() != null) {
-			if(c.getParent().getCategory() == Category.Checkbox && c.getParent().isState()) {
-				frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-				RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
-				RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, ((c.getPanelExtendet().getWidth() / c.getItem().getMaxValue()) * c.getItem().getCurrentValue()), 1.5D, colorBlue);
-			}
-		}else {
+		if(!c.isParentextendet()) {
+			double percent = (c.getItem().getCurrentValue() - c.getItem().getMinValue()) / (c.getItem().getMaxValue() - c.getItem().getMinValue());
 			frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
+			double value = Math.round(c.getItem().getCurrentValue() * 100) / 10;
+			frText.drawString(String.valueOf(df.format(c.getItem().getCurrentValue())), (c.getPanelExtendet().getPanel().getX() + (c.getPanelExtendet().getWidth() * 2)) * 2 - 40, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.WHITE.getRGB());
 			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
-			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, ((c.getPanelExtendet().getWidth() / c.getItem().getMaxValue()) * c.getItem().getCurrentValue()), 1.5D, colorBlue);
+			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, percent * c.getPanelExtendet().getWidth(), 1.5D, colorBlue);
 		}
 	}
 	
@@ -181,12 +177,45 @@ public class AteroDesign extends Design {
 
 	@Override
 	public float getSliderValue(int mouseX, int mouseY, ComponentSlider slider) {
-		return -(((slider.getPanelExtendet().getPanel().getX() + slider.getPanelExtendet().getWidth() + 1) - mouseX) / slider.getItem().getMaxValue()) * 100;
+		double dif = slider.getItem().getMaxValue() - slider.getItem().getMinValue();
+		double x = (mouseX - (slider.getPanelExtendet().getPanel().getX() + slider.getPanelExtendet().getWidth() + 1));
+		double value = slider.getItem().getMinValue() + MathHelper.clamp_double(x / slider.getPanelExtendet().getWidth(), 0.0D, 1.0D) * dif;
+		return (float) value;
 	}
 
 	@Override
 	public boolean isSliderHoveredNoneY(int mouseX, int mouseY, ComponentSlider slider) {
 		return mouseX > (slider.getPanelExtendet().getPanel().getX() + 1) && mouseX < (slider.getPanelExtendet().getPanel().getX() + (slider.getPanelExtendet().getWidth() * 2) + 1);
 	}
+	
+	@Override
+	public void drawCombobox(ComponentCombobox ccb, int y) {
+		if(!ccb.isParentextendet()) {
+			int textx = (ccb.getPanelExtendet().getPanel().getX() + ccb.getPanelExtendet().getWidth() + 1);
+			int texty = (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) - 6;
+			frText.drawString(ccb.getName(), (textx + (frText.getStringWidth(ccb.getName()) / 4)) * 2, texty * 2, colorGray.WHITE.getRGB());
+			RenderUtil.fillRect((ccb.getPanelExtendet().getPanel().getX() + ccb.getPanelExtendet().getWidth() + 1), (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) + 6, ccb.getPanelExtendet().getWidth(), 1, colorBlue);
+			if(ccb.isExtendet()) {
+				texty += 2;
+				for(String str : ccb.getItem().getModes()) {
+					texty += 12;
+					//frText.drawString(str, (textx + 2) * 2, texty * 2, Color.WHITE.getRGB());
+					if(str == ccb.getItem().getCurrent()) {
+						//RenderUtil.fillRect((ccb.getPanelExtendet().getPanel().getX() + ccb.getPanelExtendet().getWidth() + 2), (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) + 9, 1, 11, colorBlue);
+						frText.drawString(str, (textx + 2) * 2, texty * 2, colorBlue.getRGB());
+					}else {
+						frText.drawString(str, (textx + 2) * 2, texty * 2, Color.WHITE.getRGB());
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean isComboboxHovered(int mouseX, int mouseY, ComponentCombobox ccb) {
+		return mouseX > (ccb.getPanelExtendet().getPanel().getX() + 1) && mouseX < (ccb.getPanelExtendet().getPanel().getX() + (ccb.getPanelExtendet().getWidth() * 2) + 1)
+				&& mouseY > (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY() - 6) && mouseY < (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY() + 7);
+	}
+	//TODO isComboboxModesHoveres
 
 }

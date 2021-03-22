@@ -1,29 +1,29 @@
 package com.darkmagician6.eventapi.events.callables;
 
-public class EventPreMotionUpdate extends EventCancellable{
+public class EventPreMotionUpdate extends EventCancellable {
 	public static EventPreMotionUpdate getInstance;
-    private static float yaw, pitch;
-    public static float lastYaw, lastPitch;
-    private boolean ground;
-    public double x, y, z;
-    private double motionX;
-    private double MotionZ;
+	private static float yaw, pitch;
+	public static float lastYaw, lastPitch;
+	private boolean ground;
+	public double x, y, z;
+	private double motionX;
+	private double MotionZ;
 
-    public EventPreMotionUpdate(float yaw, float pitch, boolean ground, double x, double y, double z, double motionX, double MotionZ) {
-    	this.lastYaw = this.yaw;
-    	this.lastPitch = this.pitch;
-        this.yaw = yaw;
-        this.pitch = pitch;
-        this.ground = ground;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.motionX = motionX;
-        this.MotionZ = MotionZ;
-        getInstance = this;
-    }
+	public EventPreMotionUpdate(float yaw, float pitch, boolean ground, double x, double y, double z, double motionX, double MotionZ) {
+		this.lastYaw = this.yaw;
+		this.lastPitch = this.pitch;
+		this.yaw = yaw;
+		this.pitch = pitch;
+		this.ground = ground;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.motionX = motionX;
+		this.MotionZ = MotionZ;
+		getInstance = this;
+	}
 
-    public double getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -78,25 +78,28 @@ public class EventPreMotionUpdate extends EventCancellable{
 	}
 
 	public float getYaw() {
-        return yaw;
-    }
-    public void setYaw(float yaw) {
-        this.yaw = yaw;
-    }
+		return yaw;
+	}
 
-    public float getPitch() {
-        return pitch;
-    }
-    public void setPitch(float pitch) {
-        this.pitch = pitch;
-    }
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
 
-    public boolean onGround() {
-        return ground;
-    }
-    public void setGround(boolean ground) {
-        this.ground = ground;
-    }
+	public float getPitch() {
+		return pitch;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public boolean onGround() {
+		return ground;
+	}
+
+	public void setGround(boolean ground) {
+		this.ground = ground;
+	}
 
 	public byte getType() {
 		return 0;
