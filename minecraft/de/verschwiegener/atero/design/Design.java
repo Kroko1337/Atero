@@ -39,6 +39,7 @@ public abstract class Design {
 	
 	public void drawCombobox(ComponentCombobox ccb, int y) {}
 	public abstract boolean isComboboxHovered(int mouseX, int mouseY, ComponentCombobox ccb);
+	public abstract String getComboboxItem(int mouseX, int mouseY, ComponentCombobox ccb);
 	
 	public int getClickGuiPanelYOffset() {
 		return clickGuiPanelYOffset;

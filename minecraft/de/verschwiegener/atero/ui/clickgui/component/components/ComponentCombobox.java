@@ -24,17 +24,17 @@ public class ComponentCombobox extends Component {
 	@Override
 	public void onMouseClicked(int x, int y, int button) {
 		super.onMouseClicked(x, y, button);
-		if(button == 0) {
-			if(d.isComboboxHovered(x, y, this)) {
+		if (button == 0) {
+			if (d.isComboboxHovered(x, y, this)) {
 				extendet = !extendet;
-				if(extendet) {
+				if (extendet) {
 					getPanelExtendet().extendPanelByYOffset(12 * getItem().getModes().size(), getName());
-				}else {
+				} else {
 					getPanelExtendet().collapsePanelByYOffse(12 * getItem().getModes().size(), getName());
 				}
+			}else if (extendet) {
+				getItem().setCurrent(d.getComboboxItem(x, y, this));
 			}
-		}else if(extendet) {
-			//Hier is ComboboxModeHovered hin machen und dannn current im Setting setzen
 		}
 	}
 	public void onMouseReleased(int mouseX, int mouseY, int state) {

@@ -2,6 +2,9 @@ package de.verschwiegener.atero.util.chat;
 
 import java.nio.charset.StandardCharsets;
 
+import org.lwjgl.input.Keyboard;
+
+import de.verschwiegener.atero.Management;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.IChatComponent;
@@ -51,7 +54,8 @@ public class ChatExecute {
 		case "bind":
 			switch (args[1]) {
 			case "del":
-				System.out.println("Bind del: " + args[2]);
+				Management.instance.modulemgr.getModuleByName(args[2]).setKey(Keyboard.KEY_NONE);
+				//System.out.println("Bind del: " + args[2]);
 				break;
 			case "edit":
 				System.out.println("Bind edit: " + args[2]);

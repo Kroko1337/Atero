@@ -32,6 +32,12 @@ public class Component {
 	public int getY() {
 		return y;
 	}
+	public int getComponentX() {
+		return getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth();
+	}
+	public int getComponentY() {
+		return getY() + getPanelExtendet().getPanel().getY() + getPanelExtendet().getY();
+	}
 	public PanelExtendet getPanelExtendet() {
 		return pe;
 	}

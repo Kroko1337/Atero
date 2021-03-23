@@ -3,10 +3,15 @@ package net.minecraft.entity;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
+
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.combat.Killaura;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import net.minecraft.block.Block;
@@ -1554,20 +1559,38 @@ public abstract class EntityLivingBase extends Entity
     /**
      * Causes this entity to do an upwards motion (jumping).
      */
-    protected void jump()
-    {
-        this.motionY = (double)this.getJumpUpwardsMotion();
+	/*protected void jump() {
+		this.motionY = (double) this.getJumpUpwardsMotion();
 
-        if (this.isPotionActive(Potion.jump))
-        {
-            this.motionY += (double)((float)(this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
+		if (this.isPotionActive(Potion.jump)) {
+			this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
+		}
+
+		if (this.isSprinting()) {
+			float f = this.rotationYaw * 0.017453292F;
+			this.motionX -= (double) (MathHelper.sin(f) * 0.2F);
+			this.motionZ += (double) (MathHelper.cos(f) * 0.2F);
+		}
+
+		this.isAirBorne = true;
+	}*/
+    //Jump Fix
+	protected void jump() {
+        this.motionY = (double) this.getJumpUpwardsMotion();
+
+        if (this.isPotionActive(Potion.jump)) {
+            this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
         }
 
-        if (this.isSprinting())
-        {
-            float f = this.rotationYaw * 0.017453292F;
-            this.motionX -= (double)(MathHelper.sin(f) * 0.2F);
-            this.motionZ += (double)(MathHelper.cos(f) * 0.2F);
+        if (this.isSprinting()) {
+        	float f;
+            if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && (Killaura.target != null || Killaura.preaimtarget != null)) {
+                f = Killaura.getYaw() * 0.017453292F;
+            } else {
+                f = this.rotationYaw * 0.017453292F;
+            }
+            this.motionX -= MathHelper.sin(f) * 0.2F;
+            this.motionZ += MathHelper.cos(f) * 0.2F;
         }
 
         this.isAirBorne = true;

@@ -16,14 +16,14 @@ public class BindCommand extends Command {
 	public void onCommand(String[] args) {
 		switch (args[1]) {
 		case "del":
-			
 			break;
 		case "edit":
 			break;
 		default:
 			try {
-				Management.instance.modulemgr.getModuleByName(args[1]).setKey(Keyboard.getKeyIndex(args[2]));
+				Management.instance.modulemgr.getModuleByName(args[1]).setKey(Keyboard.getKeyIndex(args[2].toUpperCase()));
 			}catch(NullPointerException ex) {
+				ex.printStackTrace();
 				ChatUtil.sendMessageWithPrefix("Module \"" + args[1] + "\" could not be bindet to Key \"" + args[2] + "\"");
 			}
 			break;

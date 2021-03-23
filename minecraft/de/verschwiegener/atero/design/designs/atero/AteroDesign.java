@@ -191,8 +191,8 @@ public class AteroDesign extends Design {
 	@Override
 	public void drawCombobox(ComponentCombobox ccb, int y) {
 		if(!ccb.isParentextendet()) {
-			int textx = (ccb.getPanelExtendet().getPanel().getX() + ccb.getPanelExtendet().getWidth() + 1);
-			int texty = (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) - 6;
+			int textx = (ccb.getComponentX() + 1);
+			int texty = (ccb.getComponentY()) - 6;
 			frText.drawString(ccb.getName(), (textx + (frText.getStringWidth(ccb.getName()) / 4)) * 2, texty * 2, colorGray.WHITE.getRGB());
 			RenderUtil.fillRect((ccb.getPanelExtendet().getPanel().getX() + ccb.getPanelExtendet().getWidth() + 1), (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) + 6, ccb.getPanelExtendet().getWidth(), 1, colorBlue);
 			if(ccb.isExtendet()) {
@@ -216,6 +216,19 @@ public class AteroDesign extends Design {
 		return mouseX > (ccb.getPanelExtendet().getPanel().getX() + 1) && mouseX < (ccb.getPanelExtendet().getPanel().getX() + (ccb.getPanelExtendet().getWidth() * 2) + 1)
 				&& mouseY > (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY() - 6) && mouseY < (ccb.getY() + ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY() + 7);
 	}
-	//TODO isComboboxModesHoveres
+
+	@Override
+	public String getComboboxItem(int mouseX, int mouseY, ComponentCombobox ccb) {
+		int modeY = 2;
+		for(String str : ccb.getItem().getModes()) {
+			modeY += 12;
+			if (mouseX > ccb.getComponentX() && mouseX < (ccb.getComponentX() + ccb.getPanelExtendet().getWidth() + 1)) {
+				if(mouseY > (ccb.getComponentY() + 7) && mouseY < (ccb.getComponentY() + 7 + modeY)){
+					return str;
+				}
+			}
+		}
+		return null;
+	}
 
 }

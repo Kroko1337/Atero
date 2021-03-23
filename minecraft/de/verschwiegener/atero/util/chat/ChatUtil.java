@@ -20,11 +20,8 @@ public class ChatUtil {
 	public static void sendMessage(String message) {
 		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
 	}
-	public static void addHoverEvent(ArrayList<IChatComponent> components) {
-		//Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(components);
-	}
-	public static void addClickEvent(ArrayList<IChatComponent> components) {
-		//Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(components);
+	public static void addIChatComponent(IChatComponent components) {
+		Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(components);
 	}
 	
 	public static void addLoadChat2() {
@@ -40,13 +37,21 @@ public class ChatUtil {
 		ichatcomponent2.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.CLIENT, new ChatComponentText("test_test2_test4")));
 		components.add(ichatcomponent2);
 		
-		//Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(components);
-		
 		IChatComponent test = new ChatComponentText("Test ");
 		test.appendSibling(ichatcomponent);
 		test.appendSibling(ichatcomponent2);
 		
 		Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(test);
+	}
+	public static void addBindsMessage(String module) {
+		IChatComponent message = new ChatComponentText("§r" + module + ": ");
+		
+		IChatComponent componentremove = new ChatComponentText("Remove");
+		componentremove.getChatStyle().setColor(EnumChatFormatting.RED);
+		componentremove.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "bind_del_" + module));
+		message.appendSibling(componentremove);
+		
+		Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
 	}
 
 }

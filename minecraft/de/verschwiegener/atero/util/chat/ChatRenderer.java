@@ -45,6 +45,7 @@ public class ChatRenderer {
 	
 	
 	public void drawchat2(String line, int x, int y) {
+		//System.out.println("Line: " + line);
 		String[] args = line.replace("§", "#§").split("#");
 		int xoffset = 0;
 		messagecolor = Color.white;
@@ -133,59 +134,6 @@ public class ChatRenderer {
 			}
 		}
 	}
-	
-	public void drawChat(String line, int x, int y) {
-		String[] colorargs = line.replace("§", "#§").split("#");
-		int xoffset = 0;
-		for(int i = 0; i < colorargs.length;i++) {
-			String args = colorargs[i];
-			if(args.startsWith("§")) {
-				switch ((args.substring(1,2).toLowerCase())) {
-				case "n":
-					//Underline
-					break;
-				case "m":
-					//durchgestrichen
-					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
-					drawLine(x + xoffset, y - 2, fr.getStringWidth(args.substring(2)));
-					xoffset += fr.getStringWidth(args.substring(2));
-					break;
-				case "k":
-					//cancer mode
-					break;
-				case "o":
-					//italik
-					break;
-				case "l":
-					//Bold
-					break;
-				case "r":
-					//Wird nicht benötigt, da die standart Farbe weiß ist
-					break;
-				default:
-					Color c = colorCodes.get(args.substring(1,2).toLowerCase());
-					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
-					xoffset += fr.getStringWidth(args.substring(2));
-					break;
-				}
-				
-				
-				if(!illegalchars.contains((args.substring(1,2).toLowerCase()))){
-				}else {
-					Color c = new Color(255, 255, 255);
-					fr.drawString(args.substring(2), x + xoffset, y, c.getRGB());
-					xoffset += fr.getStringWidth(args.substring(2));
-				}
-			
-			}else {
-				Color c = new Color(255, 255, 255);
-				fr.drawString(args, x + xoffset, y, c.getRGB());
-				xoffset += fr.getStringWidth(args);
-			}
-			
-		}
-	}
-	
 	public void drawLine(int x, int y, int width) {
 		GL11.glScaled(0.5f, 0.5f, 0.5f);
 		GL11.glLineWidth(2F);

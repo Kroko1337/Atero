@@ -67,6 +67,9 @@ public class SettingsItem {
 	public String getCurrent() {
 		return current;
 	}
+	public void setCurrent(String current) {
+		this.current = current;
+	}
 	
 	public enum Category{
 		
