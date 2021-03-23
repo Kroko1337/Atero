@@ -7,6 +7,7 @@ import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
+import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
 import net.minecraft.client.gui.GuiIngame;
 
 public abstract class Design {
@@ -22,6 +23,7 @@ public abstract class Design {
 	public String getName() {
 		return name;
 	}
+	public void drawGUIButton(CustomGuiButton cgb) {}
 	public void drawGUIIngame(GuiIngame guiIngame) {}
 	public void drawTabUI() {}
 	

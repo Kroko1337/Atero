@@ -96,18 +96,20 @@ public class Killaura extends Module {
 				//}
 				
 				float CCPS = (float) Math.random() * (140 - 130 + 1) + 130; 
-				EntityLivingBase t = getTarget(mc.timer.elapsedTicks, reach);
-				System.out.println("Target: " + target + " T: " + t);
+				//Best Hit Vector
+				MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
 				if(t != null) {
-					if (t.isSwingInProgress) {
-						mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t, C02PacketUseEntity.Action.ATTACK));
-						mc.thePlayer.attackTargetEntityWithCurrentItem(t);
+					EntityLivingBase entity = (EntityLivingBase) t.entityHit;
+					if (entity.isSwingInProgress) {
+						//mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t, C02PacketUseEntity.Action.ATTACK));
+						mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, t.hitVec, C02PacketUseEntity.Action.ATTACK));
+						mc.thePlayer.attackTargetEntityWithCurrentItem(t.entityHit);
 					} else {
 						if (timer.hasReached(CCPS)) {
 							timer.reset();
-							mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t, C02PacketUseEntity.Action.ATTACK));
+							mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, C02PacketUseEntity.Action.ATTACK));
 							mc.thePlayer.swingItem();
-							mc.thePlayer.attackTargetEntityWithCurrentItem(t);
+							mc.thePlayer.attackTargetEntityWithCurrentItem(t.entityHit);
 						
 						}
 					}
@@ -204,14 +206,7 @@ public class Killaura extends Module {
 	// TODO Names Reworken
 	private float[] getEntityRotations(EntityPlayerSP player, EntityLivingBase target, Vec3 targetVec) {
 		final double posX = targetVec.xCoord - player.posX;
-		//wenn kein damage
-		//final double posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
-		double posY = 0;
-		if(target.posY > player.posY) {
-			posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
-		}else {
-			posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + (player.boundingBox.maxY - player.boundingBox.minY));
-		}
+		double posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
 		final double posZ = targetVec.zCoord - player.posZ;
 		final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
 		float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - 90.0f;
@@ -232,7 +227,7 @@ public class Killaura extends Module {
 		return new Vec3(x, y, z);
 	}
 	
-	private EntityLivingBase getTarget(float partialTicks, double distance) {
+	private MovingObjectPosition getTarget(float partialTicks, double distance) {
 		Minecraft mc = Minecraft.getMinecraft();
 		Entity pointedEntity;
 		MovingObjectPosition omo = mc.renderViewEntity.rayTrace(distance, partialTicks);
@@ -291,7 +286,7 @@ public class Killaura extends Module {
 		if (omo != null) {
 			if (omo.typeOfHit == MovingObjectType.ENTITY) {
 				if (omo.entityHit instanceof EntityLivingBase) {
-					return (EntityLivingBase) omo.entityHit;
+					return omo;
 				}
 			}
 		}

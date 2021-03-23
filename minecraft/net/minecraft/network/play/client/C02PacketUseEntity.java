@@ -29,6 +29,11 @@ public class C02PacketUseEntity implements Packet<INetHandlerPlayServer>
         this(entity, C02PacketUseEntity.Action.INTERACT_AT);
         this.hitVec = hitVec;
     }
+    //HitVec
+	public C02PacketUseEntity(Entity entity, Vec3 hitVec, C02PacketUseEntity.Action action) {
+		this(entity, action);
+		this.hitVec = hitVec;
+	}
 
     /**
      * Reads the raw packet data from the data stream.

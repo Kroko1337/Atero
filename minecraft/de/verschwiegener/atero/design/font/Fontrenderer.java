@@ -52,7 +52,6 @@ public class Fontrenderer {
 		
 		
 		unicodefont.addGlyphs(text);
-		
 		try {
 			unicodefont.loadGlyphs();
 		}catch(Exception e) {

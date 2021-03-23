@@ -7,10 +7,12 @@ import com.darkmagician6.eventapi.EventManager;
 import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.DesignManager;
 import de.verschwiegener.atero.design.font.FontManager;
+import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 
 public class Management {
@@ -29,6 +31,7 @@ public class Management {
 	public CommandManager commandmgr;
 	public DesignManager designmgr;
 	public ClickGUI clickgui;
+	public Fontrenderer fontrenderer;
 	
 	public void start() {
 		fontmgr = new FontManager();
@@ -36,6 +39,8 @@ public class Management {
 		modulemgr = new ModuleManager();
 		commandmgr = new CommandManager();
 		designmgr = new DesignManager();
+		
+		fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 		
 		clickgui = new ClickGUI();
 	}

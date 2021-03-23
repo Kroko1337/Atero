@@ -383,16 +383,16 @@ public abstract class Entity implements ICommandSender
      * Adds 15% to the entity's yaw and subtracts 15% from the pitch. Clamps pitch from -90 to 90. Both arguments in
      * degrees.
      */
-    public void setAngles(float yaw, float pitch)
-    {
-        float f = this.rotationPitch;
-        float f1 = this.rotationYaw;
-        this.rotationYaw = (float)((double)this.rotationYaw + (double)yaw * 0.15D);
-        this.rotationPitch = (float)((double)this.rotationPitch - (double)pitch * 0.15D);
-        this.rotationPitch = MathHelper.clamp_float(this.rotationPitch, -90.0F, 90.0F);
-        this.prevRotationPitch += this.rotationPitch - f;
-        this.prevRotationYaw += this.rotationYaw - f1;
-    }
+	public void setAngles(float yaw, float pitch) {
+		float f = this.rotationPitch;
+		float f1 = this.rotationYaw;
+		this.rotationYaw = (float) ((double) this.rotationYaw + (double) yaw * 0.15D);
+		this.rotationPitch = (float) ((double) this.rotationPitch - (double) pitch * 0.15D);
+		//Pitch limiter
+		this.rotationPitch = MathHelper.clamp_float(this.rotationPitch, -90.0F, 90.0F);
+		this.prevRotationPitch += this.rotationPitch - f;
+		this.prevRotationYaw += this.rotationYaw - f1;
+	}
 
     /**
      * Called to update the entity's position/logic.
