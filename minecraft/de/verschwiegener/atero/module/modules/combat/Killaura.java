@@ -100,7 +100,8 @@ public class Killaura extends Module {
 				MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
 				if(t != null) {
 					EntityLivingBase entity = (EntityLivingBase) t.entityHit;
-					if (entity.isSwingInProgress) {
+					//if (entity.isSwingInProgress) {
+					if (mc.thePlayer.isSwingInProgress) {
 						//mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t, C02PacketUseEntity.Action.ATTACK));
 						mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, t.hitVec, C02PacketUseEntity.Action.ATTACK));
 						mc.thePlayer.attackTargetEntityWithCurrentItem(t.entityHit);

@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventManager;
 
+import de.verschwiegener.atero.audio.StreamManager;
 import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.DesignManager;
 import de.verschwiegener.atero.design.font.FontManager;
@@ -32,6 +33,7 @@ public class Management {
 	public DesignManager designmgr;
 	public ClickGUI clickgui;
 	public Fontrenderer fontrenderer;
+	public StreamManager streamManager;
 	
 	public void start() {
 		fontmgr = new FontManager();
@@ -39,7 +41,8 @@ public class Management {
 		modulemgr = new ModuleManager();
 		commandmgr = new CommandManager();
 		designmgr = new DesignManager();
-		
+		streamManager = new StreamManager();
+		streamManager.updateStreams();
 		fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 		
 		clickgui = new ClickGUI();

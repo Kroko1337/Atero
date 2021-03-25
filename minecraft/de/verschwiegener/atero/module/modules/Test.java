@@ -1,10 +1,23 @@
 package de.verschwiegener.atero.module.modules;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.audio.Streamer;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
@@ -12,7 +25,10 @@ import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 
 public class Test extends Module {
-
+	
+	Streamer streamer;
+	int ticks;
+	
 	public Test() {
 		super("Test", "Test", Keyboard.KEY_NONE, Category.Combat);
 	}
@@ -32,12 +48,30 @@ public class Test extends Module {
 		items2.add("Hallo");
 		items.add(new SettingsItem("Combobox", items2, "Test", "", ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
+		
+		streamer = new Streamer();
+	}
+	
+	@Override
+	public void onEnable() {
+		super.onEnable();
+		ticks = 0;
+		streamer.play(0.5);
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		
+		ticks++;
+		if(ticks % 400 == 0L) {
+			System.out.println("Ticks: " + ticks);
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+		streamer.stop();
 	}
 
 }

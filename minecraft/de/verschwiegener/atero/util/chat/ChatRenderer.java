@@ -112,7 +112,7 @@ public class ChatRenderer {
 							xoffset += fritalic.getStringWidth(str);
 						}
 					}else if (noise) {
-						fr.drawString(getrandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
+						fr.drawString(getRandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
 						xoffset += fr.getStringWidth(str);
 					}
 					if(underline) {
@@ -134,7 +134,7 @@ public class ChatRenderer {
 			}
 		}
 	}
-	public void drawLine(int x, int y, int width) {
+	private void drawLine(int x, int y, int width) {
 		GL11.glScaled(0.5f, 0.5f, 0.5f);
 		GL11.glLineWidth(2F);
 		GL11.glBegin(GL11.GL_LINES);
@@ -143,7 +143,7 @@ public class ChatRenderer {
 		GL11.glEnd();
 	}
 	
-	public String getrandomString(int count) {
+	private String getRandomString(int count) {
 		String str = "";
 		for(int i = 0; i < count;i++) {
 			str += (char) (rnd.nextInt(26) + 'a');
