@@ -2,7 +2,7 @@ package de.verschwiegener.atero.design.font;
 
 import java.awt.Color;
 
-public abstract class Font {
+public class Font {
 	
 	String name;
 	Fontrenderer fontrenderer;

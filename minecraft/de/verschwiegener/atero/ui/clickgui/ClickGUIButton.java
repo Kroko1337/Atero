@@ -5,14 +5,14 @@ import java.awt.Color;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
 
-public class Button {
+public class ClickGUIButton {
 	
 	String name;
 	int y;
-	Panel p;
+	ClickGUIPanel p;
 	Design d;
 	
-	public Button(String name, int y, Panel p) {
+	public ClickGUIButton(String name, int y, ClickGUIPanel p) {
 		this.name = name;
 		this.y = y;
 		this.p = p;
@@ -26,7 +26,7 @@ public class Button {
 	public String getName() {
 		return name;
 	}
-	public Panel getPanel() {
+	public ClickGUIPanel getPanel() {
 		return p;
 	}
 	public int getY() {

@@ -12,11 +12,11 @@ import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
-public class Panel {
+public class ClickGUIPanel {
 	
 	String name;
 	int x, y, width, yOffset, animationHeight, extensionX;
-	ArrayList<Button> modules = new ArrayList<>();
+	ArrayList<ClickGUIButton> modules = new ArrayList<>();
 	Fontrenderer fr;
 	boolean animate, candrag;
 	int state = 2;
@@ -26,7 +26,7 @@ public class Panel {
 	
 	Design d;
 	
-	public Panel(String name, int x, int y) {
+	public ClickGUIPanel(String name, int x, int y) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -42,7 +42,7 @@ public class Panel {
 				if((fr.getStringWidth(m.getName()) + 10) > width) {
 					width = fr.getStringWidth(m.getName());
 				}
-				modules.add(new Button(m.getName(), yOffset, this));
+				modules.add(new ClickGUIButton(m.getName(), yOffset, this));
 				ePanels.add(new PanelExtendet(m.getName(), yOffset, this));
 				yOffset += 15;
 			}
@@ -69,7 +69,7 @@ public class Panel {
 		}
 		switch (mouseButton) {
 		case 0:
-			Button br = getButtonByPosition(this, x, y);
+			ClickGUIButton br = getButtonByPosition(this, x, y);
 			if(br != null) {
 				System.out.println("Toggle");
 				//Toggles the module
@@ -84,7 +84,7 @@ public class Panel {
 			}
 			break;
 		case 1:
-			Button bl = getButtonByPosition(this, x, y);
+			ClickGUIButton bl = getButtonByPosition(this, x, y);
 			if(bl != null) {
 				if(pExtendet != null && !pExtendet.getName().equalsIgnoreCase(bl.getName())) {
 					pExtendet.setState(2);
@@ -106,10 +106,10 @@ public class Panel {
 		}
 	}
 	
-	public Button getButtonByPosition(final Panel p, final int x, final int y) {
-		return modules.stream().filter(new Predicate<Button>() {	
+	public ClickGUIButton getButtonByPosition(final ClickGUIPanel p, final int x, final int y) {
+		return modules.stream().filter(new Predicate<ClickGUIButton>() {	
 			@Override
-			public boolean test(Button module) {
+			public boolean test(ClickGUIButton module) {
 				return x > (p.getX()) && x < (p.getX() + p.getWidth()) && y > (p.getY() + module.getY()) && y < (p.getY() + module.getY() + p.d.getClickGuiPanelYOffset());
 			}
 		}).findFirst().orElse(null);
@@ -146,7 +146,7 @@ public class Panel {
 		return animationHeight;
 	}
 
-	public ArrayList<Button> getModules() {
+	public ArrayList<ClickGUIButton> getModules() {
 		return modules;
 	}
 

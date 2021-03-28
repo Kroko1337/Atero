@@ -22,7 +22,10 @@ import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
+import de.verschwiegener.atero.ui.audio.AudioPanel;
+import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
+import net.minecraft.client.Minecraft;
 
 public class Test extends Module {
 	
@@ -55,23 +58,25 @@ public class Test extends Module {
 	@Override
 	public void onEnable() {
 		super.onEnable();
-		ticks = 0;
-		streamer.play(0.5);
+		Minecraft.getMinecraft().displayGuiScreen(new AudioPanel());
+		toggle();
+		//ticks = 0;
+		//streamer.play(0.5);
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		ticks++;
-		if(ticks % 400 == 0L) {
-			System.out.println("Ticks: " + ticks);
-		}
+		//ticks++;
+		//if(ticks % 400 == 0L) {
+			//System.out.println("Ticks: " + ticks);
+		//}
 	}
 	
 	@Override
 	public void onDisable() {
 		super.onDisable();
-		streamer.stop();
+		//streamer.stop();
 	}
 
 }

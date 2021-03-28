@@ -12,7 +12,7 @@ public class ComponentCombobox extends Component {
 
 	public ComponentCombobox(String name, int y, PanelExtendet pe) {
 		super(name, y, pe);
-		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
+		d = Management.instance.currentDesign;
 		extendet = false;
 	}
 	

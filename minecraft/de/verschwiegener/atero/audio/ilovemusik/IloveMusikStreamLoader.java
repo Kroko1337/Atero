@@ -29,26 +29,36 @@ import net.sf.json.JSONSerializer;
 
 public class IloveMusikStreamLoader extends StreamLoader {
 
-  public IloveMusikStreamLoader() {
-    super("https://api.ilovemusic.team/traffic/");
-  }
-
-  @Override
-  public void loadStreams() {
-    try {
-      InputStream inputStream = new URL(getDEFAULT_BASE_URL()).openStream();
-      JsonParser parser = new JsonParser();
-      JsonObject jsonObject = parser.parse(IOUtils.toString(inputStream)).getAsJsonObject();
-      System.out.println("URL: " + jsonObject.entrySet());
-      //Laden von channels
-      Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
-      for (Map.Entry<String, JsonElement> entry: entries) {
-    	    System.out.println("Key: " + entry.getKey());
-    	}
-      //Management.instance.streamManager.getStreams().remove(Management.instance.streamManager.getStreamByName(json.getString("name")));
-     // Management.instance.streamManager.getStreams().add(new Stream(Provider.ILoveMusik,json.getString("name"), json.getString("stream_url"), json.getString("title"), json.getString("artist"), json.getString("cover")));
-    } catch (JsonSyntaxException | IOException e) {
-      e.printStackTrace();
+    public IloveMusikStreamLoader() {
+	super("https://api.ilovemusic.team/traffic/");
     }
-  }
+
+    @Override
+    public void loadStreams() {
+	try {
+	    InputStream inputStream = new URL(getDEFAULT_BASE_URL()).openStream();
+	    JsonParser parser = new JsonParser();
+	    JsonObject JSONObject = parser.parse(IOUtils.toString(inputStream)).getAsJsonObject();
+	    for (Map.Entry<String, JsonElement> entry : JSONObject.entrySet()) {
+		JsonArray JSONEntries = entry.getValue().getAsJsonArray();
+		for (JsonElement JSONElement : JSONEntries) {
+		    JsonObject streamObject = JSONElement.getAsJsonObject();
+		    Stream stream = Management.instance.streamManager
+			    .getStreamByName(streamObject.get("name").getAsString());
+		    if (stream != null) {
+			stream.setTitle(streamObject.get("title").getAsString());
+			stream.setArtist(streamObject.get("artist").getAsString());
+			stream.setCoverURL(streamObject.get("cover").getAsString());
+		    } else {
+			Management.instance.streamManager.getStreams().add(new Stream(Provider.ILoveMusik,
+				streamObject.get("name").getAsString(), streamObject.get("stream_url").getAsString(),
+				streamObject.get("title").getAsString(), streamObject.get("artist").getAsString(),
+				streamObject.get("cover").getAsString()));
+		    }
+		}
+	    }
+	} catch (JsonSyntaxException | IOException e) {
+	    e.printStackTrace();
+	}
+    }
 }

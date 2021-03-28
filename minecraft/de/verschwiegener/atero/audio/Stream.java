@@ -1,50 +1,117 @@
 package de.verschwiegener.atero.audio;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+
+import de.verschwiegener.atero.Management;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
+
 public class Stream {
 
-  private final Provider provider;
-  private final String channelName;
-  private final String channelURL;
-  private final String title;
-  private final String artist;
-  private final String coverURL;
+    public enum Provider {
+	ILoveMusik
+    }
 
-  public Stream(
-      Provider provider,
-      String channelName,
-      String channelURL,
-      String title,
-      String artist,
-      String coverURL) {
-    this.provider = provider;
-    this.channelName = channelName;
-    this.channelURL = channelURL;
-    this.title = title;
-    this.artist = artist;
-    this.coverURL = coverURL;
-  }
+    private final Provider provider;
+    private final String channelName;
+    private final String channelURL;
+    private String title;
+    private String fulltitle;
+    private String artist;
+    private String coverURL;
+    private final BufferedImage image;
+    private DynamicTexture texture;
 
-  public String getChannelName() {
-    return channelName;
-  }
+    private ResourceLocation location;
 
-  public String getChannelURL() {
-    return channelURL;
-  }
+    public Stream(final Provider provider, final String channelName, final String channelURL, final String title,
+	    final String artist, final String coverURL) throws MalformedURLException, IOException {
+	this.provider = provider;
+	this.channelName = shortenString(channelName, 23);
+	this.channelURL = channelURL;
+	this.title = shortenString(title, 17);
+	this.artist = shortenString(artist, 17);
+	this.coverURL = coverURL;
+	this.fulltitle = title;
+	image = ImageIO.read(new URL(coverURL));
+	if (image != null) {
+	    texture = new DynamicTexture(image);
+	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(),
+		    texture);
+	} else {
+	    Management.instance.streamManager.getStreams().remove(this);
+	}
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getArtist() {
+	return artist;
+    }
 
-  public String getArtist() {
-    return artist;
-  }
+    public String getChannelName() {
+	return channelName;
+    }
 
-  public String getCoverURL() {
-    return coverURL;
-  }
+    public String getChannelURL() {
+	return channelURL;
+    }
 
-  public enum Provider {
-    ILoveMusik
-  }
+    public String getCoverURL() {
+	return coverURL;
+    }
+
+    public BufferedImage getImage() {
+	return image;
+    }
+
+    public ResourceLocation getLocation() {
+	return location;
+    }
+
+    public Provider getProvider() {
+	return provider;
+    }
+
+    public DynamicTexture getTexture() {
+	return texture;
+    }
+
+    public String getTitle() {
+	return title;
+    }
+
+    public void setArtist(final String artist) {
+	this.artist = artist;
+    }
+
+    public void setCoverURL(final String coverURL) {
+	this.coverURL = coverURL;
+    }
+
+    public void setTitle(final String title) {
+	this.title = shortenString(title, 17);
+	this.fulltitle = title;
+    }
+    public String getFulltitle() {
+	return fulltitle;
+    }
+
+    private String shortenString(final String input, final int length) {
+	if((input.length() > length)) {
+	    final String[] args = input.split(" ");
+		final StringBuilder builder = new StringBuilder(args[0]);
+		for (int i = 1; i < args.length; i++) {
+		    if ((builder.toString().length() + args[i].length()) < length && !args[i].equals("&")) {
+			builder.append(" " + args[i]);
+		    }
+		}
+		return builder.toString();
+	}
+	return input;
+    }
 }

@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.settings.SettingsItem;
-import de.verschwiegener.atero.ui.clickgui.Panel;
+import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
@@ -14,18 +14,18 @@ import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
 public class PanelExtendet {
 	
 	String name;
-	Panel p;
+	ClickGUIPanel p;
 	Design d;
 	boolean animate, isEmpty;
 	int state, animationX, height, width, y;
 	
 	ArrayList<Component> components = new ArrayList<>();
 	
-	public PanelExtendet(String ModuleName, int y, Panel p) {
+	public PanelExtendet(String ModuleName, int y, ClickGUIPanel p) {
 		this.y = y;
 		this.p = p;
 		this.name = ModuleName;
-		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
+		d = Management.instance.currentDesign;
 		state = 2;
 		animate = true;
 		width = 100;
@@ -209,7 +209,7 @@ public class PanelExtendet {
 	public int getHeight() {
 		return height;
 	}
-	public Panel getPanel() {
+	public ClickGUIPanel getPanel() {
 		return p;
 	}
 	public int getY() {

@@ -12,7 +12,7 @@ public class ComponentSlider extends Component{
 
 	public ComponentSlider(String name, int y, PanelExtendet pe) {
 		super(name, y, pe);
-		d = Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign);
+		d = Management.instance.currentDesign;
 	}
 	@Override
 	public void drawComponent(int x, int y) {

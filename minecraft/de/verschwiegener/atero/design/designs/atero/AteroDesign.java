@@ -15,8 +15,9 @@ import net.minecraft.util.MathHelper;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.settings.SettingsItem.Category;
-import de.verschwiegener.atero.ui.clickgui.Button;
-import de.verschwiegener.atero.ui.clickgui.Panel;
+import de.verschwiegener.atero.ui.audio.AudioPanel;
+import de.verschwiegener.atero.ui.clickgui.ClickGUIButton;
+import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
@@ -62,7 +63,7 @@ public class AteroDesign extends Design {
 	}
 
 	@Override
-	public void drawClickGuiPanel(Panel p) {
+	public void drawClickGuiPanel(ClickGUIPanel p) {
 		//Animates the extension
 		if(p.isAnimate()) {
 			switch (p.getState()) {
@@ -87,7 +88,7 @@ public class AteroDesign extends Design {
 		RenderUtil.fillRect(p.getX(), p.getY(), p.getWidth(), p.getAnimationheight(), colorBlack);
 		RenderUtil.fillRect(p.getX(), p.getY() + getClickGuiPanelYOffset() - 1, p.getWidth(), 1, colorBlue);
 		frText.drawString(p.getName(), (p.getX() * 2) + (p.getWidth() - (frText.getStringWidth(p.getName()) / 2)), (p.getY() * 2), Color.white.getRGB());
-		for(Button b : p.getModules()) {
+		for(ClickGUIButton b : p.getModules()) {
 			if(p.getState() == 1) {
 				b.drawButton();
 			}
@@ -95,12 +96,12 @@ public class AteroDesign extends Design {
 	}
 	
 	@Override
-	public boolean isClickGUIPanelHovered(int mouseX, int mouseY, Panel panel) {
+	public boolean isClickGUIPanelHovered(int mouseX, int mouseY, ClickGUIPanel panel) {
 		return mouseX > (panel.getX()) && mouseX < (panel.getX() + panel.getWidth()) && mouseY > (panel.getY() - 1) && mouseY < (panel.getY() + getClickGuiPanelYOffset());
 	}
 
 	@Override
-	public void drawClickGuiModuleButton(Button b) {
+	public void drawClickGuiModuleButton(ClickGUIButton b) {
 		if(!b.getPanel().isAnimate() && !(b.getPanel().getState() == 2)) {
 			if(!Management.instance.modulemgr.getModuleByName(b.getName()).isEnabled()) {
 				frText.drawString(b.getName(), (b.getPanel().getX() * 2) + (b.getPanel().getWidth() - (frText.getStringWidth(b.getName()) / 2)), (b.getPanel().getY() * 2) + (b.getY() * 2), Color.WHITE.getRGB());
@@ -229,6 +230,16 @@ public class AteroDesign extends Design {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void drawAudioPanel(AudioPanel audioPanel, int x, int y, int width, int height) {
+	    super.drawAudioPanel(audioPanel, x, y, width, height);
+	    System.out.println("Width: " + width);
+	    System.out.println("Height: " + height);
+	    RenderUtil.fillRect(x, y, width, height, colorBlack);
+	    RenderUtil.fillRect(x, y, (width / 5), height, colorGray);
+	    audioPanel.getTitlefont().getFontrenderer().drawString("Musik", x + (audioPanel.getTitlefont().getFontrenderer().getStringWidth2("Musik") / 2), y + 30, Color.WHITE.getRGB());
 	}
 
 }

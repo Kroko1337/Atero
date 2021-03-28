@@ -8,31 +8,29 @@ import de.verschwiegener.atero.command.Command;
 
 public class StreamManager {
 
-  private ArrayList<Stream> streams = new ArrayList<Stream>();
-  private ArrayList<StreamLoader> streamloader = new ArrayList<StreamLoader>();
+    private ArrayList<Stream> streams = new ArrayList<Stream>();
+    private ArrayList<StreamLoader> streamloader = new ArrayList<StreamLoader>();
 
-  public StreamManager() {
-	  streamloader.add(new IloveMusikStreamLoader());
-  }
+    public StreamManager() {
+	streamloader.add(new IloveMusikStreamLoader());
+    }
 
-  public Stream getStreamByName(final String name) {
-    return streams
-        .stream()
-        .filter(
-            new Predicate<Stream>() {
-              @Override
-              public boolean test(Stream module) {
-                return module.getChannelName().equalsIgnoreCase(name);
-              }
-            })
-        .findFirst()
-        .orElse(null);
-  }
-  public void updateStreams() {
-	  for(StreamLoader streamloader : streamloader) {
-		  streamloader.loadStreams();
-	  }
-  }
-  public ArrayList<Stream> getStreams() {
-return streams;}
+    public Stream getStreamByName(final String name) {
+	return streams.stream().filter(new Predicate<Stream>() {
+	    @Override
+	    public boolean test(Stream module) {
+		return module.getChannelName().equalsIgnoreCase(name);
+	    }
+	}).findFirst().orElse(null);
+    }
+
+    public void updateStreams() {
+	for (StreamLoader streamloader : streamloader) {
+	    streamloader.loadStreams();
+	}
+    }
+
+    public ArrayList<Stream> getStreams() {
+	return streams;
+    }
 }
