@@ -11,18 +11,20 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 public class Streamer {
     
-    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService EXECUTOR_SERVICE;
     private final BasicPlayer basicPlayer;
     private double currentVolume;
 
     public Streamer() {
 	basicPlayer = new BasicPlayer();
 	setVolume(0.5D);
+	EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 	startUpdateTask();
     }
     
     private void startUpdateTask() {
-	   EXECUTOR_SERVICE.scheduleAtFixedRate(this::updateStream, 0L, 30L, TimeUnit.SECONDS);
+	System.err.println("Schedule");
+	EXECUTOR_SERVICE.scheduleAtFixedRate(this::updateStreams, 5L, 20L, TimeUnit.SECONDS);
     }
 
     public float getVolume() {
@@ -41,6 +43,11 @@ public class Streamer {
 	    e.printStackTrace();
 	}
     }
+    
+    private void updateStreams() {
+	Management.instance.streamManager.updateStreams();	
+    }
+    
     public void updateStream() {
 	play(Management.instance.currentStream);
     }

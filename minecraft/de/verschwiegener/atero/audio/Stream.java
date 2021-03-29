@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import de.verschwiegener.atero.Management;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class Stream {
@@ -109,18 +110,22 @@ public class Stream {
     public String getFullChannelName() {
 	return fullChannelName;
     }
+    public void setTexture(DynamicTexture texture) {
+	this.texture = texture;
+    }
+    public void setLocation(ResourceLocation location) {
+	this.location = location;
+    }
     public void updateStream(String title, String artist, String coverURL) throws MalformedURLException, IOException {
 	this.title = shortenString(title, 17);
 	this.artist = shortenString(artist, 17);
-	this.coverURL = coverURL;
 	this.fulltitle = title;
-	image = ImageIO.read(new URL(coverURL));
-	if (image != null) {
-	    texture = new DynamicTexture(image);
-	    Minecraft.getMinecraft().getTextureManager().deleteTexture(location);
-	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(), texture);
-	} else {
-	    Management.instance.streamManager.getStreams().remove(this);
+	if(!(this.coverURL == coverURL)) {
+	    this.coverURL = coverURL;
+	    image = ImageIO.read(new URL(coverURL));
+	    if (image == null) {
+		Management.instance.streamManager.getStreams().remove(this);
+	    }
 	}
     }
 

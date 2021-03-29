@@ -68,7 +68,6 @@ public class AudioPanel extends GuiScreen {
 	for (final Stream stream : Management.instance.streamManager.getStreams()) {
 	    if (stream.getProvider() == getCurrentProvider() && stream.getImage() != null
 		    && stream.getChannelURL() != null) {
-		System.out.println("Stream: " + stream.getChannelName());
 		channelbuttons.add(new ChannelButton(stream.getChannelName(), currentX, currentY, this, widthOffset,
 			heightOffset));
 		currentX += Math.round(widthOffset);

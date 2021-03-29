@@ -38,7 +38,7 @@ public class ChannelButton {
 	this.y = y + yOffset;
 	
 	if (stream != null && stream.getImage() != null) {
-	    drawImage(this.x + width / 4, this.y + height / 8, width - width / 2, height - height / 2, stream.getLocation(), stream.getTexture());
+	    drawImage(this.x + width / 4, this.y + height / 8, width - width / 2, height - height / 2, stream);
 	    final int stringWidth = fontrenderer.getStringWidth(channel);
 	    fontrenderer.drawString(channel, this.x * 2 + width - stringWidth / 2, (this.y + height / 4 * 2.7F) * 2, Management.instance.colorBlue.getRGB());
 	    panel.getSongFont().drawString(stream.getTitle(), this.x * 2 + width - panel.getSongFont().getStringWidth(stream.getTitle()) / 2, (this.y + height / 4 * 3.1F) * 2, Color.white.getRGB());
@@ -58,9 +58,12 @@ public class ChannelButton {
 	return mouseX > x && mouseX < (x + width) && mouseY > y && mouseY < (y + height);
     }
 
-    private void drawImage(final int xPos, final int yPos, final int width, final int height, final ResourceLocation location, final DynamicTexture texture) {
-	texture.updateDynamicTexture();
-	Minecraft.getMinecraft().getTextureManager().bindTexture(location);
+    private void drawImage(final int xPos, final int yPos, final int width, final int height, Stream stream) {
+	Minecraft.getMinecraft().getTextureManager().deleteTexture(stream.getLocation());
+	stream.setTexture(new DynamicTexture(stream.getImage()));
+	stream.setLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(stream.getChannelName(), stream.getTexture()));
+	stream.getTexture().updateDynamicTexture();
+	Minecraft.getMinecraft().getTextureManager().bindTexture(stream.getLocation());
 	GL11.glEnable(GL11.GL_BLEND);
 	GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	GL11.glDisable(GL11.GL_ALPHA_TEST);

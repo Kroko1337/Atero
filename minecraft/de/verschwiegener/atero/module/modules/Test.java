@@ -29,8 +29,6 @@ import net.minecraft.client.Minecraft;
 
 public class Test extends Module {
 	
-	Streamer streamer;
-	int ticks;
 	
 	public Test() {
 		super("Test", "Test", Keyboard.KEY_NONE, Category.Combat);
@@ -51,25 +49,18 @@ public class Test extends Module {
 		items2.add("Hallo");
 		items.add(new SettingsItem("Combobox", items2, "Test", "", ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
-		
-		streamer = new Streamer();
 	}
 	
 	@Override
 	public void onEnable() {
 		super.onEnable();
 		Minecraft.getMinecraft().displayGuiScreen(new AudioPanel());
-		ticks = 0;
+		toggle();
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		ticks++;
-		if(ticks % 1000 == 0L) {
-		    System.out.println("Ticks: " + ticks);
-		    Management.instance.streamManager.updateStreams();
-		}
 	}
 	
 	@Override

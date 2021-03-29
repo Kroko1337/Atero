@@ -36,7 +36,6 @@ public class IloveMusikStreamLoader extends StreamLoader {
     @Override
     public void loadStreams() {
 	try {
-	    System.out.println("Update");
 	    InputStream inputStream = new URL(getDEFAULT_BASE_URL()).openStream();
 	    JsonParser parser = new JsonParser();
 	    JsonObject JSONObject = parser.parse(IOUtils.toString(inputStream)).getAsJsonObject();
@@ -55,6 +54,7 @@ public class IloveMusikStreamLoader extends StreamLoader {
 		    }
 		}
 	    }
+	    inputStream.close();
 	} catch (JsonSyntaxException | IOException e) {
 	    e.printStackTrace();
 	}
