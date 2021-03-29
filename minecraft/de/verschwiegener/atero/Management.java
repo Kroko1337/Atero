@@ -43,6 +43,7 @@ public class Management {
 	public DesignManager designmgr;
 	public ClickGUI clickgui;
 	public Fontrenderer fontrenderer;
+	public Fontrenderer fontrendererBold;
 	public StreamManager streamManager;
 	public Stream currentStream;
 	public Streamer streamer;
@@ -56,7 +57,7 @@ public class Management {
 		streamManager = new StreamManager();
 		streamManager.updateStreams();
 		fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
-		
+		fontrendererBold = new Fontrenderer( Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F, "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=", true, false);
 		streamer = new Streamer();
 		
 		clickgui = new ClickGUI();

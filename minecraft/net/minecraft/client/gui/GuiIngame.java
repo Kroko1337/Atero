@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 import java.awt.Color;
@@ -350,8 +351,8 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
         }
         
-        Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign).drawGUIIngame(this);
-        
+        CustomGUIIngame.drawArrayList();
+        CustomGUIIngame.drawMusikTab();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

@@ -32,7 +32,7 @@ public class AudioPanel extends GuiScreen {
     private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=";
 
     private final Fontrenderer titlefont;
-    private final Fontrenderer songFont;
+    private static Fontrenderer songFont;
     double slidery;
     private double rotatevalue = 0;
     private int lengthOffset = 0;
@@ -225,7 +225,7 @@ public class AudioPanel extends GuiScreen {
 	return height;
     }
 
-    public Fontrenderer getSongFont() {
+    public static Fontrenderer getSongFont() {
 	return songFont;
     }
 
