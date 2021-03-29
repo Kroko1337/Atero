@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.ui.mainmenu.AltManager;
 import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
 
 import java.io.BufferedReader;
@@ -238,6 +239,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
         this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online", new Object[0])));
+        this.buttonList.add(new GuiButton(500, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 3, "Account"));
     }
 
     /**
@@ -306,6 +308,9 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
                 GuiYesNo guiyesno = GuiSelectWorld.func_152129_a(this, worldinfo.getWorldName(), 12);
                 this.mc.displayGuiScreen(guiyesno);
             }
+        }
+        if(button.id == 500) {
+            this.mc.displayGuiScreen(new AltManager(this)); 
         }
     }
 
@@ -558,7 +563,6 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.drawString(this.fontRendererObj, this.openGLWarning1, this.field_92022_t, this.field_92021_u, -1);
             this.drawString(this.fontRendererObj, this.openGLWarning2, (this.width - this.field_92024_r) / 2, ((GuiButton)this.buttonList.get(0)).yPosition - 12, -1);
         }
-
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

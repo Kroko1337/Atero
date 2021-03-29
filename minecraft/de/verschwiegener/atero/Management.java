@@ -1,6 +1,9 @@
 package de.verschwiegener.atero;
 
 import java.awt.Color;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.lwjgl.input.Keyboard;
 
@@ -47,6 +50,7 @@ public class Management {
 	public StreamManager streamManager;
 	public Stream currentStream;
 	public Streamer streamer;
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 	public void start() {
 		fontmgr = new FontManager();
@@ -57,7 +61,7 @@ public class Management {
 		streamManager = new StreamManager();
 		streamManager.updateStreams();
 		fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
-		fontrendererBold = new Fontrenderer( Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F, "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=", true, false);
+		fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F, "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=", true, false);
 		streamer = new Streamer();
 		
 		clickgui = new ClickGUI();
@@ -69,10 +73,14 @@ public class Management {
 		return CLIENT_NAME + " Version:" + CLIENT_VERSION;
 	}
 	
+	public ExecutorService getExecutor() {
+	    return executor;
+	}
+	
 	public void onKey(int key) {
-		if(Keyboard.isKeyDown(key)) {
-			modulemgr.onKey(key);
-		}
+	    if (Keyboard.isKeyDown(key)) {
+		modulemgr.onKey(key);
+	    }
 	}
 
 }

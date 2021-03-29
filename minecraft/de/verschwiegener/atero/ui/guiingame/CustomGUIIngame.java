@@ -43,7 +43,7 @@ public class CustomGUIIngame {
     }
     public static void drawMusikTab() {
 	Stream stream = Management.instance.currentStream;
-	if(stream != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)) {
+	if(stream != null) {
 	    ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
 	    final int scaleFactor = sr.getScaleFactor();
 	    Fontrenderer fontRenderer = Management.instance.fontrendererBold;
@@ -58,6 +58,7 @@ public class CustomGUIIngame {
    	stream.setLocation(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(stream.getChannelName(), stream.getTexture()));
    	stream.getTexture().updateDynamicTexture();
    	Minecraft.getMinecraft().getTextureManager().bindTexture(stream.getLocation());
+   	GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0.0F, 0.0F, width, height, width, height);
        }
 
