@@ -23,6 +23,15 @@ public class StreamManager {
 	    }
 	}).findFirst().orElse(null);
     }
+    
+    public Stream getStreamByFullName(final String name) {
+	return streams.stream().filter(new Predicate<Stream>() {
+	    @Override
+	    public boolean test(Stream module) {
+		return module.getFullChannelName().equalsIgnoreCase(name);
+	    }
+	}).findFirst().orElse(null);
+    }
 
     public void updateStreams() {
 	for (StreamLoader streamloader : streamloader) {

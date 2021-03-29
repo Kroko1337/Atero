@@ -6,7 +6,9 @@ import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventManager;
 
+import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
+import de.verschwiegener.atero.audio.Streamer;
 import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.design.DesignManager;
@@ -42,6 +44,8 @@ public class Management {
 	public ClickGUI clickgui;
 	public Fontrenderer fontrenderer;
 	public StreamManager streamManager;
+	public Stream currentStream;
+	public Streamer streamer;
 	
 	public void start() {
 		fontmgr = new FontManager();
@@ -52,6 +56,8 @@ public class Management {
 		streamManager = new StreamManager();
 		streamManager.updateStreams();
 		fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
+		
+		streamer = new Streamer();
 		
 		clickgui = new ClickGUI();
 		

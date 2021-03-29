@@ -28,15 +28,16 @@ public class AudioPanel extends GuiScreen {
     private final ArrayList<ChannelButton> channelbuttons = new ArrayList<ChannelButton>();
     private final Minecraft mc = Minecraft.getMinecraft();
     private Provider currentProvider = Provider.values()[0];
-    private Stream currentStream;
 
     private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=";
 
     private final Fontrenderer titlefont;
     private final Fontrenderer songFont;
     double slidery;
-    private int rotatevalue = 0;
-    private String rotateString = "";
+    private double rotatevalue = 0;
+    private int lengthOffset = 0;
+    private boolean switchRotate;
+    private int switchRotate2 = 0;
 
     public AudioPanel() {
 	x = 100;
@@ -65,7 +66,8 @@ public class AudioPanel extends GuiScreen {
 	int currentX = 0;
 	int currentY = 0;
 	for (final Stream stream : Management.instance.streamManager.getStreams()) {
-	    if (stream.getProvider() == getCurrentProvider() && stream.getImage() != null) {
+	    if (stream.getProvider() == getCurrentProvider() && stream.getImage() != null && stream.getChannelURL() != null) {
+		System.out.println("Stream: " + stream.getChannelName());
 		channelbuttons.add(new ChannelButton(stream.getChannelName(), currentX, currentY, this, widthOffset,
 			heightOffset));
 		currentX += Math.round(widthOffset);
@@ -81,20 +83,22 @@ public class AudioPanel extends GuiScreen {
     
     @Override
     public void handleMouseInput() throws IOException {
+	final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
+	final int scaleFactor = scale.getScaleFactor();
+	//Scrolling
 	int wheelD = (Mouse.getEventDWheel() / 10);
-	int mouseY = -(Mouse.getEventY() - 1000) / 2;
-	int mouseX = Mouse.getEventX() / 2;
-	if(isMouseHovered(mouseX, mouseY)) {
+	int mouseY = Mouse.getEventY() / scaleFactor - 30;
+	int mouseX = Mouse.getEventX() / scaleFactor;
+	if (isMouseHovered(mouseX, mouseY)) {
 	    scrollY += wheelD;
-	    if(scrollY > 0) {
+	    if (scrollY > 0) {
 		scrollY = 0;
 	    }
-	    if(scrollY < -maxScrollY) {
+	    if (scrollY < -maxScrollY) {
 		scrollY = -maxScrollY;
 	    }
-	    slidery =  (maxScrollY / (height - 30)) * scrollY / 9;
-	    //System.out.println("Y: " + -slidery);
-	    
+	    slidery = (maxScrollY / (height - 30)) * scrollY / 9;
+
 	}
         super.handleMouseInput();
     }
@@ -127,29 +131,40 @@ public class AudioPanel extends GuiScreen {
 	RenderUtil.drawFullCircle(x + ((width - (width / 5)) / 2) + (width / 5), y + (height - 15), 14, true, Management.instance.colorBlack);
 	
 	RenderUtil.drawPlay(x + ((width - (width / 5)) / 2) + (width / 5) - 5, y + (height - 25),15,20, Management.instance.colorGray);
+	
+	
+	
+	Stream currentStream = Management.instance.currentStream;
 	if(currentStream != null) {
-	    Management.instance.fontrenderer.drawString(currentStream.getFulltitle(), (x * 2) +  (width / 5) * 2, (y + (height)) * 2 - 40, Color.WHITE.getRGB());
-	    
-	   // rotateString(rotateString, Minecraft.getMinecraft().getSystemTime());
-	    System.out.println("Rotate: " + rotateString);
+	    //Rotate ChannelName if length > 30
+	    if(currentStream.getFulltitle().length() > 30) {
+		if(Minecraft.getMinecraft().getSystemTime() % 2 == 0) {
+		    if(rotatevalue >= lengthOffset) {
+			switchRotate2 = 1;
+		    }else if(rotatevalue < -1) {
+			switchRotate2 = 0;
+		    }
+		    double offset = 0.08;
+		    if(switchRotate2 == 1) {
+			rotatevalue -= offset;
+		    }else {
+			rotatevalue += offset;
+		    }
+		}
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL11.glScissor(x * scaleFactor + (width / 5) * 2, y * scaleFactor, 170 * scaleFactor, Management.instance.fontrenderer.getBaseStringHeight() * 4);
+		Management.instance.fontrenderer.drawString(currentStream.getFulltitle(), (float) ((x * 2) + (width / 5) * 2 - (rotatevalue * Management.instance.fontrenderer.getSpaceWidth())), (y + (height)) * 2 - 40, Color.WHITE.getRGB());
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	    }else {
+		Management.instance.fontrenderer.drawString(currentStream.getFulltitle(), (x * 2) + (width / 5) * 2, (y + (height)) * 2 - 40, Color.WHITE.getRGB());
+	    }
 	}
 	
 	GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
     }
-    private void rotateString(String input, float partialTicks) {
-	if(partialTicks % 400 == 0) {
-	    //Rotate String smoother machen
-	    rotatevalue++;
-	    if(rotatevalue > input.length()) {
-		rotatevalue = 0;
-	    }
-	    //int i = rotatevalue % input.length();
-	    rotateString =  input.substring(rotatevalue) + input.substring(0, rotatevalue);   
-	}
-    }
-    public void setRotateString(String rotateString) {
-	this.rotateString = rotateString;
+    
+    private void drawSlider() {
+	
     }
 
     public ProviderButton getButtonByPosition(final AudioPanel audiopanel, final int x, final int y) {
@@ -188,14 +203,18 @@ public class AudioPanel extends GuiScreen {
 	return y;
     }
     public void setCurrentStream(Stream currentStream) {
-	this.currentStream = currentStream;
-	setRotateString(currentStream.getFulltitle() + " ---- ");
+	Management.instance.currentStream = currentStream;
+	Management.instance.streamer.updateStream();
+	rotatevalue = 0;
+	lengthOffset = currentStream.getFulltitle().length() - 26;
     }
 
     @Override
     protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
 	super.mouseClicked(mouseX, mouseY, mouseButton);
-	channelbuttons.forEach(button -> button.onMouseClicked(mouseX, mouseY, mouseButton));
+	if (mouseY < (y + height) && mouseY > y) {
+	    channelbuttons.forEach(button -> button.onMouseClicked(mouseX, mouseY, mouseButton));
+	}
 	if (mouseButton == 0) {
 	    final ProviderButton button = getButtonByPosition(this, mouseX, mouseY);
 	    if (button != null) {

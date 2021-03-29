@@ -20,6 +20,7 @@ public class Stream {
 
     private final Provider provider;
     private final String channelName;
+    private final String fullChannelName;
     private final String channelURL;
     private String title;
     private String fulltitle;
@@ -34,6 +35,7 @@ public class Stream {
 	    final String artist, final String coverURL) throws MalformedURLException, IOException {
 	this.provider = provider;
 	this.channelName = shortenString(channelName, 23);
+	this.fullChannelName = channelName;
 	this.channelURL = channelURL;
 	this.title = shortenString(title, 17);
 	this.artist = shortenString(artist, 17);
@@ -42,8 +44,7 @@ public class Stream {
 	image = ImageIO.read(new URL(coverURL));
 	if (image != null) {
 	    texture = new DynamicTexture(image);
-	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(),
-		    texture);
+	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(), texture);
 	} else {
 	    Management.instance.streamManager.getStreams().remove(this);
 	}
@@ -99,6 +100,9 @@ public class Stream {
     }
     public String getFulltitle() {
 	return fulltitle;
+    }
+    public String getFullChannelName() {
+	return fullChannelName;
     }
 
     private String shortenString(final String input, final int length) {

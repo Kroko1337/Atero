@@ -1,34 +1,93 @@
 package de.verschwiegener.atero.audio;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import de.verschwiegener.atero.Management;
 import javazoom.jlgui.basicplayer.BasicPlayer;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
 public class Streamer {
-  BasicPlayer bp;
+    
+    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+    private final BasicPlayer basicPlayer;
+    private double currentVolume;
 
-  public Streamer() {
-    bp = new BasicPlayer();
-  }
-
-  public synchronized void play(double gain) {
-    try {
-      bp.stop();
-      bp.open(new URL("https://streams.ilovemusic.de/iloveradio109.mp3").openStream());
-      bp.play();
-      bp.setGain(gain);
-    } catch (BasicPlayerException | IOException e) {
-      e.printStackTrace();
+    public Streamer() {
+	basicPlayer = new BasicPlayer();
+	setVolume(50);
+	startUpdateTask();
     }
-  }
-
-  public synchronized void stop() {
-    try {
-      bp.pause();
-    } catch (BasicPlayerException e) {
-      e.printStackTrace();
+    
+    private void startUpdateTask() {
+	   EXECUTOR_SERVICE.scheduleAtFixedRate(this::updateStream, 0L, 30L, TimeUnit.SECONDS);
     }
-  }
+
+    public float getVolume() {
+	return (float) currentVolume;
+    }
+
+    public boolean isPlaying() {
+	return basicPlayer.getStatus() == 0;
+    }
+
+    public synchronized void play() {
+	try {
+	    basicPlayer.resume();
+	    basicPlayer.setGain(currentVolume);
+	} catch (final BasicPlayerException e) {
+	    e.printStackTrace();
+	}
+    }
+    public void updateStream() {
+	play(Management.instance.currentStream);
+    }
+
+    public synchronized void play(final Stream stream) {
+	try {
+	    basicPlayer.stop();
+	    basicPlayer.open(new URL(stream.getChannelURL()).openStream());
+	    basicPlayer.play();
+	    basicPlayer.setGain(currentVolume);
+	} catch (BasicPlayerException | java.io.IOException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    public void setVolume(final double gain) {
+	try {
+	    currentVolume = (gain / 100);
+	    basicPlayer.setGain(gain / 100);
+	} catch (final BasicPlayerException e) {
+	    e.printStackTrace();
+	}
+    }
+
+    public synchronized void stop() {
+	try {
+	    basicPlayer.pause();
+	} catch (final BasicPlayerException e) {
+	    e.printStackTrace();
+	}
+    }
+    public synchronized void resume() {
+	try {
+	    basicPlayer.resume();
+	}catch(BasicPlayerException ex) {
+	}
+    }
+
+    public void toggle() {
+	try {
+	    if (basicPlayer.getStatus() == 1 || basicPlayer.getStatus() == 2) {
+		basicPlayer.resume();
+	    } else if (basicPlayer.getStatus() == 0) {
+		basicPlayer.pause();
+	    }
+	} catch (final BasicPlayerException e) {
+	    e.printStackTrace();
+	}
+    }
 }

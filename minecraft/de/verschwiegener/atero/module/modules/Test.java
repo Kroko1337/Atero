@@ -59,24 +59,21 @@ public class Test extends Module {
 	public void onEnable() {
 		super.onEnable();
 		Minecraft.getMinecraft().displayGuiScreen(new AudioPanel());
-		toggle();
-		//ticks = 0;
-		//streamer.play(0.5);
+		ticks = 0;
 	}
 	
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		//ticks++;
-		//if(ticks % 400 == 0L) {
-			//System.out.println("Ticks: " + ticks);
-		//}
+		ticks++;
+		if(ticks % 400 == 0L) {
+			System.out.println("Ticks: " + ticks);
+		}
 	}
 	
 	@Override
 	public void onDisable() {
 		super.onDisable();
-		//streamer.stop();
 	}
 
 }

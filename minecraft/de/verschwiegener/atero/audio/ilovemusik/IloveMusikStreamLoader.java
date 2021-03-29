@@ -43,8 +43,7 @@ public class IloveMusikStreamLoader extends StreamLoader {
 		JsonArray JSONEntries = entry.getValue().getAsJsonArray();
 		for (JsonElement JSONElement : JSONEntries) {
 		    JsonObject streamObject = JSONElement.getAsJsonObject();
-		    Stream stream = Management.instance.streamManager
-			    .getStreamByName(streamObject.get("name").getAsString());
+		    Stream stream = Management.instance.streamManager.getStreamByFullName(streamObject.get("name").getAsString());
 		    if (stream != null) {
 			stream.setTitle(streamObject.get("title").getAsString());
 			stream.setArtist(streamObject.get("artist").getAsString());
