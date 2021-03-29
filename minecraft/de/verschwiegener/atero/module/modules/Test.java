@@ -66,8 +66,9 @@ public class Test extends Module {
 	public void onUpdate() {
 		super.onUpdate();
 		ticks++;
-		if(ticks % 400 == 0L) {
-			//System.out.println("Ticks: " + ticks);
+		if(ticks % 1000 == 0L) {
+		    System.out.println("Ticks: " + ticks);
+		    Management.instance.streamManager.updateStreams();
 		}
 	}
 	

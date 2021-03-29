@@ -36,6 +36,7 @@ public class IloveMusikStreamLoader extends StreamLoader {
     @Override
     public void loadStreams() {
 	try {
+	    System.out.println("Update");
 	    InputStream inputStream = new URL(getDEFAULT_BASE_URL()).openStream();
 	    JsonParser parser = new JsonParser();
 	    JsonObject JSONObject = parser.parse(IOUtils.toString(inputStream)).getAsJsonObject();
@@ -45,9 +46,7 @@ public class IloveMusikStreamLoader extends StreamLoader {
 		    JsonObject streamObject = JSONElement.getAsJsonObject();
 		    Stream stream = Management.instance.streamManager.getStreamByFullName(streamObject.get("name").getAsString());
 		    if (stream != null) {
-			stream.setTitle(streamObject.get("title").getAsString());
-			stream.setArtist(streamObject.get("artist").getAsString());
-			stream.setCoverURL(streamObject.get("cover").getAsString());
+			stream.updateStream(streamObject.get("title").getAsString(), streamObject.get("artist").getAsString(), streamObject.get("cover").getAsString());
 		    } else {
 			Management.instance.streamManager.getStreams().add(new Stream(Provider.ILoveMusik,
 				streamObject.get("name").getAsString(), streamObject.get("stream_url").getAsString(),

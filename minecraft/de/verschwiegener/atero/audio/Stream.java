@@ -26,7 +26,7 @@ public class Stream {
     private String fulltitle;
     private String artist;
     private String coverURL;
-    private final BufferedImage image;
+    private BufferedImage image;
     private DynamicTexture texture;
 
     private ResourceLocation location;
@@ -44,6 +44,11 @@ public class Stream {
 	image = ImageIO.read(new URL(coverURL));
 	if (image != null) {
 	    texture = new DynamicTexture(image);
+	    //if(Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(), texture) != null) {
+		
+	    //}
+	    System.out.println("NEw");
+	    Minecraft.getMinecraft().getTextureManager().deleteTexture(location);
 	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(), texture);
 	} else {
 	    Management.instance.streamManager.getStreams().remove(this);
@@ -103,6 +108,20 @@ public class Stream {
     }
     public String getFullChannelName() {
 	return fullChannelName;
+    }
+    public void updateStream(String title, String artist, String coverURL) throws MalformedURLException, IOException {
+	this.title = shortenString(title, 17);
+	this.artist = shortenString(artist, 17);
+	this.coverURL = coverURL;
+	this.fulltitle = title;
+	image = ImageIO.read(new URL(coverURL));
+	if (image != null) {
+	    texture = new DynamicTexture(image);
+	    Minecraft.getMinecraft().getTextureManager().deleteTexture(location);
+	    location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(getChannelName(), texture);
+	} else {
+	    Management.instance.streamManager.getStreams().remove(this);
+	}
     }
 
     private String shortenString(final String input, final int length) {

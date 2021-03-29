@@ -108,6 +108,7 @@ public class AudioPanel extends GuiScreen {
 	super.drawScreen(mouseX, mouseY, partialTicks);
 	x = mc.displayWidth / 4 - width / 2;
 	y = mc.displayHeight / 4 - height / 2;
+	Stream currentStream = Management.instance.currentStream;
 
 	// GetSlider Value
 	if (sliderselected && isMouseSliderHoveredNoneY(mouseX, mouseY)) {
@@ -138,13 +139,17 @@ public class AudioPanel extends GuiScreen {
 	// Draw Play Pause
 	RenderUtil.drawFullCircle(x + ((width - (width / 5)) / 2) + (width / 5), y + (height - 15), 14, true,
 		Management.instance.colorBlack);
-	RenderUtil.drawPlay(x + ((width - (width / 5)) / 2) + (width / 5) - 5, y + (height - 25), 15, 20,
-		Management.instance.colorGray);
+	
+	if(!Management.instance.streamer.isPlaying()) {
+	    RenderUtil.drawPlay(x + ((width - (width / 5)) / 2) + (width / 5) - 5, y + (height - 25), 15, 20,
+			Management.instance.colorGray);
+	}else {
+	    RenderUtil.drawPause(x + ((width - (width / 5)) / 2) + (width / 5) - 6, y + (height - 25), 15, 20, Management.instance.colorGray);
+	}
 
 	drawSlider();
 
 	// Draw Title and Movement
-	Stream currentStream = Management.instance.currentStream;
 	if (currentStream != null) {
 	    // Rotate ChannelName if length > 30
 	    if (currentStream.getFulltitle().length() > 30) {
@@ -201,6 +206,10 @@ public class AudioPanel extends GuiScreen {
 
     private boolean isMouseSliderHoveredNoneY(int mouseX, int mouseY) {
 	return mouseX > (x + ((width / 5) * 4) - 1) && mouseX < (x + ((width / 5) * 4) + 76);
+    }
+    private boolean isPlayPauseHovered(int mouseX, int mouseY) {
+	return mouseX > (x + ((width - (width / 5)) / 2) + (width / 5) - 8) && mouseX < (x + ((width - (width / 5)) / 2) + (width / 5) + 5) &&
+		mouseY > (y + (height - 25)) && mouseY < (y + (height - 5));
     }
 
     private double getSliderValue(int mouseX, int mouseY) {
@@ -260,6 +269,8 @@ public class AudioPanel extends GuiScreen {
 	    } else {
 		if (isMouseSliderHovered(mouseX, mouseY)) {
 		    sliderselected = true;
+		}else if(isPlayPauseHovered(mouseX, mouseY)) {
+		   Management.instance.streamer.toggle();
 		}
 	    }
 	}

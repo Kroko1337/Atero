@@ -107,6 +107,10 @@ public class RenderUtil {
 	GL11.glVertex2d(x + width, y + (height / 2));
 	disable();
     }
+    public static void drawPause(final int x, final int y, final int width, final int height, final Color color) {
+	fillRect(x, y, width / 2 - 3, height, color);
+	fillRect(x + (width / 3) * 2 - 2, y, width / 2 - 3, height, color);
+    }
     
     public static void drawlefthalf(final float x, final float y, final float thicknes, final Color color) {
 	final float radius = 70;
