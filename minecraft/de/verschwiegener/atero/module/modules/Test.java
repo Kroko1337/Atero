@@ -67,7 +67,7 @@ public class Test extends Module {
 		super.onUpdate();
 		ticks++;
 		if(ticks % 400 == 0L) {
-			System.out.println("Ticks: " + ticks);
+			//System.out.println("Ticks: " + ticks);
 		}
 	}
 	

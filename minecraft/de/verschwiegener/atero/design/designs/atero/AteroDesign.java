@@ -164,7 +164,6 @@ public class AteroDesign extends Design {
 		if(!c.isParentextendet()) {
 			double percent = (c.getItem().getCurrentValue() - c.getItem().getMinValue()) / (c.getItem().getMaxValue() - c.getItem().getMinValue());
 			frText.drawString(c.getName(), (c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 3) * 2, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.white.getRGB());
-			double value = Math.round(c.getItem().getCurrentValue() * 100) / 10;
 			frText.drawString(String.valueOf(df.format(c.getItem().getCurrentValue())), (c.getPanelExtendet().getPanel().getX() + (c.getPanelExtendet().getWidth() * 2)) * 2 - 40, (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) * 2 - c.getPanelExtendet().getPanel().getD().getClickGuiPanelYOffset(), Color.WHITE.getRGB());
 			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, c.getPanelExtendet().getWidth(), 1.5D, colorGray);
 			RenderUtil.fillRect((c.getPanelExtendet().getPanel().getX() + c.getPanelExtendet().getWidth() + 1), (c.getY() + c.getPanelExtendet().getPanel().getY() + c.getPanelExtendet().getY()) + 5, percent * c.getPanelExtendet().getWidth(), 1.5D, colorBlue);

@@ -17,7 +17,7 @@ public class Streamer {
 
     public Streamer() {
 	basicPlayer = new BasicPlayer();
-	setVolume(50);
+	setVolume(0.5D);
 	startUpdateTask();
     }
     
@@ -58,8 +58,8 @@ public class Streamer {
 
     public void setVolume(final double gain) {
 	try {
-	    currentVolume = (gain / 100);
-	    basicPlayer.setGain(gain / 100);
+	    currentVolume = gain;
+	    basicPlayer.setGain(gain);
 	} catch (final BasicPlayerException e) {
 	    e.printStackTrace();
 	}
