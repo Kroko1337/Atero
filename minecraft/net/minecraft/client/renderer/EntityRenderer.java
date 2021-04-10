@@ -1246,8 +1246,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         return i > 200 ? 1.0F : 0.7F + MathHelper.sin(((float)i - partialTicks) * (float)Math.PI * 0.2F) * 0.3F;
     }
 
-    public void func_181560_a(float p_181560_1_, long p_181560_2_)
-    {
+    public void func_181560_a(float p_181560_1_, long p_181560_2_) {
         this.frameInit();
         boolean flag = Display.isActive();
 

@@ -108,7 +108,8 @@ public class Killaura extends Module {
 					} else {
 						if (timer.hasReached(CCPS)) {
 							timer.reset();
-							mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, C02PacketUseEntity.Action.ATTACK));
+							mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, t.hitVec, C02PacketUseEntity.Action.ATTACK));
+							//mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(t.entityHit, C02PacketUseEntity.Action.ATTACK));
 							mc.thePlayer.swingItem();
 							mc.thePlayer.attackTargetEntityWithCurrentItem(t.entityHit);
 						

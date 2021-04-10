@@ -2,9 +2,12 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AltManager;
 import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
+import de.verschwiegener.atero.util.render.RenderUtil;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -87,9 +90,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     /** Minecraft Realms button. */
     private GuiButton realmsButton;
+    private Fontrenderer fontRenderer;
 
-    public GuiMainMenu()
-    {
+    public GuiMainMenu() {
+	fontRenderer = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 10F, 10F,
+		"", true,
+		false);
         this.openGLWarning2 = field_96138_a;
         this.splashText = "missingno";
         BufferedReader bufferedreader = null;
@@ -213,9 +219,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.addSingleplayerMultiplayerButtons(j, 24);
         }
 
-        this.buttonList.add(new CustomGuiButton(0, this.width / 2 - 100, j + 72 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
-        this.buttonList.add(new CustomGuiButton(4, this.width / 2 + 2, j + 72 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
-        this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
+        
+        //this.buttonList.add(new GuiButtonLanguage(5, this.width / 2 - 124, j + 72 + 12));
 
         synchronized (this.threadLock)
         {
@@ -236,10 +241,12 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
      */
     private void addSingleplayerMultiplayerButtons(int p_73969_1_, int p_73969_2_)
     {
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
-        this.buttonList.add(this.realmsButton = new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online", new Object[0])));
-        this.buttonList.add(new GuiButton(500, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 3, "Account"));
+        this.buttonList.add(new CustomGuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
+        this.buttonList.add(new CustomGuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
+        this.buttonList.add(this.realmsButton = new CustomGuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online", new Object[0])));
+        this.buttonList.add(new CustomGuiButton(500, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 3, "Account"));
+        this.buttonList.add(new CustomGuiButton(0, this.width / 2 - 100, p_73969_1_ + 72 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
+        this.buttonList.add(new CustomGuiButton(4, this.width / 2 + 2, p_73969_1_ + 72 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
     }
 
     /**
@@ -511,41 +518,41 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        GlStateManager.disableAlpha();
-        this.renderSkybox(mouseX, mouseY, partialTicks);
-        GlStateManager.enableAlpha();
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        //GlStateManager.disableAlpha();
+        //this.renderSkybox(mouseX, mouseY, partialTicks);
+        //GlStateManager.enableAlpha();
+        //Tessellator tessellator = Tessellator.getInstance();
+        //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         int i = 274;
         int j = this.width / 2 - i / 2;
         int k = 30;
-        this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
-        this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-        this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
+        //this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
+        //this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
+        //this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
+        
+        GlStateManager.disableTexture2D();
+        //GlStateManager.enableBlend();
+        //GlStateManager.disableAlpha();
+        //GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        //GlStateManager.shadeModel(7425);
+       // GlStateManager.shadeModel(7424);
+        //GlStateManager.disableBlend();
+        //GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        //GlStateManager.pushMatrix();
+        
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderUtil.drawBackround(width, height);
+        //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if ((double)this.updateCounter < 1.0E-4D)
-        {
-            this.drawTexturedModalRect(j + 0, k + 0, 0, 0, 99, 44);
-            this.drawTexturedModalRect(j + 99, k + 0, 129, 0, 27, 44);
-            this.drawTexturedModalRect(j + 99 + 26, k + 0, 126, 0, 3, 44);
-            this.drawTexturedModalRect(j + 99 + 26 + 3, k + 0, 99, 0, 26, 44);
-            this.drawTexturedModalRect(j + 155, k + 0, 0, 45, 155, 44);
-        }
-        else
-        {
-            this.drawTexturedModalRect(j + 0, k + 0, 0, 0, 155, 44);
-            this.drawTexturedModalRect(j + 155, k + 0, 0, 45, 155, 44);
-        }
+        this.fontRenderer.drawString("ATERO", j * 2 + (fontRenderer.getStringWidth2("Atero")), k * 2, Color.WHITE.getRGB());
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);
-        GlStateManager.rotate(-20.0F, 0.0F, 0.0F, 1.0F);
-        float f = 1.8F - MathHelper.abs(MathHelper.sin((float)(Minecraft.getSystemTime() % 1000L) / 1000.0F * (float)Math.PI * 2.0F) * 0.1F);
-        f = f * 100.0F / (float)(this.fontRendererObj.getStringWidth(this.splashText) + 32);
-        GlStateManager.scale(f, f, f);
-        this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
-        GlStateManager.popMatrix();
+        
+        //GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);
+        //GlStateManager.popMatrix();
+        //GlStateManager.pushMatrix();
+        //GlStateManager.disableTexture2D();
+        
         String s = "Minecraft 1.8.8";
 
         if (this.mc.isDemo())

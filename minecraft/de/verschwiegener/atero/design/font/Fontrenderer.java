@@ -30,10 +30,11 @@ public class Fontrenderer {
 	// unicodefont = new UnicodeFont(font.deriveFont(fontSize *
 	// antiAliasingFactor));
 	unicodefont = new UnicodeFont(font, (int) (fontSize * antiAliasingFactor), bold, italic);
-	// unicodefont.addAsciiGlyphs();
+	unicodefont.addAsciiGlyphs();
+	unicodefont.addNeheGlyphs();
 	unicodefont.addGlyphs(chars);
+	unicodefont.addGlyphs(0, 2579);
 	unicodefont.getEffects().add(new ColorEffect(Color.white));
-	// unicodefont.addGlyphs(chars);
 	try {
 	    unicodefont.loadGlyphs();
 	} catch (final Exception e) {
@@ -56,7 +57,7 @@ public class Fontrenderer {
 
 	unicodefont.addGlyphs(text);
 	try {
-	    unicodefont.loadGlyphs();
+	   unicodefont.loadGlyphs();
 	} catch (final Exception e) {
 	    e.printStackTrace();
 	}
@@ -85,9 +86,9 @@ public class Fontrenderer {
 
 	GL11.glScaled(scaled, scaled, scaled);
 
-	unicodefont.addGlyphs(text);
+	//unicodefont.addGlyphs(text);
 	try {
-	    // unicodefont.loadGlyphs();
+	   // unicodefont.loadGlyphs();
 	} catch (final Exception e) {
 	    e.printStackTrace();
 	}

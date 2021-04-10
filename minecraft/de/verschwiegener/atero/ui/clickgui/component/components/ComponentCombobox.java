@@ -1,47 +1,96 @@
 package de.verschwiegener.atero.ui.clickgui.component.components;
 
+import java.awt.Color;
+
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.Design;
+import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
+import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class ComponentCombobox extends Component {
-	
-	Design d;
-	boolean extendet;
 
-	public ComponentCombobox(String name, int y, PanelExtendet pe) {
-		super(name, y, pe);
-		d = Management.instance.currentDesign;
-		extendet = false;
-	}
-	
-	@Override
-	public void drawComponent(int x, int y) {
-		super.drawComponent(x, y);
-		d.drawCombobox(this, this.getY());
-	}
-	@Override
-	public void onMouseClicked(int x, int y, int button) {
-		super.onMouseClicked(x, y, button);
-		if (button == 0) {
-			if (d.isComboboxHovered(x, y, this)) {
-				extendet = !extendet;
-				if (extendet) {
-					getPanelExtendet().extendPanelByYOffset(12 * getItem().getModes().size(), getName());
-				} else {
-					getPanelExtendet().collapsePanelByYOffse(12 * getItem().getModes().size(), getName());
-				}
-			}else if (extendet) {
-				getItem().setCurrent(d.getComboboxItem(x, y, this));
-			}
+    private boolean extendet;
+    private final Fontrenderer fontRenderer;
+
+    public ComponentCombobox(String name, int y, PanelExtendet pe) {
+	super(name, y, pe);
+	extendet = false;
+	fontRenderer = Management.instance.fontrenderer;
+    }
+
+    @Override
+    public void drawComponent(int x, int y) {
+	super.drawComponent(x, y);
+	if (!isParentextendet()) {
+	    int textx = (getComponentX() + 1);
+	    int texty = (getComponentY()) - 6;
+	    fontRenderer.drawString(getName(), (textx + (fontRenderer.getStringWidth(getName()) / 4)) * 2, texty * 2, Color.WHITE.getRGB());
+	    RenderUtil.fillRect((getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + 1),
+		    getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
+	    if (extendet) {
+		texty += 2;
+		for (String str : getItem().getModes()) {
+		    texty += 12;
+		    // frText.drawString(str, (textx + 2) * 2, texty * 2, Color.WHITE.getRGB());
+		    if (str == getItem().getCurrent()) {
+			// RenderUtil.fillRect((ccb.getPanelExtendet().getPanel().getX() +
+			// ccb.getPanelExtendet().getWidth() + 2), (ccb.getY() +
+			// ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) +
+			// 9, 1, 11, colorBlue);
+			fontRenderer.drawString(str, (textx + 2) * 2 + (getPanelExtendet().getWidth() - (fontRenderer.getStringWidth2(str))), texty * 2,
+				Management.instance.colorBlue.getRGB());
+		    } else {
+			fontRenderer.drawString(str, (textx + 2) * 2 + (getPanelExtendet().getWidth() - (fontRenderer.getStringWidth2(str))), texty * 2, Color.WHITE.getRGB());
+		    }
 		}
+	    }
 	}
-	public void onMouseReleased(int mouseX, int mouseY, int state) {
-		super.onMouseReleased(mouseX, mouseY, state);
+    }
+
+    @Override
+    public void onMouseClicked(int x, int y, int button) {
+	super.onMouseClicked(x, y, button);
+	if (button == 0) {
+	    if (isComboboxHovered(x, y)) {
+		extendet = !extendet;
+		if (extendet) {
+		    getPanelExtendet().extendPanelByYOffset(12 * getItem().getModes().size(), getName());
+		} else {
+		    getPanelExtendet().collapsePanelByYOffset(12 * getItem().getModes().size(), getName());
+		}
+	    } else if (extendet) {
+		getItem().setCurrent(getComboboxItem(x, y));
+	    }
 	}
-	public boolean isExtendet() {
-		return extendet;
+    }
+
+    public void onMouseReleased(int mouseX, int mouseY, int state) {
+	super.onMouseReleased(mouseX, mouseY, state);
+    }
+
+    public boolean isExtendet() {
+	return extendet;
+    }
+
+    public boolean isComboboxHovered(int mouseX, int mouseY) {
+	return mouseX > (getPanelExtendet().getPanel().getX() + 1)
+		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2) + 1)
+		&& mouseY > (getComponentY() - 6) && mouseY < (getComponentY() + 7);
+    }
+
+    private String getComboboxItem(int mouseX, int mouseY) {
+	int modeY = 2;
+	for (String str : getItem().getModes()) {
+	    modeY += 12;
+	    if (mouseX > getComponentX() && mouseX < (getComponentX() + getPanelExtendet().getWidth() + 1)) {
+		if (mouseY > (getComponentY() + 7) && mouseY < (getComponentY() + 7 + modeY)) {
+		    return str;
+		}
+	    }
 	}
+	return null;
+    }
 
 }

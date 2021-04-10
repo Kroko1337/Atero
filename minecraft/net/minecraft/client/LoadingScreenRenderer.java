@@ -1,5 +1,8 @@
 package net.minecraft.client;
 
+import org.lwjgl.opengl.GL11;
+
+import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -160,6 +163,12 @@ public class LoadingScreenRenderer implements IProgressUpdate
 
                 Tessellator tessellator = Tessellator.getInstance();
                 WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                
+                
+                GlStateManager.disableTexture2D();
+                GlStateManager.enableTexture2D();
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                
                 this.mc.getTextureManager().bindTexture(Gui.optionsBackground);
                 float f = 32.0F;
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);

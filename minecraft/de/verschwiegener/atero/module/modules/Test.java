@@ -31,15 +31,15 @@ public class Test extends Module {
 	
 	
 	public Test() {
-		super("Test", "Test", Keyboard.KEY_NONE, Category.Combat);
+		super("Test", "Test", Keyboard.KEY_NONE, Category.Movement);
 	}
 	
 	@Override
 	public void setup() {
 		super.setup();
 		ArrayList<SettingsItem> items = new ArrayList<>();
+		items.add(new SettingsItem("TEst2", false,"TEst"));
 		items.add(new SettingsItem("TEst", false,""));
-		items.add(new SettingsItem("TEst2", true,"TEst"));
 		items.add(new SettingsItem("TEst3", false,""));
 		items.add(new SettingsItem("TEst4", true,""));
 		items.add(new SettingsItem("TEst5", 0, 100, 50,""));

@@ -27,10 +27,10 @@ public class AltManager extends GuiScreen {
   
   public void initGui() {
     Keyboard.enableRepeatEvents(true);
-    this.buttonList.add(new GuiButton(1, width / 2 - 100, height / 4 + 96 + 12, "Login"));
-    this.buttonList.add(new GuiButton(3, width / 2 - 100, height / 4 + 96 + 36 + 24, "Altening"));
-    this.buttonList.add(new GuiButton(2, width / 2 - 100, height / 4 + 96 + 36, "Back"));
-    this.clipboard = new GuiTextField(3, this.fontRendererObj, width / 2 - 100, 76, 200, 20);
+    this.buttonList.add(new CustomGuiButton(1, width / 2 - 100, height / 4 + 96 + 12, "Login"));
+    this.buttonList.add(new CustomGuiButton(3, width / 2 - 100, height / 4 + 96 + 36 + 24, "Altening"));
+    this.buttonList.add(new CustomGuiButton(2, width / 2 - 100, height / 4 + 96 + 36, "Back"));
+    this.clipboard = new CustomGuiTextField(3, this.fontRendererObj, width / 2 - 100, 76, 200, 20);
     this.clipboard.setMaxStringLength(50);
   }
   

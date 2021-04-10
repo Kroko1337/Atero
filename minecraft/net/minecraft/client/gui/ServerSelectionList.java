@@ -9,8 +9,8 @@ import net.minecraft.client.network.LanServerDetector;
 public class ServerSelectionList extends GuiListExtended
 {
     private final GuiMultiplayer owner;
-    private final List<ServerListEntryNormal> field_148198_l = Lists.<ServerListEntryNormal>newArrayList();
-    private final List<ServerListEntryLanDetected> field_148199_m = Lists.<ServerListEntryLanDetected>newArrayList();
+    private final List<ServerListEntryNormal> serverListNormal = Lists.<ServerListEntryNormal>newArrayList();
+    private final List<ServerListEntryLanDetected> serverListLan = Lists.<ServerListEntryLanDetected>newArrayList();
     private final GuiListExtended.IGuiListEntry lanScanEntry = new ServerListEntryLanScan();
     private int selectedSlotIndex = -1;
 
@@ -25,13 +25,13 @@ public class ServerSelectionList extends GuiListExtended
      */
     public GuiListExtended.IGuiListEntry getListEntry(int index)
     {
-        if (index < this.field_148198_l.size())
+        if (index < this.serverListNormal.size())
         {
-            return (GuiListExtended.IGuiListEntry)this.field_148198_l.get(index);
+            return (GuiListExtended.IGuiListEntry)this.serverListNormal.get(index);
         }
         else
         {
-            index = index - this.field_148198_l.size();
+            index = index - this.serverListNormal.size();
 
             if (index == 0)
             {
@@ -40,14 +40,14 @@ public class ServerSelectionList extends GuiListExtended
             else
             {
                 --index;
-                return (GuiListExtended.IGuiListEntry)this.field_148199_m.get(index);
+                return (GuiListExtended.IGuiListEntry)this.serverListLan.get(index);
             }
         }
     }
 
     protected int getSize()
     {
-        return this.field_148198_l.size() + 1 + this.field_148199_m.size();
+        return this.serverListNormal.size() + 1 + this.serverListLan.size();
     }
 
     public void setSelectedSlotIndex(int selectedSlotIndexIn)
@@ -70,27 +70,30 @@ public class ServerSelectionList extends GuiListExtended
 
     public void func_148195_a(ServerList p_148195_1_)
     {
-        this.field_148198_l.clear();
+        this.serverListNormal.clear();
 
         for (int i = 0; i < p_148195_1_.countServers(); ++i)
         {
-            this.field_148198_l.add(new ServerListEntryNormal(this.owner, p_148195_1_.getServerData(i)));
+            this.serverListNormal.add(new ServerListEntryNormal(this.owner, p_148195_1_.getServerData(i)));
         }
     }
 
     public void func_148194_a(List<LanServerDetector.LanServer> p_148194_1_)
     {
-        this.field_148199_m.clear();
+        this.serverListLan.clear();
 
         for (LanServerDetector.LanServer lanserverdetector$lanserver : p_148194_1_)
         {
-            this.field_148199_m.add(new ServerListEntryLanDetected(this.owner, lanserverdetector$lanserver));
+            this.serverListLan.add(new ServerListEntryLanDetected(this.owner, lanserverdetector$lanserver));
         }
     }
 
     protected int getScrollBarX()
     {
         return super.getScrollBarX() + 30;
+    }
+    public List<ServerListEntryNormal> getServerListNormal() {
+	return serverListNormal;
     }
 
     /**

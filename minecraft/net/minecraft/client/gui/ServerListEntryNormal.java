@@ -2,6 +2,11 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.ui.multiplayer.CustomGUISlotRenderer;
+import de.verschwiegener.atero.util.chat.ChatRenderer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
@@ -35,6 +40,9 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
     private String field_148299_g;
     private DynamicTexture field_148305_h;
     private long field_148298_f;
+    
+    private Fontrenderer fontRenderer;
+    private ChatRenderer chatRenderer;
 
     protected ServerListEntryNormal(GuiMultiplayer p_i45048_1_, ServerData p_i45048_2_)
     {
@@ -43,6 +51,8 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
         this.mc = Minecraft.getMinecraft();
         this.field_148306_i = new ResourceLocation("servers/" + p_i45048_2_.serverIP + "/icon");
         this.field_148305_h = (DynamicTexture)this.mc.getTextureManager().getTexture(this.field_148306_i);
+        fontRenderer = Management.instance.fontrenderer;
+        chatRenderer = new ChatRenderer();
     }
 
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)
@@ -78,17 +88,20 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
         boolean flag = this.field_148301_e.version > 47;
         boolean flag1 = this.field_148301_e.version < 47;
         boolean flag2 = flag || flag1;
-        this.mc.fontRendererObj.drawString(this.field_148301_e.serverName, x + 32 + 3, y + 1, 16777215);
+        //this.mc.fontRendererObj.drawString(this.field_148301_e.serverName, x + 32 + 3, y + 1, 16777215);
+        fontRenderer.drawString(this.field_148301_e.serverName, (x + 32 + 3) * 2, (y + 1) * 2, 16777215);
         List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(this.field_148301_e.serverMOTD, listWidth - 32 - 2);
 
         for (int i = 0; i < Math.min(list.size(), 2); ++i)
         {
-            this.mc.fontRendererObj.drawString((String)list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
+            //this.mc.fontRendererObj.drawString((String)list.get(i), x + 32 + 3, y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i, 8421504);
+            chatRenderer.drawchat2((String)list.get(i), (x + 32 + 3) * 2, (y + 12 + this.mc.fontRendererObj.FONT_HEIGHT * i) * 2);
         }
 
         String s2 = flag2 ? EnumChatFormatting.DARK_RED + this.field_148301_e.gameVersion : this.field_148301_e.populationInfo;
         int j = this.mc.fontRendererObj.getStringWidth(s2);
-        this.mc.fontRendererObj.drawString(s2, x + listWidth - j - 15 - 2, y + 1, 8421504);
+        //this.mc.fontRendererObj.drawString(s2, x + listWidth - j - 15 - 2, y + 1, 8421504);
+        chatRenderer.drawchat2(s2, (x + listWidth - j - 15 - 2) * 2, (y - 1) * 2);
         int k = 0;
         String s = null;
         int l;
@@ -290,39 +303,38 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
     /**
      * Returns true if the mouse has been pressed on this control.
      */
-    public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_)
-    {
-        if (p_148278_5_ <= 32)
-        {
-            if (p_148278_5_ < 32 && p_148278_5_ > 16 && this.func_178013_b())
-            {
-                this.field_148303_c.selectServer(slotIndex);
-                this.field_148303_c.connectToSelected();
-                return true;
-            }
+    public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_,
+	    int p_148278_6_) {
+	if (p_148278_5_ <= 32) {
+	    if (p_148278_5_ < 32 && p_148278_5_ > 16 && this.func_178013_b()) {
+		System.out.println("Connect");
+		this.field_148303_c.selectServer(slotIndex);
+		this.field_148303_c.connectToSelected();
+		return true;
+	    }
+	    
+	    if (p_148278_5_ < 16 && p_148278_6_ < 16 && this.field_148303_c.func_175392_a(this, slotIndex)) {
+		System.err.println("Up");
+		this.field_148303_c.func_175391_a(this, slotIndex, GuiScreen.isShiftKeyDown());
+		return true;
+	    }
 
-            if (p_148278_5_ < 16 && p_148278_6_ < 16 && this.field_148303_c.func_175392_a(this, slotIndex))
-            {
-                this.field_148303_c.func_175391_a(this, slotIndex, GuiScreen.isShiftKeyDown());
-                return true;
-            }
+	    if (p_148278_5_ < 16 && p_148278_6_ > 16 && this.field_148303_c.func_175394_b(this, slotIndex)) {
+		System.err.println("Down");
+		this.field_148303_c.func_175393_b(this, slotIndex, GuiScreen.isShiftKeyDown());
+		return true;
+	    }
+	}
 
-            if (p_148278_5_ < 16 && p_148278_6_ > 16 && this.field_148303_c.func_175394_b(this, slotIndex))
-            {
-                this.field_148303_c.func_175393_b(this, slotIndex, GuiScreen.isShiftKeyDown());
-                return true;
-            }
-        }
+	this.field_148303_c.selectServer(slotIndex);
+	//CustomGUISlotRenderer.selectServer(slotIndex);
 
-        this.field_148303_c.selectServer(slotIndex);
+	if (Minecraft.getSystemTime() - this.field_148298_f < 250L) {
+	    this.field_148303_c.connectToSelected();
+	}
 
-        if (Minecraft.getSystemTime() - this.field_148298_f < 250L)
-        {
-            this.field_148303_c.connectToSelected();
-        }
-
-        this.field_148298_f = Minecraft.getSystemTime();
-        return false;
+	this.field_148298_f = Minecraft.getSystemTime();
+	return false;
     }
 
     public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)

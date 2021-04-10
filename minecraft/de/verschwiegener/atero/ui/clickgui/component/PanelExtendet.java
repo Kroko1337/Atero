@@ -1,225 +1,238 @@
 package de.verschwiegener.atero.ui.clickgui.component;
 
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
+import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class PanelExtendet {
-	
-	String name;
-	ClickGUIPanel p;
-	Design d;
-	boolean animate, isEmpty;
-	int state, animationX, height, width, y;
-	
-	ArrayList<Component> components = new ArrayList<>();
-	
-	public PanelExtendet(String ModuleName, int y, ClickGUIPanel p) {
-		this.y = y;
-		this.p = p;
-		this.name = ModuleName;
-		d = Management.instance.currentDesign;
-		state = 2;
-		animate = true;
-		width = 100;
-		//height = 100;
-		int yoffset = 8;
-		if(Management.instance.settingsmgr.getSettingByName(ModuleName) != null && !Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().isEmpty()) {
-			for(SettingsItem si : Management.instance.settingsmgr.getSettingByName(ModuleName).getItems()) {
-				System.out.println("Items");
-				switch (si.getCategory()) {
-				case Checkbox:
-					components.add(new ComponentCheckBox(si.getName(), yoffset, this));
-					yoffset += 13;
-					break;
-					
-				case Combobox:
-					components.add(new ComponentCombobox(si.getName(), yoffset, this));
-					yoffset += 13;
-					break;
-					
-				case Slider:
-					components.add(new ComponentSlider(si.getName(), yoffset, this));
-					yoffset += 15;
-					break;
-				}
-			}
-			height = yoffset - 4;
-		}else {
-			isEmpty = true;
+
+    private final String name;
+    private final ClickGUIPanel panel;
+    private boolean animate, isEmpty;
+    private int state, animationX, height;
+    private final int width;
+    private final int y;
+
+    ArrayList<Component> components = new ArrayList<>();
+
+    public PanelExtendet(final String ModuleName, final int y, final ClickGUIPanel p) {
+	this.y = y;
+	panel = p;
+	name = ModuleName;
+	state = 1;
+	animate = true;
+	width = 100;
+	int yoffset = 8;
+	if (Management.instance.settingsmgr.getSettingByName(ModuleName) != null
+		&& !Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().isEmpty()) {
+	    final int size = Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().size();
+	    for (int i = 0; i < size; i++) {
+		final SettingsItem si = Management.instance.settingsmgr.getSettingByName(ModuleName).getItems().get(i);
+		switch (si.getCategory()) {
+		case Checkbox:
+		    components.add(new ComponentCheckBox(si.getName(), yoffset, this));
+		    yoffset += 13;
+		    break;
+
+		case Combobox:
+		    components.add(new ComponentCombobox(si.getName(), yoffset, this));
+		    yoffset += 13;
+		    break;
+
+		case Slider:
+		    components.add(new ComponentSlider(si.getName(), yoffset, this));
+		    yoffset += 15;
+		    break;
 		}
+	    }
+	    height = yoffset - 4;
+	} else {
+	    isEmpty = true;
 	}
-	
-	public void drawScreen(int x, int y) {
-		if(!isEmpty) {
-			d.drawPanelExtendet(this, x, y);
-			if((getState() == 2 && !isAnimate()) && getPanel().getState() == 1) {
-				for(Component c : components) {
-					c.drawComponent(x, y);
-				}
-			}
+    }
+
+    public void collapsePanelByItemName(final String name) {
+	final Component component = getComponentByName(name);
+	final int count = components.indexOf(component);
+	int offset = 0;
+	if (component instanceof ComponentSlider) {
+	    offset = 15;
+	}
+	if (component instanceof ComponentCombobox) {
+	    offset = 13;
+	}
+	if (component instanceof ComponentCheckBox) {
+	    offset = 13;
+	}
+	for (int i = count; i < components.size(); i++) {
+	    try {
+		final Component c = components.get(i);
+		c.y -= offset;
+	    } catch (final Exception e) {
+		e.printStackTrace();
+	    }
+	}
+
+	height -= offset;
+    }
+
+    public void collapsePanelByYOffset(final int yoffset, final String name) {
+	final int count = components.indexOf(getComponentByName(name));
+	for (int i = count + 1; i < components.size(); i++) {
+	    try {
+		final Component c = components.get(i);
+		c.y -= yoffset;
+	    } catch (final Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	height -= yoffset;
+    }
+
+    public void drawScreen(final int mouseX, final int mouseY) {
+	if (!isEmpty) {
+	   /*if (animate) {
+		switch (state) {
+		case 1:
+		    setAnimationX(animationX + 1);
+		    if (animationX == width || animationX > width) {
+			animate = false;
+			setAnimationX(width);
+			setState(2);
+		    }
+		    break;
+		case 2:
+		    setAnimationX(animationX - 1);
+		    if (animationX == 17 || animationX < 17) {
+			animate = false;
+			setAnimationX(17);
+			setState(1);
+		    }
+		    break;
 		}
-	}
-	public void onMouseClicked(int x, int y, int mousebutton) {
-		if(!isEmpty) {
-			if((getState() == 2 && !isAnimate()) && getPanel().getState() == 1) {
-				for(Component c : components) {
-					c.onMouseClicked(x, y, mousebutton);
-				}
-			}
+	    }*/
+	    if ((animate || state != 1) && panel.getState() == 1) {
+		RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
+			Management.instance.colorBlack);
+	    }
+
+	    if (getState() == 2 && !isAnimate() && getPanel().getState() == 1) {
+		for (final Component c : components) {
+		    c.drawComponent(mouseX, mouseY);
 		}
+	    }
 	}
-	public void onMouseReleased(int mouseX, int mouseY, int state) {
-		for(Component c : components) {
-			c.onMouseReleased(mouseX, mouseY, state);
-		}
+    }
+
+    public void extendPanelByItemName(final String name) {
+	final Component component = getComponentByName(name);
+	final int count = components.indexOf(component);
+	int offset = 0;
+	if (component instanceof ComponentSlider) {
+	    offset = 15;
 	}
-	public void extendPanelByItemName(String name) {
-		int count = components.indexOf(getComponentByName(name));
-		for(int i = count; i < components.size();i++) {
-			try {
-				if(count == 2) {
-					Component c = components.get(i);
-					if(c instanceof ComponentSlider) {
-						c.y += 15;
-					}else if(c instanceof ComponentCheckBox) {
-						c.y += 15;
-					}else if(c instanceof ComponentCombobox) {
-						c.y += 15;
-					}
-				}else {
-					Component c = components.get(i);
-					if(c instanceof ComponentSlider) {
-						c.y += 15;
-					}else if(c instanceof ComponentCheckBox) {
-						c.y += 12;
-					}else if(c instanceof ComponentCombobox) {
-						c.y += 12;
-					}
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		Component c = getComponentByName(name);
-		if(c instanceof ComponentCheckBox) {
-			height += 12;
-		}else if(c instanceof ComponentSlider) {
-			height += 15;
-		}else if(c instanceof ComponentCombobox) {
-			height += 12;
-		}
+	if (component instanceof ComponentCombobox) {
+	    offset = 13;
 	}
-	public void extendPanelByYOffset(int yoffset, String name) {
-		int count = components.indexOf(getComponentByName(name));
-		for(int i = count + 1; i < components.size();i++) {
-			try {
-				Component c = components.get(i);
-				c.y += yoffset;
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		height += yoffset;
+	if (component instanceof ComponentCheckBox) {
+	    offset = 13;
 	}
-	public void collapsePanelByYOffse(int yoffset, String name) {
-		int count = components.indexOf(getComponentByName(name));
-		for(int i = count + 1; i < components.size();i++) {
-			try {
-				Component c = components.get(i);
-				c.y -= yoffset;
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		height -= yoffset;
+	for (int i = count; i < components.size(); i++) {
+	    try {
+		final Component c = components.get(i);
+		c.y += offset;
+	    } catch (final Exception e) {
+		e.printStackTrace();
+	    }
 	}
-	public void collapsePanelByItemName(String name) {
-		int count = components.indexOf(getComponentByName(name));
-		for(int i = count; i < components.size();i++) {
-			try {
-				if(count == 2) {
-					Component c = components.get(i);
-					if(c instanceof ComponentSlider) {
-						c.y -= 15;
-					}else if (c instanceof ComponentCheckBox) {
-						c.y -= 15;
-					}else if (c instanceof ComponentCombobox) {
-						c.y -= 15;
-					}
-				}else {
-					Component c = components.get(i);
-					if(c instanceof ComponentSlider) {
-						c.y -= 15;
-					}else if (c instanceof ComponentCheckBox) {
-						c.y -= 12;
-					}else if(c instanceof ComponentCombobox) {
-						c.y -= 12;
-					}
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		Component c = getComponentByName(name);
-		if(c instanceof ComponentCheckBox) {
-			height -= 12;
-		}else if(c instanceof ComponentSlider) {
-			height -= 15;
-		}else if(c instanceof ComponentSlider) {
-			height -= 12;
-		}
+
+	height += offset;
+
+    }
+
+    public void extendPanelByYOffset(final int yoffset, final String name) {
+	final int count = components.indexOf(getComponentByName(name));
+	for (int i = count + 1; i < components.size(); i++) {
+	    try {
+		final Component c = components.get(i);
+		c.y += yoffset;
+	    } catch (final Exception e) {
+		e.printStackTrace();
+	    }
 	}
-	public Component getComponentByName(final String name) {
-		return components.stream().filter(new Predicate<Component>() {	
-			@Override
-			public boolean test(Component module) {
-				return module.getName().equalsIgnoreCase(name);
-			}
-		}).findFirst().orElse(null);
+	height += yoffset;
+    }
+
+    public int getAnimationX() {
+	return animationX;
+    }
+
+    public Component getComponentByName(final String name) {
+	return components.stream().filter(module -> module.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
+    public int getHeight() {
+	return height;
+    }
+
+    public String getName() {
+	return name;
+    }
+
+    public ClickGUIPanel getPanel() {
+	return panel;
+    }
+
+    public int getState() {
+	return state;
+    }
+
+    public int getWidth() {
+	return width;
+    }
+
+    public int getY() {
+	return y;
+    }
+
+    public boolean isAnimate() {
+	return animate;
+    }
+
+    public void onMouseClicked(final int x, final int y, final int mousebutton) {
+	if (!isEmpty && (getState() == 2 && !isAnimate() && getPanel().getState() == 1)) {
+	    for (final Component c : components) {
+		c.onMouseClicked(x, y, mousebutton);
+	    }
 	}
-	public void switchState() {
-		animate = true;
+    }
+
+    public void onMouseReleased(final int mouseX, final int mouseY, final int state) {
+	for (final Component c : components) {
+	    c.onMouseReleased(mouseX, mouseY, state);
 	}
-	public boolean isAnimate() {
-		return animate;
-	}
-	public void setAnimate(boolean animate) {
-		this.animate = animate;
-	}
-	public int getState() {
-		return state;
-	}
-	public void setState(int state) {
-		this.state = state;
-	}
-	public void setAnimationX(int animationX) {
-		this.animationX = animationX;
-	}
-	public int getAnimationX() {
-		return animationX;
-	}
-	public int getHeight() {
-		return height;
-	}
-	public ClickGUIPanel getPanel() {
-		return p;
-	}
-	public int getY() {
-		return y;
-	}
-	public String getName() {
-		return name;
-	}
-	public int getWidth() {
-		return width;
-	}
+    }
+
+    public void setAnimate(final boolean animate) {
+	this.animate = animate;
+    }
+
+    public void setAnimationX(final int animationX) {
+	this.animationX = animationX;
+    }
+
+    public void setState(final int state) {
+	this.state = state;
+    }
+
+    public void switchState() {
+	animate = true;
+    }
 
 }

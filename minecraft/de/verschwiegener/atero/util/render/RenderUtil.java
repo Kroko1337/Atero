@@ -9,10 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderUtil {
+    
+    private static ResourceLocation background = new ResourceLocation("atero/assets/background.jpg");
     public static void disable() {
 	GL11.glEnd();
 	GL11.glDisable(3042);
@@ -164,19 +167,24 @@ public class RenderUtil {
      */
     public static void drawRectRound(final int x, final int y, final int width, final int height, final int diameter,
 	    final Color color) {
-	RenderUtil.fillRect(x - diameter, y - diameter, width - diameter * 2, height - diameter * 2, color);
+	//RenderUtil.fillRect(x - diameter, y - diameter, width - diameter * 2, height - diameter * 2, color);
 
-	RenderUtil.fillRect(x, y - diameter * 2, width - diameter * 4, diameter, color);
+	//RenderUtil.fillRect(x, y - diameter * 2, width - diameter * 4, diameter, color);
 
-	RenderUtil.fillRect(x, y + height - diameter * 3, width - diameter * 4, diameter, color);
+	//RenderUtil.fillRect(x, y + height - diameter * 3, width - diameter * 4, diameter, color);
+	fillRect(x, y + diameter, width, height - (diameter * 2), color);
+	fillRect(x + 5, y, width - (diameter * 2), height, color);
 
 	RenderUtil.enable();
 
 	GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-	RenderUtil.drawCircle(x, y + height - diameter * 3, diameter, 0, 360, color);
-	RenderUtil.drawCircle(x, y - diameter, diameter, 0, 360, color);
-	RenderUtil.drawCircle(x + width - diameter * 4, y - diameter, diameter, 0, 360, color);
-	RenderUtil.drawCircle(x + width - diameter * 4, y + height - diameter * 3, diameter, 0, 360, color);
+	//Oberen Kreise
+	drawCircle(x + diameter, y + diameter, diameter, 0, 360, color);
+	drawCircle(x + width - diameter, y + diameter, diameter, 0, 360, color);
+	
+	//Untere Kreise
+	drawCircle(x + diameter, y + height - diameter, diameter, 0, 360, color);
+	drawCircle(x + width - diameter, y + height - diameter, diameter, 0, 360, color);
 	RenderUtil.disable();
     }
 
@@ -285,5 +293,14 @@ public class RenderUtil {
 	GL11.glDisable(3042);
 	GL11.glEnable(2929);
     }
+    public static void drawBackround(int width, int height) {
+   	GlStateManager.disableLighting();
+   	GlStateManager.disableFog();
+   	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+   	Minecraft.getMinecraft().getTextureManager().bindTexture(background);
+   	Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, width, height);
+   	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
+   	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+       }
 
 }

@@ -1,5 +1,7 @@
 package net.minecraft.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -71,7 +73,8 @@ public class Gui
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(f, f1, f2, f3);
+        //GlStateManager.color(f, f1, f2, f3);
+        GL11.glColor4f(f, f1, f2, f3);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
         worldrenderer.pos((double)left, (double)bottom, 0.0D).endVertex();
         worldrenderer.pos((double)right, (double)bottom, 0.0D).endVertex();

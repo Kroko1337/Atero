@@ -237,7 +237,6 @@ public interface IChatComponent extends Iterable<IChatComponent> {
 		}
 
 		public static IChatComponent jsonToComponent(String json) {
-			System.out.println("Test5 : " + GSON.fromJson(json, IChatComponent.class).getChatStyle());
 			return (IChatComponent) GSON.fromJson(json, IChatComponent.class);
 		}
 

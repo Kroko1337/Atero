@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class ChatRenderer {
 
@@ -44,7 +45,7 @@ public class ChatRenderer {
     }
 
     public void drawchat2(String line, int x, int y) {
-	// System.out.println("Line: " + line);
+	//System.out.println("Line: " + line);
 	String[] args = line.replace("§", "#§").split("#");
 	int xoffset = 0;
 	messagecolor = Color.white;
@@ -55,7 +56,7 @@ public class ChatRenderer {
 	noise = false;
 	effekt = false;
 	for (String str : args) {
-	    if (str.length() > 0) {
+	    if (str.length() > 1) {
 		if (colorcodes.contains(str.substring(1, 2))) {
 		    messagecolor = colorCodes.get(str.substring(1, 2).toLowerCase());
 		} else {
@@ -115,10 +116,12 @@ public class ChatRenderer {
 			xoffset += fr.getStringWidth(str);
 		    }
 		    if (underline) {
-			drawLine(x + xoffset, y + 1, fr.getStringWidth(str.substring(2)));
+			fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			drawLine(x + xoffset, y + (fr.getBaseStringHeight() * 2) - 3, fr.getStringWidth2(str.substring(2)));
 		    }
 		    if (strikethrough) {
-			drawLine(x + xoffset, y - 2, fr.getStringWidth(str.substring(2)));
+			fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			drawLine(x + xoffset, y + (fr.getBaseStringHeight()), fr.getStringWidth(str.substring(2)));
 		    }
 		} else {
 		    if (str.startsWith("§")) {
@@ -129,18 +132,14 @@ public class ChatRenderer {
 			xoffset += fr.getStringWidth(str);
 		    }
 		}
-	    } else {
 	    }
 	}
+	//GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private void drawLine(int x, int y, int width) {
-	GL11.glScaled(0.5f, 0.5f, 0.5f);
-	GL11.glLineWidth(2F);
-	GL11.glBegin(GL11.GL_LINES);
-	GL11.glVertex2d(x, y);
-	GL11.glVertex2d(x + width, y);
-	GL11.glEnd();
+	RenderUtil.fillRect(x / 2, y / 2, width, 1, Color.WHITE);
+	//GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private String getRandomString(int count) {

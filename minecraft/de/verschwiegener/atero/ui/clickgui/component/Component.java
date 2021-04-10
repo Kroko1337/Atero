@@ -11,7 +11,7 @@ public class Component {
 	PanelExtendet pe;
 	
 	SettingsItem item, child;
-	boolean parentextendet, parentvalid;
+	boolean parentextendet, parentvalid, valid;
 	private boolean change;
 	
 	public Component(String name, int y, PanelExtendet pe) {
@@ -20,6 +20,7 @@ public class Component {
 		this.pe = pe;
 		item = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(name);
 		child = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getChild());
+		valid = true;
 		if((child != null)) {
 			parentvalid = true;
 			change = true;
@@ -50,18 +51,25 @@ public class Component {
 	
 	public void drawComponent(int x, int y) {
 		if(parentvalid && isChange()) {
+		    System.out.println("Change");
 			setChange(false);
 			if(item.isState()) {
+			    System.out.println("extend1");
 				Component c = pe.getComponentByName(child.getName());
 				if(c.parentextendet) {
 					c.parentextendet = false;
+					 System.out.println("extend");
 					pe.extendPanelByItemName(child.getName());
+					c.setValid(true);
 				}
 			}else {
+			    System.out.println("Collapse1");
 				Component c = pe.getComponentByName(child.getName());
 				if(!c.parentextendet) {
+				    System.out.println("Collapse");
 					c.parentextendet = true;
 					pe.collapsePanelByItemName(c.getName());
+					c.setValid(false);
 				}
 			}
 		}
@@ -78,6 +86,12 @@ public class Component {
 	}
 	public boolean isParentextendet() {
 		return parentextendet;
+	}
+	public void setValid(boolean valid) {
+	    this.valid = valid;
+	}
+	public boolean isValid() {
+	    return valid;
 	}
 
 }

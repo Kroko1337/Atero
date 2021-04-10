@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
-
+import de.verschwiegener.atero.util.TimeUtils;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ClickGUI extends GuiScreen {
@@ -41,10 +41,41 @@ public class ClickGUI extends GuiScreen {
 	case 1:
 	    ClickGUIPanel p2 = getPanelButtonByPosition(mouseX, mouseY);
 	    if (p2 != null) {
-		p2.animate = true;
+		p2.setAnimate(true);
+		animateExtension(p2);
 	    }
 	    break;
 	}
+    }
+    private void animateExtension(ClickGUIPanel p2) {
+	TimeUtils animationTimer = new TimeUtils();
+	Management.instance.EXECUTOR_SERVICE.submit(() -> {
+	    while (p2.isAnimate()) {
+		if(animationTimer.hasReached(10)) {
+		    animationTimer.reset();
+		  //TODO return implementieren: https://www.baeldung.com/java-future
+			System.out.println("LOL");
+			switch (p2.getState()) {
+			case 1:
+			    p2.setAnimationheight(p2.getAnimationheight() - 1);
+			    if (p2.getAnimationheight() == 15 || p2.getAnimationheight() < 15) {
+				p2.setAnimate(false);
+				p2.setAnimationheight(15);
+				p2.setState(2);
+			    }
+			    break;
+			case 2:
+			    p2.setAnimationheight(p2.getAnimationheight() + 1);
+			    if (p2.getAnimationheight() == -p2.getYoffset()
+				    || p2.getAnimationheight() > p2.getYoffset()) {
+				p2.setAnimate(false);
+				p2.setAnimationheight(p2.getYoffset());
+				p2.setState(1);
+			    }
+			}
+		}
+	    }
+	});
     }
 
     @Override
@@ -70,7 +101,7 @@ public class ClickGUI extends GuiScreen {
 	    @Override
 	    public boolean test(ClickGUIPanel module) {
 		return x > (module.getX()) && x < (module.getX() + module.getWidth()) && y > module.getY()
-			&& y < (module.getY() + module.d.getClickGuiPanelYOffset());
+			&& y < (module.getY() + module.getPanelYOffset());
 	    }
 	}).findFirst().orElse(null);
     }
