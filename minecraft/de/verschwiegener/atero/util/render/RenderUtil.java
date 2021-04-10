@@ -153,6 +153,24 @@ public class RenderUtil {
 	RenderUtil.disable();
 
     }
+    
+    public static void drawLine(final int x1, final int y1, final int x2, final int y2, final float thickness, final Color color) {
+
+	RenderUtil.enable();
+
+	GL11.glColor4f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F,
+		color.getAlpha() / 255.0F);
+
+	GL11.glLineWidth(thickness);
+
+	GL11.glBegin(GL11.GL_LINES);
+	
+	GL11.glVertex2f(x1,y1);
+	GL11.glVertex2f(x2,y2);
+
+	RenderUtil.disable();
+
+    }
 
     /**
      * Draws a Rect with roundet edges after this principle

@@ -70,7 +70,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     {
         this.parentScreen = parentScreen;
         customRenderer = new CustomGUISlotRenderer(this);
-        guiproxy = new GuiProxy();
+        guiproxy = Management.instance.proxymgr.getGui();
         showProxy = false;
     }
 
@@ -221,7 +221,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             {
                 this.refreshServerList();
             }else if(button.id == 9) {
-        	showProxy = !showProxy;
+        	showProxy = !isShowProxy();
             }
         }
     }
@@ -300,7 +300,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
      */
     protected void keyTyped(char typedChar, int keyCode) throws IOException{
 	
-	if(showProxy) {
+	if(isShowProxy()) {
 	    guiproxy.handleKeyboardInput(typedChar, keyCode);
 	}
 	
@@ -387,7 +387,18 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
                 }
                 else if (keyCode != 28 && keyCode != 156)
                 {
-                    super.keyTyped(typedChar, keyCode);
+                    //super.keyTyped(typedChar, keyCode);
+		    if (keyCode == 1) {
+			if (showProxy) {
+			    showProxy = false;
+			} else {
+			    this.mc.displayGuiScreen((GuiScreen) null);
+
+			    if (this.mc.currentScreen == null) {
+				this.mc.setIngameFocus();
+			    }
+			}
+		    }
                 }
                 else
                 {
@@ -396,7 +407,18 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             }
             else
             {
-                super.keyTyped(typedChar, keyCode);
+                //super.keyTyped(typedChar, keyCode);
+		if (keyCode == 1) {
+		    if (showProxy) {
+			showProxy = false;
+		    } else {
+			this.mc.displayGuiScreen((GuiScreen) null);
+
+			if (this.mc.currentScreen == null) {
+			    this.mc.setIngameFocus();
+			}
+		    }
+		}
             }
         }
     }
@@ -417,7 +439,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 	if (this.hoveringText != null) {
 	    this.drawHoveringText(Lists.newArrayList(Splitter.on("\n").split(this.hoveringText)), mouseX, mouseY);
 	}
-        if(showProxy) {
+        if(isShowProxy()) {
             guiproxy.drawScreen(mouseX, mouseY, partialTicks);
         }
     }
@@ -479,11 +501,12 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-	super.mouseClicked(mouseX, mouseY, mouseButton);
-	customRenderer.handleMouseClicked(mouseX, mouseY, mouseButton);
 	// this.getServerListSelector().mouseClicked(mouseX, mouseY, mouseButton);
-	if(showProxy) {
+	if(isShowProxy()) {
 	    guiproxy.mouseClicked(mouseX, mouseY, mouseButton);
+	}else {
+	    super.mouseClicked(mouseX, mouseY, mouseButton);
+	    customRenderer.handleMouseClicked(mouseX, mouseY, mouseButton);
 	}
     }
 
@@ -541,5 +564,9 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 
     public ServerSelectionList getServerListSelector() {
 	return serverListSelector;
+    }
+
+    public boolean isShowProxy() {
+	return showProxy;
     }
 }

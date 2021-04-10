@@ -56,7 +56,7 @@ public class Management {
     public ExecutorService EXECUTOR_SERVICE;
 
     public void start() {
-	EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
+	EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
 	fontmgr = new FontManager();
 	settingsmgr = new SettingsManager();
 	modulemgr = new ModuleManager();

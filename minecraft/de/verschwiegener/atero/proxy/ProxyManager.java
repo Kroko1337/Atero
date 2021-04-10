@@ -1,19 +1,36 @@
 package de.verschwiegener.atero.proxy;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.ui.multiplayer.GuiProxy;
 
 public class ProxyManager {
 
     private ArrayList<Proxy> proxys = new ArrayList<>();
+    private Future<?> testProxy;
+    private Socket socket = new Socket();
 
     private Proxy currentProxy;
     private boolean useProxy;
+    
+    private GuiProxy gui;
+    
+    public ProxyManager() {
+	gui = new GuiProxy();
+    }
 
     public ArrayList<Proxy> getProxys() {
 	return proxys;
+    }
+    public GuiProxy getGui() {
+	return gui;
     }
 
     public void setProxys(ArrayList<Proxy> proxys) {
@@ -26,6 +43,9 @@ public class ProxyManager {
 
     public void setCurrentProxy(Proxy currentProxy) {
 	this.currentProxy = currentProxy;
+	testProxy = Management.instance.EXECUTOR_SERVICE.submit(() -> {
+	    pingHost(currentProxy);
+	});
     }
 
     public boolean isUseProxy() {
@@ -36,13 +56,16 @@ public class ProxyManager {
 	this.useProxy = useProxy;
     }
     
-    public static boolean pingHost(Proxy proxy) {
-	    try (Socket socket = new Socket()) {
-	        socket.connect(new InetSocketAddress(proxy.getIP(), proxy.getPort()), 3000);
-	        return true;
-	    } catch (IOException e) {
-	        return false; // Either timeout or unreachable or failed DNS lookup.
-	    }
+    private void pingHost(Proxy proxy) {
+	try {
+	    socket.connect(new InetSocketAddress(proxy.getIP(), proxy.getPort()), 5000);
+	    gui.setProxyState("Connected");
+	    gui.setMessageColor(Management.instance.colorBlue);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    gui.setProxyState("Invalid Proxy");
+	    gui.setMessageColor(Color.RED);
 	}
+    }
 
 }
