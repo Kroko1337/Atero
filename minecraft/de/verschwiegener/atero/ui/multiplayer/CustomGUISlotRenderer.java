@@ -41,7 +41,7 @@ public class CustomGUISlotRenderer {
 	for (int i = 0; i < guiMultiplayer.getServerListSelector().getServerListNormal().size(); i++) {
 	    ServerListEntryNormal entry = guiMultiplayer.getServerListSelector().getServerListNormal().get(i);
 	    entry.drawEntry(i, (guiMultiplayer.width / 2) - 150, 40 * i + 20, 300, 20, mouseX, mouseY,
-		    (i == selectedEntryIndex && isHovered(mouseX, mouseY) && !guiMultiplayer.isShowProxy()) ? true : false, (!guiMultiplayer.isShowProxy()) ? true: false);
+		    (i == selectedEntryIndex && isHovered(mouseX, mouseY) && !guiMultiplayer.isCustomGui()) ? true : false, (!guiMultiplayer.isCustomGui()) ? true: false);
 
 	}
     }

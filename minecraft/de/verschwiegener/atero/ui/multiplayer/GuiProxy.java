@@ -24,8 +24,8 @@ public class GuiProxy {
     private int x;
     private int y;
     private int selectetTextField;
-    private String field1Text = "Test";
-    private String field2Text = "Test2";
+    private String field1Text = "";
+    private String field2Text = "";
     private boolean hasFirstConnected, proxyCheckFinish;
     private String proxyState;
     private Color messageColor;

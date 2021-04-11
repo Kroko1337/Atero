@@ -382,7 +382,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                 p_initChannel_1_.pipeline().addLast((String)"timeout", (ChannelHandler)(new ReadTimeoutHandler(30))).addLast((String)"splitter", (ChannelHandler)(new MessageDeserializer2())).addLast((String)"decoder", (ChannelHandler)(new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast((String)"prepender", (ChannelHandler)(new MessageSerializer2())).addLast((String)"encoder", (ChannelHandler)(new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast((String)"packet_handler", (ChannelHandler)networkmanager);
                 if(Management.instance.proxymgr.isUseProxy()) {
                     Proxy proxy = Management.instance.proxymgr.getCurrentProxy();
-		    //if (Management.instance.proxymgr.pingHost(proxy)) {
 			ChannelHandler handler = null;
 			switch (Management.instance.proxymgr.getCurrentProxy().getType()) {
 			case SOCKS5:
@@ -396,7 +395,6 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
 			    break;
 			}
 			p_initChannel_1_.pipeline().addFirst(handler);
-		    //}
                 }
                 // Socks5ProxyHandler socks5ProxyHandler = new Socks5ProxyHandler(new InetSocketAddress("198.8.94.170", 4145));
                // Socks4ProxyHandler socks4ProxyHandler = new Socks4ProxyHandler(new InetSocketAddress("195.234.215.26", 38629));

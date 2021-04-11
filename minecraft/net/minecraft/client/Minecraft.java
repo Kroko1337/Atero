@@ -563,6 +563,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.checkGLError("Post startup");
         
         
+        if(System.getProperty("org.lwjgl.opengl.Window.undecorated") == null){
+            System.setProperty("org.lwjgl.opengl.Window.undecorated", "false");
+        }
+        
+        
         this.ingameGUI = new GuiIngame(this);
         
         
@@ -1649,63 +1654,61 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     /**
      * Toggles fullscreen mode.
      */
-    public void toggleFullscreen()
-    {
-        try
-        {
-            this.fullscreen = !this.fullscreen;
-            this.gameSettings.fullScreen = this.fullscreen;
+    public void toggleFullscreen() {
+	try {
+	    this.fullscreen = !this.fullscreen;
+	    this.gameSettings.fullScreen = this.fullscreen;
+	    //Enable Fullscreen
+	    if (this.fullscreen) {
+		//Borderless Window: 
+		//https://github.com/hancin/Fullscreen-Windowed-Minecraft/blob/33853b8378023b018d45273b729a93b230c2bafe/src/main/java/com/hancinworld/fw/proxy/ClientProxy.java#L164
+		System.setProperty("org.lwjgl.opengl.Window.undecorated","true");
+		
+		this.updateDisplayMode();
+		this.displayWidth = Display.getDisplayMode().getWidth();
+		this.displayHeight = Display.getDisplayMode().getHeight();
+		Display.setDisplayMode(new DisplayMode(this.displayWidth, this.displayHeight));
+		
+		if (this.displayWidth <= 0) {
+		    this.displayWidth = 1;
+		}
 
-            if (this.fullscreen)
-            {
-                this.updateDisplayMode();
-                this.displayWidth = Display.getDisplayMode().getWidth();
-                this.displayHeight = Display.getDisplayMode().getHeight();
+		if (this.displayHeight <= 0) {
+		    this.displayHeight = 1;
+		}
+		
+	    } else {
+		//Disable Fullscreen
+		//Borderless Window
+		System.setProperty("org.lwjgl.opengl.Window.undecorated","false");
+		
+		Display.setDisplayMode(new DisplayMode(this.tempDisplayWidth, this.tempDisplayHeight));
+		this.displayWidth = this.tempDisplayWidth;
+		this.displayHeight = this.tempDisplayHeight;
 
-                if (this.displayWidth <= 0)
-                {
-                    this.displayWidth = 1;
-                }
+		if (this.displayWidth <= 0) {
+		    this.displayWidth = 1;
+		}
 
-                if (this.displayHeight <= 0)
-                {
-                    this.displayHeight = 1;
-                }
-            }
-            else
-            {
-                Display.setDisplayMode(new DisplayMode(this.tempDisplayWidth, this.tempDisplayHeight));
-                this.displayWidth = this.tempDisplayWidth;
-                this.displayHeight = this.tempDisplayHeight;
+		if (this.displayHeight <= 0) {
+		    this.displayHeight = 1;
+		}
+		
+	    }
 
-                if (this.displayWidth <= 0)
-                {
-                    this.displayWidth = 1;
-                }
+	    if (this.currentScreen != null) {
+		this.resize(this.displayWidth, this.displayHeight);
+	    } else {
+		this.updateFramebufferSize();
+	    }
+	    
+	    Display.setFullscreen(false);
+	    Display.setVSyncEnabled(this.gameSettings.enableVsync);
 
-                if (this.displayHeight <= 0)
-                {
-                    this.displayHeight = 1;
-                }
-            }
-
-            if (this.currentScreen != null)
-            {
-                this.resize(this.displayWidth, this.displayHeight);
-            }
-            else
-            {
-                this.updateFramebufferSize();
-            }
-
-            Display.setFullscreen(this.fullscreen);
-            Display.setVSyncEnabled(this.gameSettings.enableVsync);
-            this.updateDisplay();
-        }
-        catch (Exception exception)
-        {
-            logger.error((String)"Couldn\'t toggle fullscreen", (Throwable)exception);
-        }
+	    this.updateDisplay();
+	} catch (Exception exception) {
+	    logger.error((String) "Couldn\'t toggle fullscreen", (Throwable) exception);
+	}
     }
 
     /**

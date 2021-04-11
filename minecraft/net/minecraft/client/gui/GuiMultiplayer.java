@@ -7,6 +7,7 @@ import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
 import de.verschwiegener.atero.ui.multiplayer.CustomGUISlotRenderer;
 import de.verschwiegener.atero.ui.multiplayer.GuiProxy;
+import de.verschwiegener.atero.ui.multiplayer.GuiReconnect;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 import java.awt.Color;
@@ -64,14 +65,17 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     private CustomGUISlotRenderer customRenderer;
     
     private GuiProxy guiproxy;
-    private boolean showProxy;
+    private GuiReconnect guiReconnect;
+    private boolean useCustomGui;
+    private int customGuiMode;
     
     public GuiMultiplayer(GuiScreen parentScreen)
     {
         this.parentScreen = parentScreen;
         customRenderer = new CustomGUISlotRenderer(this);
         guiproxy = Management.instance.proxymgr.getGui();
-        showProxy = false;
+        guiReconnect = new GuiReconnect();
+        useCustomGui = false;
     }
 
     /**
@@ -221,7 +225,14 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             {
                 this.refreshServerList();
             }else if(button.id == 9) {
-        	showProxy = !isShowProxy();
+		useCustomGui = !isCustomGui();
+		customGuiMode = 1;
+            }else if(button.id == 10) {
+		useCustomGui = !isCustomGui();
+		customGuiMode = 2;
+		guiReconnect.updateIP();
+		guiReconnect.setReconnectState("Pending");
+		guiReconnect.setReconnectColor(Management.instance.colorBlue);
             }
         }
     }
@@ -300,8 +311,12 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
      */
     protected void keyTyped(char typedChar, int keyCode) throws IOException{
 	
-	if(isShowProxy()) {
-	    guiproxy.handleKeyboardInput(typedChar, keyCode);
+	if(isCustomGui()) {
+	    if(customGuiMode == 1) {
+		 guiproxy.handleKeyboardInput(typedChar, keyCode);
+	    }else if(customGuiMode == 2) {
+		guiReconnect.handleKeyboardInput(typedChar, keyCode);
+	    }
 	}
 	
         int i = this.getServerListSelector().func_148193_k();
@@ -389,8 +404,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
                 {
                     //super.keyTyped(typedChar, keyCode);
 		    if (keyCode == 1) {
-			if (showProxy) {
-			    showProxy = false;
+			if (useCustomGui) {
+			    useCustomGui = false;
 			} else {
 			    this.mc.displayGuiScreen((GuiScreen) null);
 
@@ -409,8 +424,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             {
                 //super.keyTyped(typedChar, keyCode);
 		if (keyCode == 1) {
-		    if (showProxy) {
-			showProxy = false;
+		    if (useCustomGui) {
+			useCustomGui = false;
 		    } else {
 			this.mc.displayGuiScreen((GuiScreen) null);
 
@@ -439,8 +454,12 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 	if (this.hoveringText != null) {
 	    this.drawHoveringText(Lists.newArrayList(Splitter.on("\n").split(this.hoveringText)), mouseX, mouseY);
 	}
-        if(isShowProxy()) {
-            guiproxy.drawScreen(mouseX, mouseY, partialTicks);
+        if(isCustomGui()) {
+            if(customGuiMode == 1) {
+        	guiproxy.drawScreen(mouseX, mouseY, partialTicks);
+            }else if(customGuiMode == 2) {
+        	guiReconnect.drawScreen(mouseX, mouseY, partialTicks);
+            }
         }
     }
     private void drawBackround() {
@@ -502,8 +521,12 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 	// this.getServerListSelector().mouseClicked(mouseX, mouseY, mouseButton);
-	if(isShowProxy()) {
-	    guiproxy.mouseClicked(mouseX, mouseY, mouseButton);
+	if(isCustomGui()) {
+	    if(customGuiMode == 1) {
+		 guiproxy.mouseClicked(mouseX, mouseY, mouseButton);
+	    }else if(customGuiMode == 2) {
+		guiReconnect.mouseClicked(mouseX, mouseY, mouseButton);
+	    }
 	}else {
 	    super.mouseClicked(mouseX, mouseY, mouseButton);
 	    customRenderer.handleMouseClicked(mouseX, mouseY, mouseButton);
@@ -566,7 +589,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 	return serverListSelector;
     }
 
-    public boolean isShowProxy() {
-	return showProxy;
+    public boolean isCustomGui() {
+	return useCustomGui;
     }
 }

@@ -15,7 +15,6 @@ public class ProxyManager {
 
     private ArrayList<Proxy> proxys = new ArrayList<>();
     private Future<?> testProxy;
-    private Socket socket = new Socket();
 
     private Proxy currentProxy;
     private boolean useProxy;
@@ -57,14 +56,22 @@ public class ProxyManager {
     }
     
     private void pingHost(Proxy proxy) {
+	Socket socket = new Socket();
 	try {
 	    socket.connect(new InetSocketAddress(proxy.getIP(), proxy.getPort()), 5000);
 	    gui.setProxyState("Connected");
 	    gui.setMessageColor(Management.instance.colorBlue);
+	    useProxy = true;
+	    socket.close();
 	} catch (IOException e) {
 	    e.printStackTrace();
-	    gui.setProxyState("Invalid Proxy");
-	    gui.setMessageColor(Color.RED);
+	    if(e.toString().contains("already connected")) {
+		gui.setProxyState("Already Connected");
+		    gui.setMessageColor(Management.instance.colorBlue);
+	    }else {
+		gui.setProxyState("Invalid Proxy");
+		    gui.setMessageColor(Color.RED);
+	    }
 	}
     }
 
