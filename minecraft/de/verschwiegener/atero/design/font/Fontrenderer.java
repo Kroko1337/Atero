@@ -57,7 +57,7 @@ public class Fontrenderer {
 
 	unicodefont.addGlyphs(text);
 	try {
-	   unicodefont.loadGlyphs();
+	    unicodefont.loadGlyphs();
 	} catch (final Exception e) {
 	    e.printStackTrace();
 	}
@@ -86,9 +86,9 @@ public class Fontrenderer {
 
 	GL11.glScaled(scaled, scaled, scaled);
 
-	//unicodefont.addGlyphs(text);
+	// unicodefont.addGlyphs(text);
 	try {
-	   // unicodefont.loadGlyphs();
+	    // unicodefont.loadGlyphs();
 	} catch (final Exception e) {
 	    e.printStackTrace();
 	}

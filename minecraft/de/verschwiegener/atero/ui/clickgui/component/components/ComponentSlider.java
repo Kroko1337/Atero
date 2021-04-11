@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.component.Component;

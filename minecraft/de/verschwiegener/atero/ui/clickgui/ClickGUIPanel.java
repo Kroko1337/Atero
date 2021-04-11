@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;

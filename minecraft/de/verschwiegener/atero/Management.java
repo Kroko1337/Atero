@@ -13,8 +13,6 @@ import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
 import de.verschwiegener.atero.audio.Streamer;
 import de.verschwiegener.atero.command.CommandManager;
-import de.verschwiegener.atero.design.Design;
-import de.verschwiegener.atero.design.DesignManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.ModuleManager;
@@ -33,7 +31,6 @@ public class Management {
     public final String CLIENT_VERSION = "0.0.0.1";
     public String selectedDesign = "AteroDesign";
 
-    public Design currentDesign;
     public Color colorBlue = new Color(0, 161, 249);
     public Color colorBlack = new Color(28, 28, 28);
     public Color colorGray = new Color(45, 45, 45);
@@ -44,7 +41,6 @@ public class Management {
     public SettingsManager settingsmgr;
     public ModuleManager modulemgr;
     public CommandManager commandmgr;
-    public DesignManager designmgr;
     public ClickGUI clickgui;
     public Fontrenderer fontrenderer;
     public Fontrenderer fontrendererBold;
@@ -61,7 +57,6 @@ public class Management {
 	settingsmgr = new SettingsManager();
 	modulemgr = new ModuleManager();
 	commandmgr = new CommandManager();
-	designmgr = new DesignManager();
 	streamManager = new StreamManager();
 	streamManager.updateStreams();
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
@@ -73,7 +68,6 @@ public class Management {
 
 	clickgui = new ClickGUI();
 
-	currentDesign = designmgr.getDesignByName(selectedDesign);
     }
 
     public String getTitle() {

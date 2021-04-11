@@ -3,7 +3,6 @@ package de.verschwiegener.atero.ui.clickgui;
 import java.awt.Color;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.design.Design;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 
 public class ClickGUIButton {
