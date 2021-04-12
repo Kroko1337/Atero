@@ -50,33 +50,28 @@ public class Component {
 	}
 	
 	public void drawComponent(int x, int y) {
-		if(parentvalid && isChange()) {
-		    System.out.println("Change");
-			setChange(false);
-			if(item.isState()) {
-			    System.out.println("extend1");
-				Component c = pe.getComponentByName(child.getName());
-				if(c.parentextendet) {
-					c.parentextendet = false;
-					 System.out.println("extend");
-					pe.extendPanelByItemName(child.getName());
-					c.setValid(true);
-				}
-			}else {
-			    System.out.println("Collapse1");
-				Component c = pe.getComponentByName(child.getName());
-				if(!c.parentextendet) {
-				    System.out.println("Collapse");
-					c.parentextendet = true;
-					pe.collapsePanelByItemName(c.getName());
-					c.setValid(false);
-				}
-			}
+	    if (parentvalid && isChange()) {
+		setChange(false);
+		if (item.isState()) {
+		    Component c = pe.getComponentByName(child.getName());
+		    if (c.parentextendet) {
+			c.parentextendet = false;
+			pe.extendPanelByItemName(child.getName());
+			c.setValid(true);
+		    }
+		} else {
+		    Component c = pe.getComponentByName(child.getName());
+		    if (!c.parentextendet) {
+			c.parentextendet = true;
+			pe.collapsePanelByItemName(c.getName());
+			c.setValid(false);
+		    }
 		}
+	    }
 	}
 	public void onMouseClicked(int x, int y, int button) {}
 	public void onMouseReleased(int mouseX, int mouseY, int state) {}
-
+	public void onKeyTyped(char typedChar, int keyCode) {}
 	public boolean isChange() {
 		return change;
 	}

@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.ui.mainmenu;
+package de.verschwiegener.atero.util.components;
 
 import java.awt.Color;
 

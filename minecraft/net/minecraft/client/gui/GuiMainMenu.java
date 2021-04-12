@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AltManager;
-import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
+import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 import java.awt.Color;

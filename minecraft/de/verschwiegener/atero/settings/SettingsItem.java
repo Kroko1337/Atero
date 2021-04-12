@@ -56,7 +56,7 @@ public class SettingsItem {
 		return minValue;
 	}
 	public void setCurrentValue(float currentValue) {
-		this.currentValue = currentValue;
+	    this.currentValue = currentValue;
 	}
 	public String getChild() {
 		return child;

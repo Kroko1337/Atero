@@ -45,7 +45,7 @@ public class Util {
 	 * https://stackoverflow.com/questions/2939218/getting-the-external-ip-address-in-java
 	 */
 	public static String getIpv4() throws IOException {
-	    URL whatismyip = new URL("http://checkip.amazonaws.com");
+	    URL whatismyip = new URL("https://ipv4.icanhazip.com/");
 	    BufferedReader in = null;
 	    try {
 		in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
@@ -62,7 +62,7 @@ public class Util {
 	    }
 	}
 	public static String getIpv6() throws IOException {
-	    URL whatismyip = new URL("http://icanhazip.com/");
+	    URL whatismyip = new URL("https://ipv6.icanhazip.com/");
 	    BufferedReader in = null;
 	    try {
 		in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));

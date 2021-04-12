@@ -4,10 +4,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.ui.mainmenu.CustomGuiButton;
 import de.verschwiegener.atero.ui.multiplayer.CustomGUISlotRenderer;
 import de.verschwiegener.atero.ui.multiplayer.GuiProxy;
 import de.verschwiegener.atero.ui.multiplayer.GuiReconnect;
+import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 import java.awt.Color;

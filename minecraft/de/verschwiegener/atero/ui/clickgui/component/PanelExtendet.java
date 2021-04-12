@@ -97,35 +97,20 @@ public class PanelExtendet {
 
     public void drawScreen(final int mouseX, final int mouseY) {
 	if (!isEmpty) {
-	   /*if (animate) {
-		switch (state) {
-		case 1:
-		    setAnimationX(animationX + 1);
-		    if (animationX == width || animationX > width) {
-			animate = false;
-			setAnimationX(width);
-			setState(2);
-		    }
-		    break;
-		case 2:
-		    setAnimationX(animationX - 1);
-		    if (animationX == 17 || animationX < 17) {
-			animate = false;
-			setAnimationX(17);
-			setState(1);
-		    }
-		    break;
-		}
-	    }*/
+	    /*
+	     * if (animate) { switch (state) { case 1: setAnimationX(animationX + 1); if
+	     * (animationX == width || animationX > width) { animate = false;
+	     * setAnimationX(width); setState(2); } break; case 2: setAnimationX(animationX
+	     * - 1); if (animationX == 17 || animationX < 17) { animate = false;
+	     * setAnimationX(17); setState(1); } break; } }
+	     */
 	    if ((animate || state != 1) && panel.getState() == 1) {
 		RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
 			Management.instance.colorBlack);
 	    }
 
 	    if (getState() == 2 && !isAnimate() && getPanel().getState() == 1) {
-		for (final Component c : components) {
-		    c.drawComponent(mouseX, mouseY);
-		}
+		components.forEach(component -> component.drawComponent(mouseX, mouseY));
 	    }
 	}
     }
@@ -205,8 +190,12 @@ public class PanelExtendet {
 	return animate;
     }
 
+    public void onKeyTyped(final char typedChar, final int keyCode) {
+	components.forEach(component -> component.onKeyTyped(typedChar, keyCode));
+    }
+
     public void onMouseClicked(final int x, final int y, final int mousebutton) {
-	if (!isEmpty && (getState() == 2 && !isAnimate() && getPanel().getState() == 1)) {
+	if (!isEmpty && getState() == 2 && !isAnimate() && getPanel().getState() == 1) {
 	    for (final Component c : components) {
 		c.onMouseClicked(x, y, mousebutton);
 	    }

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class ClickGUIButton {
 
@@ -29,6 +30,9 @@ public class ClickGUIButton {
 		fontRenderer.drawString(name,
 			(panel.getX() * 2) + (panel.getWidth() - (fontRenderer.getStringWidth(name) / 2)),
 			(panel.getY() * 2) + (y * 2), Management.instance.colorBlue.getRGB());
+	    }
+	    if(Management.instance.clickgui.getSettingByName(name) != null && Management.instance.clickgui.isHasSearched()) {
+		 RenderUtil.drawRect(panel.getX() + 1, panel.getY() + y + 1, panel.getWidth() - 2, panel.getPanelYOffset() - 2, Management.instance.clickgui.getColorSearch(), 0.5F);
 	    }
 	}
     }

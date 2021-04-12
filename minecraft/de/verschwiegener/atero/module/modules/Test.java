@@ -42,7 +42,7 @@ public class Test extends Module {
 		items.add(new SettingsItem("TEst", false,""));
 		items.add(new SettingsItem("TEst3", false,""));
 		items.add(new SettingsItem("TEst4", true,""));
-		items.add(new SettingsItem("TEst5", 0, 100, 50,""));
+		items.add(new SettingsItem("TEst5", 0F, 99F, 50F,""));
 		ArrayList<String> items2 = new ArrayList<>();
 		items2.add("Test");
 		items2.add("LOLOLOLOLO");

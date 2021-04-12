@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.ui.mainmenu;
+package de.verschwiegener.atero.util.components;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
@@ -67,6 +67,7 @@ public class CustomGuiTextField extends GuiTextField {
     private Predicate<String> field_175209_y = Predicates.<String>alwaysTrue();
     
     private Fontrenderer fontRenderer;
+    private boolean light;
 
     public CustomGuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width,
 	    int par6Height) {
@@ -78,6 +79,18 @@ public class CustomGuiTextField extends GuiTextField {
 	this.width = par5Width;
 	this.height = par6Height;
 	this.fontRenderer = Management.instance.fontrenderer;
+    }
+    public CustomGuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width,
+	    int par6Height, boolean light) {
+	super(componentId, fontrendererObj, x, y, par5Width, par6Height);
+	this.id = componentId;
+	this.fontRendererInstance = fontrendererObj;
+	this.xPosition = x;
+	this.yPosition = y;
+	this.width = par5Width;
+	this.height = par6Height;
+	this.fontRenderer = Management.instance.fontrenderer;
+	this.light = light;
     }
 
     public void func_175207_a(GuiPageButtonList.GuiResponder p_175207_1_) {
@@ -432,6 +445,15 @@ public class CustomGuiTextField extends GuiTextField {
 	    this.setCursorPosition(this.fontRendererInstance.trimStringToWidth(s, i).length() + this.lineScrollOffset);
 	}
     }
+    public void setyPosition(int yPosition) {
+	this.yPosition = yPosition;
+    }
+    public int getyPosition() {
+	return yPosition;
+    }
+    public void setLight(boolean light) {
+	this.light = light;
+    }
 
     /**
      * Draws the textbox
@@ -439,7 +461,10 @@ public class CustomGuiTextField extends GuiTextField {
     public void drawTextBox() {
 	if (this.getVisible()) {
 	    RenderUtil.fillRect(xPosition, yPosition, width, height, Management.instance.colorGray);
-	    RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
+	    if(!light) {
+		//RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
+	    }
+	    //RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
 
 	    int i = this.isEnabled ? this.enabledColor : this.disabledColor;
 	    int j = this.cursorPosition - this.lineScrollOffset;
@@ -473,10 +498,10 @@ public class CustomGuiTextField extends GuiTextField {
 	    }
 
 	    if (s.length() > 0 && flag && j < s.length()) {
-		fontRenderer.drawString(s.substring(j), j1 * 2, k1 * 2, i);
+		fontRenderer.drawString(s.substring(j), j1 * 2 + 1, i1 * 2 - 4, i);
 		j1 = this.fontRenderer.getStringWidth2(s.substring(j));
 	    }
-
+	    
 	    if (flag1) {
 		if (flag2) {
 		    Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);

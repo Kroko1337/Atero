@@ -3,6 +3,10 @@ package de.verschwiegener.atero.ui.mainmenu;
 import com.mojang.authlib.Agent;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
+
+import de.verschwiegener.atero.util.components.CustomGuiButton;
+import de.verschwiegener.atero.util.components.CustomGuiTextField;
+
 import java.io.IOException;
 import java.net.Proxy;
 
