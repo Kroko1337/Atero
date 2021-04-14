@@ -60,7 +60,10 @@ public class ComponentCombobox extends Component {
 		    getPanelExtendet().collapsePanelByYOffset(12 * getItem().getModes().size(), getName());
 		}
 	    } else if (extendet) {
-		getItem().setCurrent(getComboboxItem(x, y));
+		String value = getComboboxItem(x, y);
+		if(value != null) {
+		    getItem().setCurrent(getComboboxItem(x, y));
+		}
 	    }
 	}
     }
@@ -74,7 +77,7 @@ public class ComponentCombobox extends Component {
     }
 
     public boolean isComboboxHovered(int mouseX, int mouseY) {
-	return mouseX > (getPanelExtendet().getPanel().getX() + 1)
+	return mouseX > (getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + 1)
 		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2) + 1)
 		&& mouseY > (getComponentY() - 6) && mouseY < (getComponentY() + 7);
     }

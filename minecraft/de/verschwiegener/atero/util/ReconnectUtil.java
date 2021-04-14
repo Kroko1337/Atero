@@ -10,8 +10,6 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.profesorfalken.jpowershell.PowerShell;
-
 public class ReconnectUtil {
     
     static String xmlbody;

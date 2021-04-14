@@ -1,8 +1,15 @@
 package net.minecraft.client.renderer.entity;
 
+import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.google.common.collect.Lists;
+
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.combat.Killaura;
+
 import java.nio.FloatBuffer;
 import java.util.List;
+import java.util.Objects;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -145,6 +152,34 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 }
 
                 float f8 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+                
+		if (entity instanceof EntityPlayerSP) {
+		    if (Objects.requireNonNull(Objects
+			    .requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled())) {
+			if(Killaura.hasTarget()) {
+			    float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
+					EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
+				float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,
+					EventPreMotionUpdate.getInstance.getPitch(), partialTicks);
+
+				f = yaw;
+				f2 = yaw - f;
+				f8 = pitch;   
+			}
+		    }
+		    if (Objects.requireNonNull(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Scaffold")).isEnabled())) {
+			float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
+				EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
+			float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,
+				EventPreMotionUpdate.getInstance.getPitch(), partialTicks);
+
+			f = yaw;
+			f2 = yaw - f;
+			f8 = pitch;   
+		    }
+		}
+
+                
                 this.renderLivingAt(entity, x, y, z);
                 float f7 = this.handleRotationFloat(entity, partialTicks);
                 this.rotateCorpse(entity, f7, f, partialTicks);

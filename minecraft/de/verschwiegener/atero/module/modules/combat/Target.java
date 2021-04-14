@@ -19,7 +19,8 @@ public class Target extends Module{
 	public void setup() {
 		super.setup();
 		ArrayList<SettingsItem> items = new ArrayList<>();
-		items.add(new SettingsItem("Player", true, ""));
+		items.add(new SettingsItem("Player", true, "Death"));
+		items.add(new SettingsItem("Death", false, ""));
 		items.add(new SettingsItem("Animals", false, ""));
 		items.add(new SettingsItem("Mobs", false, ""));
 		items.add(new SettingsItem("Villager", false, ""));

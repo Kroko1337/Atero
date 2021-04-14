@@ -462,7 +462,7 @@ public class CustomGuiTextField extends GuiTextField {
 	if (this.getVisible()) {
 	    RenderUtil.fillRect(xPosition, yPosition, width, height, Management.instance.colorGray);
 	    if(!light) {
-		//RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
+		RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
 	    }
 	    //RenderUtil.fillRect(xPosition, yPosition + height - 2, width, 1, Management.instance.colorBlue);
 

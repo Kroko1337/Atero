@@ -83,15 +83,6 @@ public class ClickGUIPanel {
 	    pe.setAnimate(true);
 	}
     }
-    public void extendNeeded() {
-	for(ClickGUIButton button : modules) {
-	    if(Management.instance.clickgui.getSettingByName(button.getName()) != null) {
-		state = 2;
-		animate = true;
-		Management.instance.clickgui.animateExtension(this);
-	    }
-	}
-    }
 
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
 	// Drags the panel

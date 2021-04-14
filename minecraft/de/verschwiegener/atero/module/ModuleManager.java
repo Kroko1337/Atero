@@ -6,6 +6,7 @@ import de.verschwiegener.atero.module.modules.Test;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.combat.Target;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
+import de.verschwiegener.atero.module.modules.world.Scaffold;
 import net.minecraft.client.Minecraft;
 
 public class ModuleManager {
@@ -17,6 +18,7 @@ public class ModuleManager {
 	modules.add(new ClickGui());
 	modules.add(new Killaura());
 	modules.add(new Target());
+	modules.add(new Scaffold());
     }
 
     public Module getModuleByName(final String name) {

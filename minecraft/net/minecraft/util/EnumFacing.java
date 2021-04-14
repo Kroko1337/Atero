@@ -40,15 +40,15 @@ public enum EnumFacing implements IStringSerializable
     private static final EnumFacing[] $VALUES = new EnumFacing[]{DOWN, UP, NORTH, SOUTH, WEST, EAST};
     private static final String __OBFID = "CL_00001201";
 
-    private EnumFacing(String p_i17_3_, int p_i17_4_, int p_i17_5_, int p_i17_6_, int p_i17_7_, String p_i17_8_, EnumFacing.AxisDirection p_i17_9_, EnumFacing.Axis p_i17_10_, Vec3i p_i17_11_)
+    private EnumFacing(String p_i17_3_, int p_i17_4_, int index, int opposite, int horizontalIndex, String name, EnumFacing.AxisDirection axisDirection, EnumFacing.Axis axis, Vec3i directionVec)
     {
-        this.index = p_i17_5_;
-        this.horizontalIndex = p_i17_7_;
-        this.opposite = p_i17_6_;
-        this.name = p_i17_8_;
-        this.axis = p_i17_10_;
-        this.axisDirection = p_i17_9_;
-        this.directionVec = p_i17_11_;
+        this.index = index;
+        this.horizontalIndex = horizontalIndex;
+        this.opposite = opposite;
+        this.name = name;
+        this.axis = axis;
+        this.axisDirection = axisDirection;
+        this.directionVec = directionVec;
     }
 
     /**
@@ -310,6 +310,11 @@ public enum EnumFacing implements IStringSerializable
         }
 
         return enumfacing;
+    }
+    
+    public static EnumFacing getFacingFromVector(Vec3 vector)
+    {
+       return getFacingFromVector((float)vector.xCoord, (float)vector.yCoord, (float)vector.zCoord);
     }
 
     public String toString()

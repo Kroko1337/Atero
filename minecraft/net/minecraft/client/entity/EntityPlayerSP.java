@@ -1,6 +1,7 @@
 package net.minecraft.client.entity;
 
 import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 
 import de.verschwiegener.atero.Management;
@@ -183,6 +184,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
             else
             {
                 this.onUpdateWalkingPlayer();
+                EventPostMotionUpdate postMotion = new EventPostMotionUpdate();
+                EventManager.call(postMotion);
             }
         }
     }
@@ -228,58 +231,88 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
             this.serverSneakState = flag1;
         }
+        
 
-        if (this.isCurrentViewEntity())
-        {
-            double d0 = this.posX - this.lastReportedPosX;
-            double d1 = this.getEntityBoundingBox().minY - this.lastReportedPosY;
-            double d2 = this.posZ - this.lastReportedPosZ;
-            double d3 = (double)(this.rotationYaw - this.lastReportedYaw);
-            double d4 = (double)(this.rotationPitch - this.lastReportedPitch);
-            boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
-            boolean flag3 = d3 != 0.0D || d4 != 0.0D;
+	if (this.isCurrentViewEntity()) {
 
-            if (this.ridingEntity == null)
-            {
-                if (flag2 && flag3)
-                {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround));
-                }
-                else if (flag2)
-                {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.onGround));
-                }
-                else if (flag3)
-                {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
-                }
-                else
-                {
-                    this.sendQueue.addToSendQueue(new C03PacketPlayer(this.onGround));
-                }
-            }
-            else
-            {
-                this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ, this.rotationYaw, this.rotationPitch, this.onGround));
-                flag2 = false;
-            }
+	    double d0 = preMotion.getX() - this.lastReportedPosX;
+	    double d1 = preMotion.getY() - this.lastReportedPosY;
+	    double d2 = preMotion.getZ() - this.lastReportedPosZ;
+	    double d3 = preMotion.getYaw() - this.lastReportedYaw;
+	    double d4 = preMotion.getPitch() - this.lastReportedPitch;
+	    boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
+	    boolean flag3 = d3 != 0.0D || d4 != 0.0D;
 
-            ++this.positionUpdateTicks;
+	    if (this.ridingEntity == null && preMotion.getYaw() != 0 || preMotion.getPitch() != 0) {
+		if (flag2 && flag3) {
+		    this.sendQueue.addToSendQueue(
+			    new C03PacketPlayer.C06PacketPlayerPosLook(preMotion.getX(), preMotion.getY(),
+				    preMotion.getZ(), preMotion.getYaw(), preMotion.getPitch(), preMotion.onGround()));
+		} else if (flag2) {
+		    this.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(preMotion.getX(),
+			    preMotion.getY(), preMotion.getZ(), preMotion.onGround()));
+		} else if (flag3) {
+		    this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(preMotion.getYaw(),
+			    preMotion.getPitch(), preMotion.onGround()));
+		} else {
+		    this.sendQueue.addToSendQueue(new C03PacketPlayer(preMotion.onGround()));
+		}
+	    } else {
+		this.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D,
+			this.motionZ, preMotion.getYaw(), preMotion.getPitch(), preMotion.onGround()));
+		flag2 = false;
+	    }
 
-            if (flag2)
-            {
-                this.lastReportedPosX = this.posX;
-                this.lastReportedPosY = this.getEntityBoundingBox().minY;
-                this.lastReportedPosZ = this.posZ;
-                this.positionUpdateTicks = 0;
-            }
+	    ++this.positionUpdateTicks;
 
-            if (flag3)
-            {
-                this.lastReportedYaw = this.rotationYaw;
-                this.lastReportedPitch = this.rotationPitch;
-            }
-        }
+	    if (flag2) {
+		this.lastReportedPosX = preMotion.getX();
+		this.lastReportedPosY = preMotion.getY();
+		this.lastReportedPosZ = preMotion.getZ();
+		this.positionUpdateTicks = 0;
+	    }
+	    //this.prevRotationYawHead = preMotion.getYaw();
+	    //this.prevRotationPitchHead = preMotion.getPitch();
+
+	    if (flag3) {
+		this.lastReportedYaw = preMotion.getYaw();
+		this.lastReportedPitch = preMotion.getPitch();
+	    }
+
+	    /*
+	     * double d0 = this.posX - this.lastReportedPosX; double d1 =
+	     * this.getEntityBoundingBox().minY - this.lastReportedPosY; double d2 =
+	     * this.posZ - this.lastReportedPosZ; double d3 = (double)(this.rotationYaw -
+	     * this.lastReportedYaw); double d4 = (double)(this.rotationPitch -
+	     * this.lastReportedPitch); boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 >
+	     * 9.0E-4D || this.positionUpdateTicks >= 20; boolean flag3 = d3 != 0.0D || d4
+	     * != 0.0D;
+	     * 
+	     * if (this.ridingEntity == null) { if (flag2 && flag3) {
+	     * this.sendQueue.addToSendQueue(new
+	     * C03PacketPlayer.C06PacketPlayerPosLook(this.posX,
+	     * this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw,
+	     * this.rotationPitch, this.onGround)); } else if (flag2) {
+	     * this.sendQueue.addToSendQueue(new
+	     * C03PacketPlayer.C04PacketPlayerPosition(this.posX,
+	     * this.getEntityBoundingBox().minY, this.posZ, this.onGround)); } else if
+	     * (flag3) { this.sendQueue.addToSendQueue(new
+	     * C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch,
+	     * this.onGround)); } else { this.sendQueue.addToSendQueue(new
+	     * C03PacketPlayer(this.onGround)); } } else { this.sendQueue.addToSendQueue(new
+	     * C03PacketPlayer.C06PacketPlayerPosLook(this.motionX, -999.0D, this.motionZ,
+	     * this.rotationYaw, this.rotationPitch, this.onGround)); flag2 = false; }
+	     * 
+	     * ++this.positionUpdateTicks;
+	     * 
+	     * if (flag2) { this.lastReportedPosX = this.posX; this.lastReportedPosY =
+	     * this.getEntityBoundingBox().minY; this.lastReportedPosZ = this.posZ;
+	     * this.positionUpdateTicks = 0; }
+	     * 
+	     * if (flag3) { this.lastReportedYaw = this.rotationYaw; this.lastReportedPitch
+	     * = this.rotationPitch; }
+	     */
+	}
     }
 
     /**

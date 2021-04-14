@@ -3,6 +3,9 @@ package de.verschwiegener.atero.ui.clickgui;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.sun.tools.javac.main.Main.Result;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
@@ -36,7 +39,7 @@ public class ClickGUI extends GuiScreen {
         super.initGui();
         this.searchBar = new CustomGuiTextField(1, fontRendererObj, width / 2 -50, -20, 100, 18);
         this.searchBar.setLight(true);
-        this.searchBar.setVisible(true);
+        this.searchBar.setVisible(false);
     }
     public Color getColorSearch() {
 	return colorSearch;
@@ -116,7 +119,7 @@ public class ClickGUI extends GuiScreen {
 
     @Override
     protected void keyTyped(final char typedChar, final int keyCode) throws IOException {
-	if(keyCode == 1 && !this.searchBar.getVisible()) {
+	if(!this.searchBar.getVisible()) {
 	    super.keyTyped(typedChar, keyCode);
 	}
 	this.searchBar.textboxKeyTyped(typedChar, keyCode);
@@ -125,21 +128,21 @@ public class ClickGUI extends GuiScreen {
 	case 28:
 	    if(this.searchBar.isFocused()) {
 		 animateSearchBar(1);
-		 extendNeeded();
 		 this.searchBar.setFocused(false);
 	    }
 	    if(!this.searchBar.getText().isBlank()) {
-		results.clear();
 		colorSearch = new Color(255, 0, 0, 255);
 		hasSearched = true;
-		results.addAll(Management.instance.settingsmgr.getSearchResult(this.searchBar.getText()));
+		results.clear();
+		results = Management.instance.settingsmgr.getSearchResult(this.searchBar.getText());
+		extendNeeded();
 	    }
 	    
 	    break;
 	case 15:
-	    animateSearchBar(2);
 	    this.searchBar.setText("");
 	    this.searchBar.setFocused(true);
+	    animateSearchBar(2);
 	    break;
 	case 1:
 	    if(this.searchBar.getVisible()) {
@@ -169,9 +172,7 @@ public class ClickGUI extends GuiScreen {
 			    }
 			    break;
 			case 2:
-			    System.out.println("Case 2");
 			    this.searchBar.yPosition += 1;
-			    System.out.println("Y: " + this.searchBar.yPosition);
 			    if(this.searchBar.yPosition == 10 || this.searchBar.yPosition > 10) {
 				animate = false;
 				this.searchBar.setyPosition(10);
@@ -183,8 +184,16 @@ public class ClickGUI extends GuiScreen {
 	    }
 	});
     }
-    private void extendNeeded() {
-	panels.forEach(panel -> panel.extendNeeded());
+    public void extendNeeded() {
+	for(ClickGUIPanel panel : panels) {
+	    for(ClickGUIButton button : panel.getModules()) {
+		    if(Management.instance.clickgui.getSettingByName(button.getName()) != null) {
+			panel.setState(2);
+			panel.setAnimate(true);
+			animateExtension(panel);
+		    }
+		}   
+	}
     }
 
     @Override

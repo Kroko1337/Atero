@@ -10,6 +10,7 @@ import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.module.modules.world.Scaffold;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -1179,7 +1180,7 @@ public abstract class Entity implements ICommandSender
 		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState() && (Killaura.target != null || Killaura.preaimtarget != null)) {
 			yaw = Killaura.getYaw();
 		}else {
-			yaw = this.rotationYaw;
+		    yaw = this.rotationYaw;
 		}
 		
 		float f = strafe * strafe + forward * forward;
@@ -1416,19 +1417,22 @@ public abstract class Entity implements ICommandSender
     public Vec3 getLook(float partialTicks) {
     	//TODO Scaffold adden
     	//Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled() &&
-        if (!(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled())) {
-            if (partialTicks == 1.0F) {
-                return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-			} else {
+	if (!(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled()) && !(Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled())) {
+	    if (partialTicks == 1.0F) {
+		return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
+	    } else {
 
-				float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
-				float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
-				return this.getVectorForRotation(f, f1);
+		float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
+		float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
+		return this.getVectorForRotation(f, f1);
 
-			}
-        } else {
-            return this.getVectorForRotation(EventPreMotionUpdate.getInstance.getPitch(),EventPreMotionUpdate.getInstance.getYaw());
-        }
+	    }
+	} else {
+	    //System.out.println("Pitch: " + EventPreMotionUpdate.getInstance.getPitch());
+	    //System.out.println("Yaw: " + EventPreMotionUpdate.getInstance.getYaw());
+	    return this.getVectorForRotation(EventPreMotionUpdate.getInstance.getPitch(),
+		    EventPreMotionUpdate.getInstance.getYaw());
+	}
     }
     /*public Vec3 getLook(float partialTicks)
     {
