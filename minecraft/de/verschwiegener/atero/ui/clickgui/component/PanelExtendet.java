@@ -8,6 +8,7 @@ import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCheckBox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 import de.verschwiegener.atero.ui.clickgui.component.components.ComponentSlider;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentTextField;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class PanelExtendet {
@@ -49,6 +50,10 @@ public class PanelExtendet {
 		    components.add(new ComponentSlider(si.getName(), yoffset, this));
 		    yoffset += 15;
 		    break;
+		case Textfield:
+		    components.add(new ComponentTextField(si.getName(), yoffset, this));
+		    yoffset += 13;
+		    break;
 		}
 	    }
 	    height = yoffset - 4;
@@ -61,14 +66,19 @@ public class PanelExtendet {
 	final Component component = getComponentByName(name);
 	final int count = components.indexOf(component);
 	int offset = 0;
-	if (component instanceof ComponentSlider) {
+	switch (component.getItem().getCategory()) {
+	case Checkbox:
+	    offset = 13;
+	    break;
+	case Combobox:
+	    offset = 13;
+	    break;
+	case Slider:
 	    offset = 15;
-	}
-	if (component instanceof ComponentCombobox) {
+	    break;
+	case Textfield:
 	    offset = 13;
-	}
-	if (component instanceof ComponentCheckBox) {
-	    offset = 13;
+	    break;
 	}
 	for (int i = count; i < components.size(); i++) {
 	    try {
@@ -97,13 +107,6 @@ public class PanelExtendet {
 
     public void drawScreen(final int mouseX, final int mouseY) {
 	if (!isEmpty) {
-	    /*
-	     * if (animate) { switch (state) { case 1: setAnimationX(animationX + 1); if
-	     * (animationX == width || animationX > width) { animate = false;
-	     * setAnimationX(width); setState(2); } break; case 2: setAnimationX(animationX
-	     * - 1); if (animationX == 17 || animationX < 17) { animate = false;
-	     * setAnimationX(17); setState(1); } break; } }
-	     */
 	    if ((animate || state != 1) && panel.getState() == 1) {
 		RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
 			Management.instance.colorBlack);
@@ -119,14 +122,19 @@ public class PanelExtendet {
 	final Component component = getComponentByName(name);
 	final int count = components.indexOf(component);
 	int offset = 0;
-	if (component instanceof ComponentSlider) {
+	switch (component.getItem().getCategory()) {
+	case Checkbox:
+	    offset = 13;
+	    break;
+	case Combobox:
+	    offset = 13;
+	    break;
+	case Slider:
 	    offset = 15;
-	}
-	if (component instanceof ComponentCombobox) {
+	    break;
+	case Textfield:
 	    offset = 13;
-	}
-	if (component instanceof ComponentCheckBox) {
-	    offset = 13;
+	    break;
 	}
 	for (int i = count; i < components.size(); i++) {
 	    try {

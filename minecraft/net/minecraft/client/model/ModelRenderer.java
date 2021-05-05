@@ -120,9 +120,9 @@ public class ModelRenderer
     /**
      * Creates a textured box. Args: originX, originY, originZ, width, height, depth, scaleFactor.
      */
-    public void addBox(float p_78790_1_, float p_78790_2_, float p_78790_3_, int width, int height, int depth, float scaleFactor)
+    public void addBox(float posX1, float posY1, float posZ1, int width, int height, int depth, float scaleFactor)
     {
-        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, p_78790_1_, p_78790_2_, p_78790_3_, width, height, depth, scaleFactor));
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, posX1, posY1, posZ1, width, height, depth, scaleFactor));
     }
 
     public void setRotationPoint(float rotationPointXIn, float rotationPointYIn, float rotationPointZIn)
@@ -132,82 +132,67 @@ public class ModelRenderer
         this.rotationPointZ = rotationPointZIn;
     }
 
-    public void render(float p_78785_1_)
-    {
-        if (!this.isHidden && this.showModel)
-        {
-            if (!this.compiled)
-            {
-                this.compileDisplayList(p_78785_1_);
-            }
+    public void render(float p_78785_1_) {
+	if (!this.isHidden && this.showModel) {
+	    if (!this.compiled) {
+		this.compileDisplayList(p_78785_1_);
+	    }
 
-            GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
+	    GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
 
-            if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F)
-            {
-                if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
-                {
-                    GlStateManager.callList(this.displayList);
+	    if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F) {
+		if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F) {
+		    GlStateManager.callList(this.displayList);
 
-                    if (this.childModels != null)
-                    {
-                        for (int k = 0; k < this.childModels.size(); ++k)
-                        {
-                            ((ModelRenderer)this.childModels.get(k)).render(p_78785_1_);
-                        }
-                    }
-                }
-                else
-                {
-                    GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_, this.rotationPointZ * p_78785_1_);
-                    GlStateManager.callList(this.displayList);
+		    if (this.childModels != null) {
+			for (int k = 0; k < this.childModels.size(); ++k) {
+			    ((ModelRenderer) this.childModels.get(k)).render(p_78785_1_);
+			}
+		    }
+		} else {
+		    GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_,
+			    this.rotationPointZ * p_78785_1_);
+		    GlStateManager.callList(this.displayList);
 
-                    if (this.childModels != null)
-                    {
-                        for (int j = 0; j < this.childModels.size(); ++j)
-                        {
-                            ((ModelRenderer)this.childModels.get(j)).render(p_78785_1_);
-                        }
-                    }
+		    if (this.childModels != null) {
+			for (int j = 0; j < this.childModels.size(); ++j) {
+			    ((ModelRenderer) this.childModels.get(j)).render(p_78785_1_);
+			}
+		    }
 
-                    GlStateManager.translate(-this.rotationPointX * p_78785_1_, -this.rotationPointY * p_78785_1_, -this.rotationPointZ * p_78785_1_);
-                }
-            }
-            else
-            {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_, this.rotationPointZ * p_78785_1_);
+		    GlStateManager.translate(-this.rotationPointX * p_78785_1_, -this.rotationPointY * p_78785_1_,
+			    -this.rotationPointZ * p_78785_1_);
+		}
+	    } else {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_,
+			this.rotationPointZ * p_78785_1_);
 
-                if (this.rotateAngleZ != 0.0F)
-                {
-                    GlStateManager.rotate(this.rotateAngleZ * (180F / (float)Math.PI), 0.0F, 0.0F, 1.0F);
-                }
+		if (this.rotateAngleZ != 0.0F) {
+		    GlStateManager.rotate(this.rotateAngleZ * (180F / (float) Math.PI), 0.0F, 0.0F, 1.0F);
+		}
 
-                if (this.rotateAngleY != 0.0F)
-                {
-                    GlStateManager.rotate(this.rotateAngleY * (180F / (float)Math.PI), 0.0F, 1.0F, 0.0F);
-                }
+		if (this.rotateAngleY != 0.0F) {
+		    GlStateManager.rotate(this.rotateAngleY * (180F / (float) Math.PI), 0.0F, 1.0F, 0.0F);
+		}
 
-                if (this.rotateAngleX != 0.0F)
-                {
-                    GlStateManager.rotate(this.rotateAngleX * (180F / (float)Math.PI), 1.0F, 0.0F, 0.0F);
-                }
+		if (this.rotateAngleX != 0.0F) {
+		    GlStateManager.rotate(this.rotateAngleX * (180F / (float) Math.PI), 1.0F, 0.0F, 0.0F);
+		}
 
-                GlStateManager.callList(this.displayList);
+		GlStateManager.callList(this.displayList);
 
-                if (this.childModels != null)
-                {
-                    for (int i = 0; i < this.childModels.size(); ++i)
-                    {
-                        ((ModelRenderer)this.childModels.get(i)).render(p_78785_1_);
-                    }
-                }
+		if (this.childModels != null) {
+		    for (int i = 0; i < this.childModels.size(); ++i) {
+			((ModelRenderer) this.childModels.get(i)).render(p_78785_1_);
+		    }
+		}
 
-                GlStateManager.popMatrix();
-            }
+		GlStateManager.popMatrix();
+	    }
 
-            GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
-        }
+	    GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
+	}
     }
 
     public void renderWithRotation(float p_78791_1_)

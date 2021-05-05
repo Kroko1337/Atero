@@ -19,11 +19,13 @@ public class Component {
 		this.y = y;
 		this.pe = pe;
 		item = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(name);
-		child = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getChild());
-		valid = true;
-		if((child != null)) {
-			parentvalid = true;
-			change = true;
+		if(item.getChild() != null) {
+		    child = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getChild());
+			valid = true;
+			if((child != null)) {
+				parentvalid = true;
+				change = true;
+			}
 		}
 	}
 	

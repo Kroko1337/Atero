@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.sun.tools.javac.main.Main.Result;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
@@ -52,12 +51,35 @@ public class ClickGUI extends GuiScreen {
 	    hasSearched = false;
 	}
     }
-
-    public void animateExtension(final ClickGUIPanel p2) {
+    private void drawPressed(final boolean longPressed, final ClickGUIPanel p2) {
+	boolean isAnimate = true;
 	final TimeUtils animationTimer = new TimeUtils();
-	Management.instance.EXECUTOR_SERVICE.submit(() -> {
+	final int delay = longPressed ? 19 : 5;
+	if(!p2.isDrawCircle()) {
+	    p2.setDrawCircle(true);
+	    p2.setLongPressed(longPressed);
+	    Management.instance.ANIMATION_EXECUTOR.submit(() -> {
+		    int circlesize = 0;
+		    while(p2.isDrawCircle()) {
+			if(animationTimer.isDelayComplete(delay)) {
+			    animationTimer.reset();
+			    circlesize++;
+			    p2.setCircleAnimationDiameter(circlesize);
+			    if(circlesize >= 50) {
+				p2.setDrawCircle(false);
+				p2.setCircleAnimationDiameter(0);
+			    }
+			}
+		    }
+		});
+	}
+    }
+
+    private void animateExtension(final ClickGUIPanel p2) {
+	final TimeUtils animationTimer = new TimeUtils();
+	Management.instance.ANIMATION_EXECUTOR.submit(() -> {
 	    while (p2.isAnimate()) {
-		if (animationTimer.hasReached(10)) {
+		if (animationTimer.hasReached(8)) {
 		    animationTimer.reset();
 		    switch (p2.getState()) {
 		    case 1:
@@ -157,7 +179,7 @@ public class ClickGUI extends GuiScreen {
 	if(state == 2) {
 	    this.searchBar.setVisible(true);
 	}
-	Management.instance.EXECUTOR_SERVICE.submit(() -> {
+	Management.instance.ANIMATION_EXECUTOR.submit(() -> {
 	    boolean animate = true;
 	    while(animate) {
 		if(animationTimer.hasReached(10)) {
@@ -206,8 +228,7 @@ public class ClickGUI extends GuiScreen {
 	case 1:
 	    final ClickGUIPanel p2 = getPanelButtonByPosition(mouseX, mouseY);
 	    if (p2 != null) {
-		p2.setAnimate(true);
-		animateExtension(p2);
+		drawPressed(true, p2);
 	    }
 	    break;
 	}
@@ -222,6 +243,17 @@ public class ClickGUI extends GuiScreen {
     @Override
     protected void mouseReleased(final int mouseX, final int mouseY, final int state) {
 	super.mouseReleased(mouseX, mouseY, state);
+	
+	if(state == 1) {
+	    final ClickGUIPanel p2 = getPanelButtonByPosition(mouseX, mouseY);
+	    if (p2 != null) {
+		p2.setAnimate(true);
+		p2.setCircleX(p2.getX() - mouseX);
+		p2.setCircleY(p2.getY() - mouseY);
+		animateExtension(p2);
+	    }
+	}
+	
 	for (final ClickGUIPanel p : panels) {
 	    p.onMouseReleased(mouseX, mouseY, state);
 	}

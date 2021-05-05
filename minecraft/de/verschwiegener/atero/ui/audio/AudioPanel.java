@@ -112,7 +112,7 @@ public class AudioPanel extends GuiScreen {
 	// GetSlider Value
 	if (sliderselected && isMouseSliderHoveredNoneY(mouseX, mouseY)) {
 	    double value = getSliderValue(mouseX, mouseY);
-	    Management.instance.streamer.setVolume(value);
+	    Management.instance.streamer.setVolume(value / 10);
 	}
 
 	// Main Scissor
@@ -185,7 +185,7 @@ public class AudioPanel extends GuiScreen {
     private void drawSlider() {
 	double percent = Management.instance.streamer.getVolume();
 	RenderUtil.fillRect(x + ((width / 5) * 4), y + (height - 15), 75, 1.5D, Management.instance.colorBlack);
-	RenderUtil.fillRect(x + ((width / 5) * 4), y + (height - 15), percent * 75, 1.5D,
+	RenderUtil.fillRect(x + ((width / 5) * 4), y + (height - 15), (percent * 10) * 75, 1.5D,
 		Management.instance.colorBlue);
     }
 

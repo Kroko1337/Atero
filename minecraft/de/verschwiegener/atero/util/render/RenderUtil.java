@@ -154,6 +154,26 @@ public class RenderUtil {
 
     }
     
+    public static void drawCircle(final float x, final float y, final float diameter, final Color color, boolean longPressed) {
+	final double twicePi = Math.PI * 2;
+	
+	final int triageAmount = longPressed ? (int) Math.max(4, diameter * twicePi / 4) : 10;
+
+	RenderUtil.enable();
+
+	GL11.glColor4f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F,
+		color.getAlpha() / 255.0F);
+	GL11.glScaled(0.5f, 0.5f, 0.5f);
+	GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+
+	for (int i = 0; i <= triageAmount; i++) {
+	    GL11.glVertex2d(x * 2 + diameter * Math.sin(i * twicePi / triageAmount),
+		    y * 2 + diameter * Math.cos(i * twicePi / triageAmount));
+	}
+
+	RenderUtil.disable();
+    }
+    
     public static void drawLine(final int x1, final int y1, final int x2, final int y2, final float thickness, final Color color) {
 
 	RenderUtil.enable();
@@ -318,7 +338,7 @@ public class RenderUtil {
    	Minecraft.getMinecraft().getTextureManager().bindTexture(background);
    	Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, width, height);
    	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
-   	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+   	//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
        }
 
 }

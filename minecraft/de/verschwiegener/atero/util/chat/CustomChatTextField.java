@@ -1,10 +1,13 @@
 package de.verschwiegener.atero.util.chat;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPageButtonList;
@@ -14,6 +17,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
 
@@ -537,75 +542,126 @@ public class CustomChatTextField extends GuiTextField {
     /**
      * Draws the textbox
      */
-	public void drawTextBox() {
-		if (this.getVisible()) {
-			if (this.getEnableBackgroundDrawing()) {
-				drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1,
-						this.yPosition + this.height + 1, -6250336);
-				drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height,
-						-16777216);
-			}
+    public void drawTextBox() {
+	if (this.getVisible()) {
+	    if (this.getEnableBackgroundDrawing()) {
+		drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1,
+			this.yPosition + this.height + 1, -6250336);
+		drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height,
+			-16777216);
+	    }
+	    
+	    Minecraft mc = Minecraft.getMinecraft();
+	    EntityPlayer entityplayer = mc.thePlayer;
+	    mc.getTextureManager().bindTexture(mc.thePlayer.getLocationSkin());
+	    int l2 = 8 + (0);
+	    int i3 = 8 * (1);
+	    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	    Gui.drawScaledCustomSizeModalRect(1, yPosition - 2, 8.0F, (float) l2, 8, i3, height, height, 64.0F, 64.0F);
 
-			int i = this.isEnabled ? this.enabledColor : this.disabledColor;
-			int j = this.cursorPosition - this.lineScrollOffset;
-			int k = this.selectionEnd - this.lineScrollOffset;
-			String s = this.fontRendererInstance.trimStringToWidth(this.text.substring(this.lineScrollOffset),
-					this.getWidth());
-			boolean flag = j >= 0 && j <= s.length();
-			boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
-			int l = this.enableBackgroundDrawing ? this.xPosition + 4 : this.xPosition;
-			int i1 = this.enableBackgroundDrawing ? this.yPosition + (this.height - 8) / 2 : this.yPosition;
-			int j1 = l;
-
-			if (k > s.length()) {
-				k = s.length();
-			}
-			
-			Fontrenderer fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
-			//System.err.println("Fontrenderer: " + fr.get);
-			
-			if (s.length() > 0) {
-				//Draws the text
-				String s1 = flag ? s.substring(0, j) : s;
-				fr.drawString(s1, l + 2, (i1 * 2) - 5, i);
-				//draws the Autocomplete
-				fr.drawString(AutoComplete.onAutoComplete(getText()), j1 + fr.getStringWidth(getText()) + 3, (i1 * 2) - 5, i);
-			}
-
-			boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
-			int k1 = j1;
-
-			if (!flag) {
-				k1 = j > 0 ? l + this.width : l;
-			} else if (flag2) {
-				k1 = j1 - 1;
-				--j1;
-			}
-
-			int stringlength = fr.getStringWidth(s);
-			int offset = fr.getStringWidth(s.substring(j, s.length()));
-			int offset2 = fr.getStringWidth2(s.substring(0, j));
-			if (s.length() > 0 && flag && j < s.length()) {
-				fr.drawString(s.substring(j), stringlength - offset + 7, (i1 * 2) - 5, i);
-			}
-
-			if (flag1) {
-				//Draws when more than one line is present
-				if (flag2) {
-					Gui.drawRect(l + offset2 - 1, i1 - 1, l + offset2, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
-				} else {
-					//Am ende vom text indicator
-					fr.drawString("_", l + stringlength + 2, (i1 * 2) - 4, i);
-				}
-			}
-
-			if (k != j) {
-				//Draws when text is selected
-				int l1 = l + fr.getStringWidth2(s.substring(0, j));
-				this.drawCursorVertical(k1 - 1, i1 - 1, l1, i1 +  + this.fontRendererInstance.FONT_HEIGHT);
-			}
+	    /*
+	     * if (entityplayer != null && entityplayer.isWearing(EnumPlayerModelParts.HAT))
+	     * { int j3 = 8 + (flag1 ? 8 : 0); int k3 = 8 * (flag1 ? -1 : 1);
+	     * Gui.drawScaledCustomSizeModalRect(0, k2, 40.0F, (float) j3, 8, k3, 8, 8,
+	     * 64.0F, 64.0F); }
+	     */
+	    
+	    /*int widthoffset = 0;
+		if(getText().endsWith(" ")) {
+		    widthoffset = fr.getStringWidth(replaceLast(getText(), " ", ""));
+		}else {
+		    fr.getStringWidth(getText());
 		}
+		
+		fr.drawString(AutoComplete.onAutoComplete(getText()), j1 + fr.getStringWidth(getText()) + 3, (i1 * 2) - 5, i);*/
+
+	    int i = this.isEnabled ? this.enabledColor : this.disabledColor;
+	    int j = this.cursorPosition - this.lineScrollOffset;
+	    int k = this.selectionEnd - this.lineScrollOffset;
+	    String s = this.fontRendererInstance.trimStringToWidth(this.text.substring(this.lineScrollOffset),
+		    this.getWidth());
+	    boolean flag = j >= 0 && j <= s.length();
+	    boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
+	    int l = this.enableBackgroundDrawing ? this.xPosition + 4: this.xPosition;
+	    int i1 = this.enableBackgroundDrawing ? this.yPosition + (this.height - 8) / 2 : this.yPosition;
+	    int j1 = l;
+
+	    if (k > s.length()) {
+		k = s.length();
+	    }
+
+	    Fontrenderer fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
+
+	    if (s.length() > 0)
+            {
+                String s1 = flag ? s.substring(0, j) : s;
+               // j1 = this.fontRendererInstance.drawStringWithShadow(s1, (float)l, (float)i1, i);
+                fr.drawString(s1, l + 27, i1 * 2 - 5, i);
+                j1 = fr.getStringWidth2(s1) + 2;
+                
+                int widthoffset = 0;
+                String text = "";
+		if(getText().endsWith(" ")) {
+		    text = replaceLast(getText(), " ", "");
+		    widthoffset = fr.getStringWidth(text);
+		}else {
+		    text = getText();
+		    widthoffset = fr.getStringWidth(getText());
+		}
+		System.out.println("Text: " + getText() + " Custom: " + text);
+		fr.drawString(AutoComplete.onAutoComplete(text), l + 27 + widthoffset, (i1 * 2) - 5, i);
+                
+            }
+
+            boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
+            int k1 = j1;
+
+            if (!flag)
+            {
+                k1 = j > 0 ? l + this.width : l;
+            }
+            else if (flag2)
+            {
+                k1 = j1 - 1;
+                --j1;
+            }
+            
+	    int stringlength = fr.getStringWidth(s);
+	    int offset = fr.getStringWidth(s.substring(j, s.length()));
+	    int offset2 = fr.getStringWidth2(s.substring(0, j)) + 12;
+            
+            if (s.length() > 0 && flag && j < s.length())
+            {
+                //j1 = this.fontRendererInstance.drawStringWithShadow(s.substring(j), (float)j1, (float)i1, i);
+        	fr.drawString(s.substring(j), stringlength - offset + 33, i1 * 2 - 5, i);
+            }
+
+            if (flag1)
+            {
+                if (flag2)
+                {
+                    Gui.drawRect(l + offset2 + 1, i1 - 1, l + offset2, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
+                    //Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
+                }
+                else
+                {
+                    fr.drawString("_", l + stringlength + 27, (i1 * 2) - 4, i);
+                    //this.fontRendererInstance.drawStringWithShadow("_", (float)k1, (float)i1, i);
+                }
+            }
+
+            if (k != j)
+            {
+                //int l1 = l + this.fontRendererInstance.getStringWidth(s.substring(0, k));
+                //this.drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT);
+        	int l1 = l + fr.getStringWidth2(s.substring(0, j));
+		this.drawCursorVertical(k1 - 1, i1 - 1, l1, i1 +  + this.fontRendererInstance.FONT_HEIGHT);
+            }
 	}
+    }
+    public static String replaceLast(String text, String regex, String replacement) {
+        return text.replaceFirst("(?s)"+regex+"(?!.*?"+regex+")", replacement);
+    }
 
     /**
      * draws the vertical line cursor in the textbox

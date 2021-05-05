@@ -199,6 +199,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (preMotion.isCancelled()) {
             return;
         }
+        
+        this.motionX = preMotion.getMotionX();
+        this.motionZ = preMotion.getMotionZ();
     	
         boolean flag = this.isSprinting();
 
@@ -242,7 +245,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
 	    double d4 = preMotion.getPitch() - this.lastReportedPitch;
 	    boolean flag2 = d0 * d0 + d1 * d1 + d2 * d2 > 9.0E-4D || this.positionUpdateTicks >= 20;
 	    boolean flag3 = d3 != 0.0D || d4 != 0.0D;
-
+	    
+	    
 	    if (this.ridingEntity == null && preMotion.getYaw() != 0 || preMotion.getPitch() != 0) {
 		if (flag2 && flag3) {
 		    this.sendQueue.addToSendQueue(

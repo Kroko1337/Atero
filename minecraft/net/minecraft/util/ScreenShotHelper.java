@@ -48,6 +48,7 @@ public class ScreenShotHelper
     {
         try
         {
+            System.out.println("TimeStart: " + System.currentTimeMillis());
             File file1 = new File(gameDirectory, "screenshots");
             file1.mkdir();
 
@@ -116,7 +117,9 @@ public class ScreenShotHelper
             ImageIO.write(bufferedimage, "png", (File)file2);
             IChatComponent ichatcomponent = new ChatComponentText(file2.getName());
             ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file2.getAbsolutePath()));
-            ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+            //ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+            
+            System.out.println("TimeStop: " + System.currentTimeMillis());
             return new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent});
         }
         catch (Exception exception)

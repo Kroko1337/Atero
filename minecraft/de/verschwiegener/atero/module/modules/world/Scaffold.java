@@ -56,19 +56,20 @@ public class Scaffold extends Module {
         
         mc.thePlayer.motionX *= 0.508500000F;
         mc.thePlayer.motionZ *= 0.508500000F;
-        
-        BlockPos blockPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.0D, mc.thePlayer.posZ);
+    }
+    
+    @EventTarget
+    public void onPost(EventPostMotionUpdate post) {
+	BlockPos blockPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.0D, mc.thePlayer.posZ);
 
         if (mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
             if(mc.rightClickDelayTimer == 0) {
         	 mc.rightClickMouse();
             }
-        } //else {
-            //mc.rightClickDelayTimer = (int) 4F;
+        } else {
+            mc.rightClickDelayTimer = (int) 4F;
             //mc.thePlayer.setSprinting(false);
-        //}
-
-
+        }
     }
 
 
@@ -89,7 +90,7 @@ public class Scaffold extends Module {
         yaw -= yaw % f3;
         pitch -= pitch % (f3 * f2);
 
-        pre.setYaw(yaw);
+        pre.setYaw(aac3Rotations(blockData)[0]);
         pre.setPitch(aac3Rotations(blockData)[1]);
     }
 
@@ -137,15 +138,15 @@ public class Scaffold extends Module {
 
         float yaw = (float)(Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
         float pitch = (float) (-Math.atan2(y, allmax) * ROTTS4 / Math.PI);
-        //System.out.println("Pitch1: " + pitch);
-        //if (yaw < 0.0F) yaw += 360.0F;
-        //float f2 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-        //float f3 = f2 * f2 * f2 * 1.2F;
-        //yaw -= yaw % f3;
-        //pitch -= pitch % (f3 * f2);
-        if(pitch < 83) {
-            pitch = 83;
-        }
+        System.out.println("Pitch1: " + pitch);
+        if (yaw < 0.0F) yaw += 360.0F;
+        float f2 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+        float f3 = f2 * f2 * f2 * 1.2F;
+        yaw -= yaw % f3;
+        pitch -= pitch % (f3 * f2);
+        //if(pitch < 83) {
+            //pitch = 83;
+        //}
         System.out.println("Pitch2: " + pitch);
         return new float[]{yaw, pitch};
     }
@@ -178,6 +179,8 @@ public class Scaffold extends Module {
         }
         return false;
     }
+    
+
     
     
     public class BlockData {

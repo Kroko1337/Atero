@@ -1,6 +1,9 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
+
+import de.verschwiegener.atero.Management;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -41,8 +44,7 @@ public class GuiIngameMenu extends GuiScreen
     /**
      * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
      */
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
+    protected void actionPerformed(GuiButton button) throws IOException {
         switch (button.id)
         {
             case 0:
@@ -50,6 +52,7 @@ public class GuiIngameMenu extends GuiScreen
                 break;
 
             case 1:
+        	Management.instance.currentServer = null;
                 boolean flag = this.mc.isIntegratedServerRunning();
                 boolean flag1 = this.mc.func_181540_al();
                 button.enabled = false;
@@ -110,5 +113,10 @@ public class GuiIngameMenu extends GuiScreen
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 40, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
+        //System.out.println("Screen: " + Management.instance.currentServer);
+        if(Management.instance.currentServer != null && mc.displayHeight > 700) {
+            ScaledResolution sr  = new ScaledResolution(mc);
+            Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150, (buttonList.get(4).yPosition - 75) , 300, 20, mouseX, mouseY, false, false);
+        }
     }
 }

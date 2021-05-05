@@ -442,7 +442,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.hoveringText = null;
+	this.hoveringText = null;
         //this.drawDefaultBackground();
         drawBackround();
         customRenderer.drawScreen(mouseX, mouseY, partialTicks);
@@ -466,19 +466,20 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 	RenderUtil.drawBackround(width, height);
     }
 
-    public void connectToSelected()
-    {
-        GuiListExtended.IGuiListEntry guilistextended$iguilistentry = this.getServerListSelector().func_148193_k() < 0 ? null : this.getServerListSelector().getListEntry(this.getServerListSelector().func_148193_k());
+    public void connectToSelected() {
+	GuiListExtended.IGuiListEntry guilistextended$iguilistentry = this.getServerListSelector().func_148193_k() < 0
+		? null
+		: this.getServerListSelector().getListEntry(this.getServerListSelector().func_148193_k());
 
-        if (guilistextended$iguilistentry instanceof ServerListEntryNormal)
-        {
-            this.connectToServer(((ServerListEntryNormal)guilistextended$iguilistentry).getServerData());
-        }
-        else if (guilistextended$iguilistentry instanceof ServerListEntryLanDetected)
-        {
-            LanServerDetector.LanServer lanserverdetector$lanserver = ((ServerListEntryLanDetected)guilistextended$iguilistentry).getLanServer();
-            this.connectToServer(new ServerData(lanserverdetector$lanserver.getServerMotd(), lanserverdetector$lanserver.getServerIpPort(), true));
-        }
+	if (guilistextended$iguilistentry instanceof ServerListEntryNormal) {
+	    Management.instance.currentServer = (ServerListEntryNormal) guilistextended$iguilistentry;
+	    this.connectToServer(((ServerListEntryNormal) guilistextended$iguilistentry).getServerData());
+	} else if (guilistextended$iguilistentry instanceof ServerListEntryLanDetected) {
+	    LanServerDetector.LanServer lanserverdetector$lanserver = ((ServerListEntryLanDetected) guilistextended$iguilistentry)
+		    .getLanServer();
+	    this.connectToServer(new ServerData(lanserverdetector$lanserver.getServerMotd(),
+		    lanserverdetector$lanserver.getServerIpPort(), true));
+	}
     }
 
     private void connectToServer(ServerData server)

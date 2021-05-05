@@ -1,5 +1,8 @@
 package net.minecraft.client.gui;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.Event;
+import com.darkmagician6.eventapi.events.callables.EventRender2D;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -126,6 +129,7 @@ public class GuiIngame extends Gui
         int j = scaledresolution.getScaledHeight();
         this.mc.entityRenderer.setupOverlayRendering();
         GlStateManager.enableBlend();
+        EventManager.call(new EventRender2D());
 
         if (Config.isVignetteEnabled())
         {

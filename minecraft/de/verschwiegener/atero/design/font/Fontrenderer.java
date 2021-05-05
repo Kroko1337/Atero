@@ -54,6 +54,17 @@ public class Fontrenderer {
 	GL11.glBlendFunc(770, 771);
 
 	GL11.glScaled(0.5F, 0.5F, 0.5F);
+	
+	boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        boolean texture = GL11.glIsEnabled(GL11.GL_TEXTURE_2D);
+        if (!blend)
+            GL11.glEnable(GL11.GL_BLEND);
+        if (lighting)
+            GL11.glDisable(GL11.GL_LIGHTING);
+        if (texture)
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+
 
 	unicodefont.addGlyphs(text);
 	try {
@@ -63,6 +74,13 @@ public class Fontrenderer {
 	}
 
 	unicodefont.drawString(x, y, text, new org.newdawn.slick.Color(color));
+	
+	if (texture)
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+        if (lighting)
+            GL11.glEnable(GL11.GL_LIGHTING);
+        if (!blend)
+            GL11.glDisable(GL11.GL_BLEND);
 
 	GL11.glDisable(3042);
 	GL11.glEnable(3553);

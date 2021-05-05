@@ -17,7 +17,7 @@ public class Streamer {
 
     public Streamer() {
 	basicPlayer = new BasicPlayer();
-	setVolume(0.5D);
+	setVolume(0.1D);
 	EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 	startUpdateTask();
     }

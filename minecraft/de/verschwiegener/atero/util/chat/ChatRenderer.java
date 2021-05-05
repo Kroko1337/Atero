@@ -13,13 +13,11 @@ import de.verschwiegener.atero.util.render.RenderUtil;
 public class ChatRenderer {
 
     HashMap<String, Color> colorCodes = new HashMap<>();
-    Fontrenderer fr, frbold, fritalic;
-    String colorcodes = "0123456789abcdef";
-    Color c = new Color(255, 255, 255);
+    Fontrenderer fontRenderer, fontRendererBold, fontRendererItalic;
+
     Color messagecolor;
     boolean bold, italic, underline, strikethrough, noise, effekt;
     Random rnd = new Random();
-    String illegalchars = "n";
 
     public ChatRenderer() {
 	colorCodes.putIfAbsent("0", new Color(0, 0, 0));
@@ -38,14 +36,14 @@ public class ChatRenderer {
 	colorCodes.putIfAbsent("d", new Color(255, 85, 255));
 	colorCodes.putIfAbsent("e", new Color(255, 255, 85));
 	colorCodes.putIfAbsent("f", new Color(255, 255, 255));
-	fr = Management.instance.fontmgr.getFontByName("InterChat").getFontrenderer();
-	frbold = Management.instance.fontmgr.getFontByName("InterChatBold").getFontrenderer();
-	fritalic = Management.instance.fontmgr.getFontByName("InterChatItalic").getFontrenderer();
+	colorCodes.putIfAbsent("g",  new Color(0, 161, 249));
+	fontRenderer = Management.instance.fontmgr.getFontByName("InterChat").getFontrenderer();
+	fontRendererBold = Management.instance.fontmgr.getFontByName("InterChatBold").getFontrenderer();
+	fontRendererItalic = Management.instance.fontmgr.getFontByName("InterChatItalic").getFontrenderer();
 	messagecolor = Color.white;
     }
 
     public void drawchat2(String line, int x, int y) {
-	//System.out.println("Line: " + line);
 	String[] args = line.replace("§", "#§").split("#");
 	int xoffset = 0;
 	messagecolor = Color.white;
@@ -57,7 +55,7 @@ public class ChatRenderer {
 	effekt = false;
 	for (String str : args) {
 	    if (str.length() > 1) {
-		if (colorcodes.contains(str.substring(1, 2))) {
+		if (colorCodes.containsKey(str.substring(1, 2))) {
 		    messagecolor = colorCodes.get(str.substring(1, 2).toLowerCase());
 		} else {
 		    switch (str.substring(1, 2)) {
@@ -97,49 +95,47 @@ public class ChatRenderer {
 		if (effekt) {
 		    if (bold) {
 			if (str.startsWith("§")) {
-			    frbold.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-			    xoffset += frbold.getStringWidth(str.substring(2));
+			    fontRendererBold.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			    xoffset += fontRendererBold.getStringWidth(str.substring(2));
 			} else {
-			    frbold.drawString(str, x + xoffset, y, messagecolor.getRGB());
-			    xoffset += frbold.getStringWidth(str);
+			    fontRendererBold.drawString(str, x + xoffset, y, messagecolor.getRGB());
+			    xoffset += fontRendererBold.getStringWidth(str);
 			}
 		    } else if (italic) {
 			if (str.startsWith("§")) {
-			    fritalic.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
-			    xoffset += fritalic.getStringWidth(str.substring(2));
+			    fontRendererItalic.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
+			    xoffset += fontRendererItalic.getStringWidth(str.substring(2));
 			} else {
-			    fritalic.drawString(str, x + xoffset, y, messagecolor.getRed());
-			    xoffset += fritalic.getStringWidth(str);
+			    fontRendererItalic.drawString(str, x + xoffset, y, messagecolor.getRed());
+			    xoffset += fontRendererItalic.getStringWidth(str);
 			}
 		    } else if (noise) {
-			fr.drawString(getRandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
-			xoffset += fr.getStringWidth(str);
+			fontRenderer.drawString(getRandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
+			xoffset += fontRenderer.getStringWidth(str);
 		    }
 		    if (underline) {
-			fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-			drawLine(x + xoffset, y + (fr.getBaseStringHeight() * 2) - 3, fr.getStringWidth2(str.substring(2)));
+			drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
+			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		    if (strikethrough) {
-			fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-			drawLine(x + xoffset, y + (fr.getBaseStringHeight()), fr.getStringWidth(str.substring(2)));
+			drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()), fontRenderer.getStringWidth(str.substring(2)), messagecolor);
+			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		} else {
 		    if (str.startsWith("§")) {
-			fr.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-			xoffset += fr.getStringWidth(str.substring(2));
+			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			xoffset += fontRenderer.getStringWidth(str.substring(2));
 		    } else {
-			fr.drawString(str, x + xoffset, y, messagecolor.getRGB());
-			xoffset += fr.getStringWidth(str);
+			fontRenderer.drawString(str, x + xoffset, y, messagecolor.getRGB());
+			xoffset += fontRenderer.getStringWidth(str);
 		    }
 		}
 	    }
 	}
-	//GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    private void drawLine(int x, int y, int width) {
-	RenderUtil.fillRect(x / 2, y / 2, width, 1, Color.WHITE);
-	//GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    private void drawLine(int x, int y, int width, Color color) {
+	RenderUtil.fillRect(x / 2, y / 2, width, 1, color);
     }
 
     private String getRandomString(int count) {

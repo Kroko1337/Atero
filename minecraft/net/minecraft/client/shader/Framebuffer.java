@@ -168,8 +168,7 @@ public class Framebuffer
         }
     }
 
-    public void bindFramebufferTexture()
-    {
+    public void bindFramebufferTexture() {
         if (OpenGlHelper.isFramebufferEnabled())
         {
             GlStateManager.bindTexture(this.framebufferTexture);

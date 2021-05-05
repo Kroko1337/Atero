@@ -16,7 +16,7 @@ import de.verschwiegener.atero.command.Command;
 public class BindsCommand extends Command{
 
 	public BindsCommand() {
-		super("Binds", "Lists all Binds", "");
+		super("Binds", "Lists all Binds", new String[] {});
 	}
 	
 	@Override

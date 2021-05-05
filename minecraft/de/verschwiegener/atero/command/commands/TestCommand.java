@@ -8,7 +8,7 @@ import de.verschwiegener.atero.util.chat.ChatUtil;
 public class TestCommand extends Command{
 
 	public TestCommand() {
-		super("Test", "Test", "<module> <key>");
+		super("Test", "Test", new String[]{"<module> <key>"});
 	}
 
 	@Override

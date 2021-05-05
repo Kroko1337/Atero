@@ -10,7 +10,7 @@ public class TimeUtils {
 	}
 	
 	public boolean isDelayComplete(long delay) {
-		if(System.currentTimeMillis() - lastMS >= delay) {
+		if(getCurrentMS() - lastMS >= delay) {
 			return true;
 		}
 		

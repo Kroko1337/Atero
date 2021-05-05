@@ -12,9 +12,13 @@ import com.darkmagician6.eventapi.EventManager;
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
 import de.verschwiegener.atero.audio.Streamer;
+import de.verschwiegener.atero.cape.GIF;
+import de.verschwiegener.atero.cape.GIFManager;
+import de.verschwiegener.atero.cape.GifLoader;
 import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.friend.FriendManager;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.proxy.ProxyManager;
@@ -22,6 +26,7 @@ import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ServerListEntryNormal;
 
 public class Management {
 
@@ -48,21 +53,32 @@ public class Management {
     public Stream currentStream;
     public Streamer streamer;
     public ProxyManager proxymgr;
+    public GifLoader GIFLoader;
+    public GIFManager GIFmgr;
+    public FriendManager friendmgr;
     
     public ExecutorService EXECUTOR_SERVICE;
+    public ExecutorService ANIMATION_EXECUTOR;
+    
+    public ServerListEntryNormal currentServer;
 
     public void start() {
-	EXECUTOR_SERVICE = Executors.newFixedThreadPool(5);
+	EXECUTOR_SERVICE = Executors.newFixedThreadPool(1);
+	ANIMATION_EXECUTOR = Executors.newFixedThreadPool(15);
 	fontmgr = new FontManager();
 	settingsmgr = new SettingsManager();
+	friendmgr = new FriendManager();
 	modulemgr = new ModuleManager();
 	commandmgr = new CommandManager();
 	streamManager = new StreamManager();
 	streamManager.updateStreams();
+	GIFLoader = new GifLoader();
+	GIFmgr = new GIFManager();
+	
+	GIFmgr.addGif(new GIF("TEst", "hero"));
+	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
-	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,
-		"<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=", true,
-		false);
+	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
 

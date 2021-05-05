@@ -3,12 +3,17 @@ package de.verschwiegener.atero.ui.clickgui;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.render.RenderUtil;
+import net.java.games.input.OSXEnvironmentPlugin;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class ClickGUIPanel {
 
@@ -22,6 +27,10 @@ public class ClickGUIPanel {
     private double dragx, dragy;
     private PanelExtendet pExtendet;
     private final ArrayList<PanelExtendet> ePanels = new ArrayList<>();
+    private int circleAnimationDiameter = 0;
+    private boolean drawCircle;
+    private boolean isLongPressed;
+    private int circleX, circleY;
 
     public ClickGUIPanel(final String name, final int x, final int y) {
 	this.name = name;
@@ -48,7 +57,7 @@ public class ClickGUIPanel {
 
     private void animateExtension(final PanelExtendet pExtendet) {
 	new TimeUtils();
-	Management.instance.EXECUTOR_SERVICE.submit(() -> {
+	Management.instance.ANIMATION_EXECUTOR.submit(() -> {
 	    while (pExtendet.isAnimate()) {
 		// if (pExtendet.isAnimate()) {
 		if (TimeUtils.hasReached(5)) {
@@ -85,27 +94,24 @@ public class ClickGUIPanel {
     }
 
     public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
+	
 	// Drags the panel
 	if (candrag) {
 	    x = (int) (dragx + mouseX);
 	    y = (int) (dragy + mouseY);
 	}
 	// draws panel extendet
-	for (final PanelExtendet pe : ePanels) {
-	    pe.drawScreen(mouseX, mouseY);
-	}
-
-	/*
-	 * if(isAnimate()) { switch (getState()) { case 1:
-	 * setAnimationheight(getAnimationheight() - 1); if(getAnimationheight() == 15
-	 * || getAnimationheight() < 15) { setAnimate(false); setAnimationheight(15);
-	 * setState(2); } break; case 2: setAnimationheight(getAnimationheight() + 1);
-	 * if(getAnimationheight() == -getYoffset() || getAnimationheight() >
-	 * getYoffset()) { setAnimate(false); setAnimationheight(getYoffset());
-	 * setState(1); } } }
-	 */
+	ePanels.forEach(panel -> panel.drawScreen(mouseX, mouseY));
 
 	RenderUtil.fillRect(x, y, width, animationHeight, Management.instance.colorBlack);
+	if(drawCircle) {
+	    GL11.glEnable(GL11.GL_SCISSOR_TEST);
+	    final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
+	    final int scaleFactor = scale.getScaleFactor();
+	    GL11.glScissor((x) * scaleFactor, (((y + 15) * scaleFactor) - Minecraft.getMinecraft().displayHeight) /-1, width * scaleFactor, 15 * scaleFactor);
+	    RenderUtil.drawCircle(x - circleX, y - circleY, circleAnimationDiameter, new Color(48, 48, 48), isLongPressed);
+	    GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	}
 	RenderUtil.fillRect(x, y + getPanelYOffset() - 1, width, 1, Management.instance.colorBlue);
 	fontRenderer.drawString(name, x * 2 + width - fontRenderer.getStringWidth2(name), y * 2, Color.white.getRGB());
 	if (state == 1) {
@@ -162,6 +168,24 @@ public class ClickGUIPanel {
     public boolean isAnimate() {
 	return animate;
     }
+    public void setCircleAnimationDiameter(int circleAnimationDiameter) {
+	this.circleAnimationDiameter = circleAnimationDiameter;
+    }
+    public void setDrawCircle(boolean drawCircle) {
+	this.drawCircle = drawCircle;
+    }
+    public boolean isDrawCircle() {
+	return drawCircle;
+    }
+    public void setLongPressed(boolean isLongPressed) {
+	this.isLongPressed = isLongPressed;
+    }
+    public void setCircleX(int circleX) {
+	this.circleX = circleX;
+    }
+    public void setCircleY(int circleY) {
+	this.circleY = circleY;
+    }
 
     private boolean isClickGUIPanelHovered(final int mouseX, final int mouseY) {
 	return mouseX > x && mouseX < x + width && mouseY > y - 1 && mouseY < y + getPanelYOffset();
@@ -175,12 +199,7 @@ public class ClickGUIPanel {
 	ePanels.forEach(panel -> panel.onMouseClicked(mouseX, mouseY, mouseButton));
 	switch (mouseButton) {
 	case 0:
-	    final ClickGUIButton br = getButtonByPosition(this, mouseX, mouseY);
-	    if (br != null) {
-		if (state == 1) {
-		    Management.instance.modulemgr.getModuleByName(br.getName()).toggle();
-		}
-	    } else if (isClickGUIPanelHovered(mouseX, mouseY)) {
+	    if (isClickGUIPanelHovered(mouseX, mouseY)) {
 		// Drags
 		candrag = true;
 		dragx = x - mouseX;
@@ -188,24 +207,61 @@ public class ClickGUIPanel {
 	    }
 	    break;
 	case 1:
-	    final ClickGUIButton bl = getButtonByPosition(this, mouseX, mouseY);
-	    if (bl != null) {
-		if (pExtendet != null && !pExtendet.getName().equalsIgnoreCase(bl.getName())) {
-		    pExtendet.setState(2);
-		    pExtendet.setAnimate(true);
-		    animateExtension(pExtendet);
-		}
-		pExtendet = getPanelByModuleName(bl.getName());
-		pExtendet.switchState();
-		animateExtension(pExtendet);
+	    final ClickGUIButton buttonLeft = getButtonByPosition(this, mouseX, mouseY);
+	    if (buttonLeft != null) {
+		//buttonLeft.setCircleX(x - mouseX);
+		//buttonLeft.setCircleY((buttonLeft.getY() + y) - mouseY);
+		//drawPressed(true, buttonLeft);
 	    }
 	    break;
+	}
+    }
+    
+    private void drawPressed(final boolean longPressed, final ClickGUIButton panel) {
+	boolean isAnimate = true;
+	final TimeUtils animationTimer = new TimeUtils();
+	final int delay = longPressed ? 19 : 5;
+	if(!panel.isDrawCircle()) {
+	    panel.setDrawCircle(true);
+	    Management.instance.ANIMATION_EXECUTOR.submit(() -> {
+		    int circlesize = 0;
+		    while(panel.isDrawCircle()) {
+			if(animationTimer.isDelayComplete(delay)) {
+			    animationTimer.reset();
+			    circlesize++;
+			    panel.setCircleAnimationDiameter(circlesize);
+			    if(circlesize >= 50) {
+				panel.setDrawCircle(false);
+				panel.setCircleAnimationDiameter(0);
+			    }
+			}
+		    }
+		});
 	}
     }
 
     public void onMouseReleased(final int mouseX, final int mouseY, final int state) {
 	if (state == 0) {
 	    candrag = false;
+	    final ClickGUIButton buttonRight = getButtonByPosition(this, mouseX, mouseY);
+	    if (buttonRight != null) {
+		if (this.state == 1) {
+		    Management.instance.modulemgr.getModuleByName(buttonRight.getName()).toggle();
+		}
+	    }
+	}
+	if(state == 1) {
+	    final ClickGUIButton buttonLeft = getButtonByPosition(this, mouseX, mouseY);
+	    if (buttonLeft != null) {
+		if (pExtendet != null && !pExtendet.getName().equalsIgnoreCase(buttonLeft.getName())) {
+		    pExtendet.setState(2);
+		    pExtendet.setAnimate(true);
+		    animateExtension(pExtendet);
+		}
+		pExtendet = getPanelByModuleName(buttonLeft.getName());
+		pExtendet.switchState();
+		animateExtension(pExtendet);
+	    }
 	}
 	ePanels.forEach(panel -> panel.onMouseReleased(mouseX, mouseY, state));
     }

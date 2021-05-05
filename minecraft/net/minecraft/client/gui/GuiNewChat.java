@@ -86,7 +86,6 @@ public class GuiNewChat extends Gui
 
                             if (l1 > 3)
                             {
-                        	//System.out.println("I1: " + (-i1 * 9));
                                 int i2 = 0;
                                 int j2 = -i1 * 9;
                                 drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
@@ -144,10 +143,6 @@ public class GuiNewChat extends Gui
 		this.printChatMessageWithOptionalDeletion(ichatcomponent, 0);
 		
 	}
-    
-    /*public void addChatLine(ArrayList<IChatComponent> components) {
-    	setChatLine(components, 0, this.mc.ingameGUI.getUpdateCounter(), false);
-    }*/
 	
 	public void addChatLine(IChatComponent ichatcomponent) {
 		setChatLine(ichatcomponent, 0, this.mc.ingameGUI.getUpdateCounter(), false);
@@ -300,7 +295,6 @@ public class GuiNewChat extends Gui
 									}
 								}
 							}else {
-								//Wenn mehrere IchatComponents nicht gehen hier fixen JULIUS
 								if (ichatcomponent instanceof ChatComponentText) {
 									j1 += this.mc.fontRendererObj.getStringWidth(GuiUtilRenderComponents.func_178909_a(((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false));
 

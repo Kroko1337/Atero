@@ -1175,13 +1175,13 @@ public abstract class Entity implements ICommandSender
 		float yaw = 0;
 		if(this != Minecraft.thePlayer)
 			return;
-		
 		//AddScaffold
-		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState() && (Killaura.target != null || Killaura.preaimtarget != null)) {
-			yaw = Killaura.getYaw();
-		}else {
+		//MovFix Julius
+		//if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState() && (Killaura.target != null || Killaura.preaimtarget != null)) {
+		    //yaw = Killaura.getYaw();
+		//}else {
 		    yaw = this.rotationYaw;
-		}
+		//}
 		
 		float f = strafe * strafe + forward * forward;
 
@@ -1421,15 +1421,12 @@ public abstract class Entity implements ICommandSender
 	    if (partialTicks == 1.0F) {
 		return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
 	    } else {
-
 		float f = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * partialTicks;
 		float f1 = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * partialTicks;
 		return this.getVectorForRotation(f, f1);
 
 	    }
 	} else {
-	    //System.out.println("Pitch: " + EventPreMotionUpdate.getInstance.getPitch());
-	    //System.out.println("Yaw: " + EventPreMotionUpdate.getInstance.getYaw());
 	    return this.getVectorForRotation(EventPreMotionUpdate.getInstance.getPitch(),
 		    EventPreMotionUpdate.getInstance.getYaw());
 	}
@@ -1479,6 +1476,12 @@ public abstract class Entity implements ICommandSender
     public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks) {
         Vec3 vec3 = this.getPositionEyes(partialTicks);
         Vec3 vec31 = this.getLook(partialTicks);
+        Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+    public MovingObjectPosition rayTrace(double blockReachDistance, float partialTicks, float yaw, float pitch) {
+        Vec3 vec3 = this.getPositionEyes(partialTicks);
+        Vec3 vec31 = this.getVectorForRotation(pitch, yaw);
         Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
         return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
     }

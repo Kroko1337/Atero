@@ -32,6 +32,11 @@ public class SettingsItem {
 		this.child = child;
 		this.category = Category.Checkbox;
 	}
+	public SettingsItem(String name, String currentText) {
+		this.name = name;
+		this.current = currentText;
+		this.category = Category.Textfield;
+	}
 	
 	public String getName() {
 		return name;
@@ -73,7 +78,7 @@ public class SettingsItem {
 	
 	public enum Category{
 		
-		Slider, Combobox, Checkbox
+		Slider, Combobox, Checkbox, Textfield
 		
 	}
 

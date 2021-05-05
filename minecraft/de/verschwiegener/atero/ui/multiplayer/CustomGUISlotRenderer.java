@@ -24,7 +24,6 @@ public class CustomGUISlotRenderer {
     }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-	
 	for (int i = 0; i < guiMultiplayer.getServerListSelector().getServerListNormal().size(); i++) {
 	    if (mouseY > (40 * i + 20) && mouseY < (40 * i + 53)) {
 		if (mouseX > ((guiMultiplayer.width / 2) - 150) && mouseX < ((guiMultiplayer.width / 2) + 150)) {
@@ -39,6 +38,7 @@ public class CustomGUISlotRenderer {
 		((guiMultiplayer.width / 2) * 2) - fontRenderer.getStringWidth2("Multiplayer"), 10,
 		Color.white.getRGB());
 	for (int i = 0; i < guiMultiplayer.getServerListSelector().getServerListNormal().size(); i++) {
+	    boolean test = (i == selectedEntryIndex && isHovered(mouseX, mouseY) && !guiMultiplayer.isCustomGui()) ? true : false;
 	    ServerListEntryNormal entry = guiMultiplayer.getServerListSelector().getServerListNormal().get(i);
 	    entry.drawEntry(i, (guiMultiplayer.width / 2) - 150, 40 * i + 20, 300, 20, mouseX, mouseY,
 		    (i == selectedEntryIndex && isHovered(mouseX, mouseY) && !guiMultiplayer.isCustomGui()) ? true : false, (!guiMultiplayer.isCustomGui()) ? true: false);

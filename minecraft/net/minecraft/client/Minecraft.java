@@ -16,6 +16,10 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
+import de.verschwiegener.atero.util.ScreenshotSaverAsync;
+import de.verschwiegener.atero.util.chat.ChatUtil;
+import de.verschwiegener.atero.util.render.ShaderRenderer;
 import de.verschwiegener.atero.util.splashscreen.splashscreen.SplashScreenRenderUtil;
 import de.verschwiegener.atero.util.splashscreen.splashscreen.StartSplashScreenRenderer;
 
@@ -120,6 +124,7 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLeashKnot;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.item.EntityBoat;
@@ -173,6 +178,8 @@ import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.storage.ISaveFormat;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import shadersmod.client.ShaderUtils;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
@@ -1095,6 +1102,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	GlStateManager.popMatrix();
 	GlStateManager.pushMatrix();
 	this.framebufferMc.framebufferRender(this.displayWidth, this.displayHeight);
+	
+	CustomGUIIngame.renderShader();
+	
 	GlStateManager.popMatrix();
 	GlStateManager.pushMatrix();
 	this.entityRenderer.renderStreamIndicator(this.timer.renderPartialTicks);
@@ -1436,6 +1446,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		    this.leftClickCounter = 10;
 		}
 	    } else {
+		System.out.println("PacePitch2: " + thePlayer.rotationPitch);
 		switch (this.objectMouseOver.typeOfHit) {
 		case ENTITY:
 		    this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
@@ -1688,6 +1699,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
 	    while (Mouse.next()) {
 		int i = Mouse.getEventButton();
+		
 		KeyBinding.setKeyBindState(i - 100, Mouse.getEventButtonState());
 
 		if (Mouse.getEventButtonState()) {
@@ -2249,8 +2261,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		i = block1.getDamageValue(this.theWorld, blockpos);
 		flag1 = item.getHasSubtypes();
 	    } else {
-		if (this.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY
-			|| this.objectMouseOver.entityHit == null || !flag) {
+		
+		  //midclick friends
+		if(this.objectMouseOver.entityHit instanceof EntityPlayer) {
+		    System.out.println("Entity");
+		    if(!Management.instance.friendmgr.isFriend(this.objectMouseOver.entityHit.getName())) {
+			Management.instance.friendmgr.addFriend(this.objectMouseOver.entityHit.getName(), "");
+			ChatUtil.sendMessageWithPrefix(this.objectMouseOver.entityHit.getName() + " is now your friend");
+		    }else {
+			ChatUtil.sendMessageWithPrefix(this.objectMouseOver.entityHit.getName() + " is already your friend");
+		    }
+		}
+		
+		if (this.objectMouseOver.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY || this.objectMouseOver.entityHit == null || !flag) {
 		    return;
 		}
 
@@ -2891,8 +2914,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 		    } else if (key == this.gameSettings.keyBindFullscreen.getKeyCode()) {
 			this.toggleFullscreen();
 		    } else if (key == this.gameSettings.keyBindScreenshot.getKeyCode()) {
-			this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir,
-				this.displayWidth, this.displayHeight, this.framebufferMc));
+			ScreenshotSaverAsync.takeScreenshot();
+			/*this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir,
+				this.displayWidth, this.displayHeight, this.framebufferMc));*/
 		    }
 		} else if (key == this.gameSettings.keyBindStreamToggleMic.getKeyCode()) {
 		    this.stream.muteMicrophone(false);

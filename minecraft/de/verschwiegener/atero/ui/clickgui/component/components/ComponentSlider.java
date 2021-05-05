@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
+import org.lwjgl.input.Mouse;
+
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.settings.SettingsItem;
@@ -19,10 +21,11 @@ public class ComponentSlider extends Component {
     private int textFieldEditPosition;
     private final Fontrenderer fontRenderer;
     private final DecimalFormat df = new DecimalFormat("0.0");
-    private int[] validKeycodes = { 200, 203, 205, 208 };
     private int count;
     private boolean draw;
     private String currentValue;
+    private long prev;
+    private boolean buttonleft;
 
     public ComponentSlider(String name, int y, PanelExtendet pe) {
 	super(name, y, pe);
@@ -33,6 +36,10 @@ public class ComponentSlider extends Component {
     @Override
     public void drawComponent(int x, int y) {
 	super.drawComponent(x, y);
+	if(buttonleft) {
+	    if(prev - System.currentTimeMillis() <= -500) {
+	    }
+	}
 	if (!isParentextendet()) {
 	    double percent = (getItem().getCurrentValue() - getItem().getMinValue())
 		    / (getItem().getMaxValue() - getItem().getMinValue());
@@ -40,21 +47,29 @@ public class ComponentSlider extends Component {
 		    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
 	    if (textFieldSelected) {
 		try {
-		    int textX = (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2)) * 2 - 40;
+		    int textX = (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2)) * 2 - 39;
 		    String split1 = currentValue.substring(0, textFieldEditPosition);
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
+		    
+		    //System.out.println("TextX: " + textX);
 		    
 		    fontRenderer.drawString(split1, textX,
 			    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
 			    Color.WHITE.getRGB());
-		    fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth(split1) + 3,
-			    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
-			    Color.WHITE.getRGB());
+		    if(textFieldEditPosition != 0) {
+			fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth(split1) + 3,
+				    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
+				    Color.WHITE.getRGB());
+		    }else {
+			fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth(split1),
+				    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
+				    Color.WHITE.getRGB());
+		    }
 		    
 		    drawSelected((getComponentX() + getPanelExtendet().getWidth() - 20)
 			    + fontRenderer.getStringWidth2(split1));
 		} catch (Exception e) {
-		   // e.printStackTrace();
+		    e.printStackTrace();
 		}
 	    } else {
 		fontRenderer.drawString(currentValue,
@@ -82,7 +97,7 @@ public class ComponentSlider extends Component {
 	    count = 0;
 	}
 	if(draw) {
-	    RenderUtil.fillRect(x + 2, getComponentY() - fontRenderer.getBaseStringHeight() + 6, 0.5, fontRenderer.getBaseStringHeight(), Color.WHITE);
+	    RenderUtil.fillRect(x + 1, getComponentY() - fontRenderer.getBaseStringHeight() + 6, 0.5, fontRenderer.getBaseStringHeight(), Color.WHITE);
 	}
     }
 
@@ -92,13 +107,15 @@ public class ComponentSlider extends Component {
 	textFieldSelected = false;
 	if (!isParentextendet()) {
 	    if (button == 0) {
+		prev = System.currentTimeMillis();
+		buttonleft = true;
 		if (isSliderHovered(mouseX, mouseY)) {
 		    sliderSelected = true;
 		    currentValue = df.format(getItem().getCurrentValue());
 		}
 		if (isTextFieldHovered(mouseX, mouseY)) {
-		    System.out.println("Pressed");
 		    textFieldSelected = true;
+		    draw = true;
 		}
 
 	    }
@@ -113,7 +130,6 @@ public class ComponentSlider extends Component {
 		try {
 		    String beforadd = currentValue.substring(0, textFieldEditPosition);
 		    String afteradd = currentValue.substring(textFieldEditPosition, currentValue.length());
-		    // currentValue += String.valueOf(typedChar);
 		    currentValue = beforadd + String.valueOf(typedChar) + afteradd;
 		    textFieldEditPosition += 1;
 		}catch(Exception e) {
@@ -121,6 +137,18 @@ public class ComponentSlider extends Component {
 		
 	    }
 	    switch (keyCode) {
+	    case 12:
+		if(textFieldEditPosition == 0 && !currentValue.startsWith("-")) {
+		    currentValue = "-" + currentValue;
+		    textFieldEditPosition = 1;
+		}
+		break;
+	    case 74:
+		if(textFieldEditPosition == 0 && !currentValue.startsWith("-")) {
+		    currentValue = "-" + currentValue;
+		    textFieldEditPosition = 1;
+		}
+		break;
 	    case 203:
 		if (textFieldEditPosition != 0 && textFieldEditPosition > 0) {
 		    textFieldEditPosition -= 1;
@@ -132,30 +160,29 @@ public class ComponentSlider extends Component {
 		}
 		break;
 	    case 14:
-		if(textFieldEditPosition - 1 > -1) {
+		if (textFieldEditPosition - 1 > -1) {
 		    try {
-			System.out.println("TextFieldPosition1: " + textFieldEditPosition);
 			String beforRemove = currentValue.substring(0, textFieldEditPosition - 1);
 			String afterRemove = currentValue.substring(textFieldEditPosition, currentValue.length());
 			textFieldEditPosition -= 1;
 			currentValue = beforRemove + afterRemove;
-			System.out.println("TextFieldPosition2: " + textFieldEditPosition);
-		    }catch(Exception e) {
+		    } catch (Exception e) {
 		    }
-		    
+
 		}
 		break;
 	    case 28:
 		try {
-		    DecimalFormat f = new DecimalFormat("##.0");
+		    DecimalFormat f = new DecimalFormat("#0.0");
 		    float value2 = df.parse(currentValue).floatValue();
 		    currentValue = f.format(value2);
 		    textFieldEditPosition = 0;
-		    Number finalvalue =  f.parse(f.format(value2));
-		    if(!(finalvalue.floatValue() > getItem().getMaxValue()) && !(finalvalue.floatValue() < getItem().getMinValue())) {
-			 getItem().setCurrentValue(finalvalue.floatValue());
-			 textFieldSelected = false;
-		    }else {
+		    Number finalvalue = f.parse(f.format(value2));
+		    if (!(finalvalue.floatValue() > getItem().getMaxValue())
+			    && !(finalvalue.floatValue() < getItem().getMinValue())) {
+			getItem().setCurrentValue(finalvalue.floatValue());
+			textFieldSelected = false;
+		    } else {
 			currentValue = df.format(getItem().getCurrentValue());
 		    }
 		} catch (ParseException e) {
@@ -181,6 +208,9 @@ public class ComponentSlider extends Component {
     @Override
     public void onMouseReleased(int mouseX, int mouseY, int state) {
 	super.onMouseReleased(mouseX, mouseY, state);
+	if(state == 0) {
+	    buttonleft = false;
+	}
 	sliderSelected = false;
     }
 

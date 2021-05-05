@@ -11,6 +11,7 @@ public class ModelPlayer extends ModelBiped
     public ModelRenderer bipedRightLegwear;
     public ModelRenderer bipedBodyWear;
     private ModelRenderer bipedCape;
+    private ModelRenderer customcape;
     private ModelRenderer bipedDeadmau5Head;
     private boolean smallArms;
     private static final String __OBFID = "CL_00002626";
@@ -18,12 +19,15 @@ public class ModelPlayer extends ModelBiped
     public ModelPlayer(float p_i46304_1_, boolean p_i46304_2_)
     {
         super(p_i46304_1_, 0.0F, 64, 64);
+        System.out.println("Model: " + p_i46304_1_);
         this.smallArms = p_i46304_2_;
         this.bipedDeadmau5Head = new ModelRenderer(this, 24, 0);
         this.bipedDeadmau5Head.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, p_i46304_1_);
         this.bipedCape = new ModelRenderer(this, 0, 0);
         this.bipedCape.setTextureSize(64, 32);
         this.bipedCape.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, p_i46304_1_);
+        
+        customcape = new ModelRenderer(this, 0, 0);
 
         if (p_i46304_2_)
         {
@@ -111,9 +115,21 @@ public class ModelPlayer extends ModelBiped
         this.bipedDeadmau5Head.render(p_178727_1_);
     }
 
-    public void renderCape(float p_178728_1_)
-    {
-        this.bipedCape.render(p_178728_1_);
+    public void renderCape(float p_178728_1_) {
+	this.bipedCape = new ModelRenderer(this, 0, 0);
+	this.bipedCape.setTextureSize(12, 18);
+        this.bipedCape.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, 0);
+	
+	
+	this.bipedCape.render(p_178728_1_);
+    }
+
+    public void renderCustomCape(float p_178728_1_, int textureWidth, int textureHeight) {
+	//customcape = new ModelRenderer(this, 0, 0);
+	customcape.setTextureSize(textureWidth, textureHeight);
+        customcape.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, 0);
+	
+	customcape.render(p_178728_1_);
     }
 
     /**

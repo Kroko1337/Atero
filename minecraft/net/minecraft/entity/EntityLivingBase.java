@@ -1385,6 +1385,7 @@ public abstract class EntityLivingBase extends Entity {
      * this.isAirBorne = true; }
      */
     // Jump Fix
+    //Julius
     protected void jump() {
 	this.motionY = (double) this.getJumpUpwardsMotion();
 
@@ -1394,8 +1395,7 @@ public abstract class EntityLivingBase extends Entity {
 
 	if (this.isSprinting()) {
 	    float f;
-	    if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled()
-		    && (Killaura.target != null || Killaura.preaimtarget != null)) {
+	    if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && (Killaura.target != null || Killaura.preaimtarget != null)) {
 		f = Killaura.getYaw() * 0.017453292F;
 	    } else {
 		f = this.rotationYaw * 0.017453292F;

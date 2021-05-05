@@ -68,13 +68,13 @@ public class StartSplashScreenRenderer {
 					GlStateManager.disableDepth();
 
 					renderer = new SplashScreenRenderUtil();
-					ShaderRenderer sr = new ShaderRenderer(fragment, vertex);
+					//ShaderRenderer sr = new ShaderRenderer(fragment, vertex);
 					
 					while (!renderer.finish) {
 						if (timer.hasReached(20)) {
 							timer.reset();
 							renderer.draw();
-							sr.render();
+							//sr.render();
 							Display.update();
 						}
 					}
