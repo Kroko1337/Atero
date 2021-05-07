@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import java.io.IOException;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.WebsiteUtil;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -25,26 +26,26 @@ public class GuiConfirmOpenLink extends GuiYesNo {
 	this.copyLinkButtonText = I18n.format("chat.copy", new Object[0]);
 	this.openLinkWarning = I18n.format("chat.link.warning", new Object[0]);
 	this.linkText = linkTextIn;
-//	if(linkTextIn.contains("youtube")) {
-//	    try {
-//		//location = WebsiteUtil.readImage(linkTextIn);
-//	    } catch (IOException e) {
-//		e.printStackTrace();
-//		try {
-//		    System.err.println("GetFavicon: " + linkTextIn);
-//		   // location = WebsiteUtil.getFavicon(linkTextIn);
-//		    System.err.println("Loaction: " + location + " Link: " + linkTextIn);
-//		} catch (Exception e1) {
-//		    e1.printStackTrace();
-//		}
-//	    }
-	//}else {
-	//    try {
-		//location = WebsiteUtil.getFavicon(linkTextIn);
-	  //  } catch (IOException e) {
-	//	e.printStackTrace();
-	 //   }
-	//}
+	if(linkTextIn.contains("youtube")) {
+	    try {
+		location = WebsiteUtil.readImage(linkTextIn);
+	    } catch (IOException e) {
+		e.printStackTrace();
+		try {
+		    System.err.println("GetFavicon: " + linkTextIn);
+		    location = WebsiteUtil.getFavicon(linkTextIn);
+		    System.err.println("Loaction: " + location + " Link: " + linkTextIn);
+		} catch (Exception e1) {
+		    e1.printStackTrace();
+		}
+	    }
+	}else {
+	    try {
+		location = WebsiteUtil.getFavicon(linkTextIn);
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
     }
 
     /**

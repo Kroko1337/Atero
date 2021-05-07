@@ -12,7 +12,6 @@ import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
-import god.buddy.aot.BCompiler;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -49,7 +48,7 @@ public class Scaffold extends Module {
 
     public void setup() {
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onUpdate() {
         blockData = find(new Vec3(0, 0, 0));
 
@@ -60,7 +59,6 @@ public class Scaffold extends Module {
     }
     
     @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPost(EventPostMotionUpdate post) {
 	BlockPos blockPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.0D, mc.thePlayer.posZ);
 
@@ -76,7 +74,6 @@ public class Scaffold extends Module {
 
 
     @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(EventPreMotionUpdate pre) {
 
         float ROTTS4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 150, 176);
@@ -125,7 +122,6 @@ public class Scaffold extends Module {
         }
         return null;
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
 
     float[] aac3Rotations(Scaffold.BlockData blockData) {
         //EntitySnowball temp = new EntitySnowball(mc.theWorld);
@@ -161,7 +157,7 @@ public class Scaffold extends Module {
         Vec3 point = new Vec3((double) position.getX() + 0.5, (double) position.getY() + 0.5, (double) position.getZ() + 0.5);
         return point.add(offset);
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     private boolean rayTrace(Vec3 origin, Vec3 position) {
         Vec3 difference = position.subtract(origin);
         int steps = 20;
@@ -186,7 +182,7 @@ public class Scaffold extends Module {
     
 
     
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    
     public class BlockData {
 	private EnumFacing facing;
 	private BlockPos pos;

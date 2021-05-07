@@ -219,7 +219,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     /**
      * Set to 'this' in Minecraft constructor; used by some settings get methods
      */
-    public static Minecraft theMinecraft;
+    private static Minecraft theMinecraft;
     public PlayerControllerMP playerController;
     public boolean fullscreen;
     private boolean enableGLErrorChecking = true;
@@ -431,7 +431,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	while (true) {
 	    try {
 		while (this.running) {
-		  //  if (ssru.getRenderer().isFinish()) {
+		    if (ssru.getRenderer().isFinish()) {
 			if (!this.hasCrashed || this.crashReporter == null) {
 			    try {
 				this.runGameLoop();
@@ -444,7 +444,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			    this.displayCrashReport(this.crashReporter);
 			}
 		    }
-		//}
+		}
 	    } catch (MinecraftError var12) {
 		break;
 	    } catch (ReportedException reportedexception) {

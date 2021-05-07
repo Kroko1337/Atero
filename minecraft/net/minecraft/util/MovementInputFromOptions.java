@@ -55,10 +55,10 @@ public class MovementInputFromOptions extends MovementInput {
         //System.out.println("MoveForward: " + moveForward);
         //System.out.println("Silent: " + updatePlayerMovementState.getYaw());
         
-	//if (updatePlayerMovementState.isSilentMoveFix() && (moveForward != 0 || moveStrafe != 0)) {
-	 //   correctMovement2(moveForward, moveStrafe, EventPreMotionUpdate.getInstance.getYaw());
+	if (updatePlayerMovementState.isSilentMoveFix() && (moveForward != 0 || moveStrafe != 0)) {
+	    correctMovement2(moveForward, moveStrafe, EventPreMotionUpdate.getInstance.getYaw());
 	    //getCorrectedMovement(moveForward, moveStrafe, EventPreMotionUpdate.getInstance.getYaw(), 0, false);
-	//}
+	}
 
 	this.jump = this.gameSettings.keyBindJump.isKeyDown();
 	this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
