@@ -89,18 +89,18 @@ public class GuiConfirmOpenLink extends GuiYesNo {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 	super.drawScreen(mouseX, mouseY, partialTicks);
 
-	//ScaledResolution sr = new ScaledResolution(mc);
-	//int xheight = sr.getScaledWidth() / 2;
-	//int yheight = sr.getScaledHeight() / 2;
+	ScaledResolution sr = new ScaledResolution(mc);
+	int xheight = sr.getScaledWidth() / 2;
+	int yheight = sr.getScaledHeight() / 2;
 	
-	//RenderUtil.fillRect(xheight - 100, yheight - 50, 200, 100, Management.instance.colorBlack);
-	//RenderUtil.fillRect(xheight - 100, yheight + 49, 200, 1, Management.instance.colorBlue);
-	//if(location != null) {
-	    //try {
-		 //RenderUtil.drawImage(location, xheight - 100,  yheight - 50, 100, 100);
-	    //}catch(Exception e) {
-	    //}
-	//}
+	RenderUtil.fillRect(xheight - 100, yheight - 50, 200, 100, Management.instance.colorBlack);
+	RenderUtil.fillRect(xheight - 100, yheight + 49, 200, 1, Management.instance.colorBlue);
+	if(location != null) {
+	    try {
+		 RenderUtil.drawImage(location, xheight - 100,  yheight - 50, 100, 100);
+	    }catch(Exception e) {
+	    }
+	}
 	
 	
 	if (this.showSecurityWarning) {
