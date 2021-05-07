@@ -23,7 +23,7 @@ import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.Stream.Provider;
 import de.verschwiegener.atero.audio.StreamLoader;
-
+//Juli is gott
 
 public class IloveMusikStreamLoader extends StreamLoader {
 
