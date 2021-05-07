@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import de.verschwiegener.atero.module.modules.Test;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.combat.Target;
+import de.verschwiegener.atero.module.modules.movement.Speed;
+import de.verschwiegener.atero.module.modules.movement.Sprint;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.world.Scaffold;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,8 @@ public class ModuleManager {
 	modules.add(new Killaura());
 	modules.add(new Target());
 	modules.add(new Scaffold());
+	modules.add(new Sprint());
+	modules.add(new Speed());
     }
 
     public Module getModuleByName(final String name) {
