@@ -6,6 +6,7 @@ import de.verschwiegener.atero.Management;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
+import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.realms.RealmsBridge;
@@ -113,9 +114,12 @@ public class GuiIngameMenu extends GuiScreen
         this.drawDefaultBackground();
         this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 40, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
-        //System.out.println("Screen: " + Management.instance.currentServer);
         if(Management.instance.currentServer != null && mc.displayHeight > 700) {
             ScaledResolution sr  = new ScaledResolution(mc);
+            if(!(Management.instance.currentServer.getServerData().pingToServer > 0)) {
+        	 GuiMultiplayer guiMultiplayer = new GuiMultiplayer(null);
+        	 Management.instance.currentServer.setServerData(guiMultiplayer.getServerList().getServerByIP(Management.instance.currentServer.getServerData().getServerIP()));
+            }
             Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150, (buttonList.get(4).yPosition - 75) , 300, 20, mouseX, mouseY, false, false);
         }
     }

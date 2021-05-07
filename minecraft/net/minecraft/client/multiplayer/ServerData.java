@@ -119,6 +119,9 @@ public class ServerData
     {
         this.serverIcon = icon;
     }
+    public String getServerIP() {
+	return serverIP;
+    }
 
     public boolean func_181041_d()
     {

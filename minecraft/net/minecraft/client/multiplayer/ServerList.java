@@ -1,6 +1,9 @@
 package net.minecraft.client.multiplayer;
 
 import com.google.common.collect.Lists;
+
+import de.verschwiegener.atero.module.Module;
+
 import java.io.File;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -84,6 +87,14 @@ public class ServerList
     public ServerData getServerData(int p_78850_1_)
     {
         return (ServerData)this.servers.get(p_78850_1_);
+    }
+    
+    public List<ServerData> getServers() {
+	return servers;
+    }
+    
+    public ServerData getServerByIP(final String IP) {
+	return servers.stream().filter(module -> module.getServerIP() == IP).findFirst().orElse(null);
     }
 
     /**
