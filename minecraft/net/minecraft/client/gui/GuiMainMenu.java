@@ -245,8 +245,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new CustomGuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
         this.buttonList.add(this.realmsButton = new CustomGuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.format("menu.online", new Object[0])));
         this.buttonList.add(new CustomGuiButton(500, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 3, "Account"));
-        this.buttonList.add(new CustomGuiButton(0, this.width / 2 - 100, p_73969_1_ + 72 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
-        this.buttonList.add(new CustomGuiButton(4, this.width / 2 + 2, p_73969_1_ + 72 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
+        this.buttonList.add(new CustomGuiButton(0, this.width / 2 - 100, p_73969_1_ + 83 + 12, 98, 20, I18n.format("menu.options", new Object[0])));
+        this.buttonList.add(new CustomGuiButton(4, this.width / 2 + 2, p_73969_1_ + 83 + 12, 98, 20, I18n.format("menu.quit", new Object[0])));
     }
 
     /**
@@ -524,7 +524,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         //Tessellator tessellator = Tessellator.getInstance();
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         int i = 274;
-        int j = this.width / 2 - i / 2;
+        int j = this.width / 3 - i / 2;
         int k = 30;
         //this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
         //this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
@@ -545,7 +545,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         RenderUtil.drawBackround(width, height);
         //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        this.fontRenderer.drawString("ATERO", j * 2 + (fontRenderer.getStringWidth2("Atero")), k * 2, Color.WHITE.getRGB());
+      //  this.fontRenderer.drawString("ATERO", j * 4 + (fontRenderer.getStringWidth2("Atero")), k * 2, Color.WHITE.getRGB());
 
         
         //GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);

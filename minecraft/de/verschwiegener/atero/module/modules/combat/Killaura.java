@@ -321,7 +321,7 @@ public class Killaura extends Module {
 	    if (t != null && (t.typeOfHit == MovingObjectType.ENTITY) || setting.getItemByName("ThroughWalls").isState()) {
 		if (timer.hasReached(CCPS)) {
 		    timer.reset();
-		    //mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+		    mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
 		    mc.thePlayer.swingItem();
 
 		}

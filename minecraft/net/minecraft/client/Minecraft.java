@@ -220,7 +220,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Set to 'this' in Minecraft constructor; used by some settings get methods
      */
     private static Minecraft theMinecraft;
-    public PlayerControllerMP playerController;
+    public static PlayerControllerMP playerController;
     public boolean fullscreen;
     private boolean enableGLErrorChecking = true;
     private boolean hasCrashed;
@@ -252,7 +252,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public FontRenderer standardGalacticFontRenderer;
 
     /** The GuiScreen that's being displayed at the moment. */
-    public GuiScreen currentScreen;
+    public static GuiScreen currentScreen;
     public LoadingScreenRenderer loadingScreen;
     public EntityRenderer entityRenderer;
 

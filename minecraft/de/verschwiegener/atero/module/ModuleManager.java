@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import de.verschwiegener.atero.module.modules.Test;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.combat.Target;
+import de.verschwiegener.atero.module.modules.movement.Fly;
 import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.module.modules.movement.Sprint;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
+import de.verschwiegener.atero.module.modules.render.ESP;
+import de.verschwiegener.atero.module.modules.world.Cheststealer;
 import de.verschwiegener.atero.module.modules.world.Scaffold;
 import net.minecraft.client.Minecraft;
 
@@ -23,6 +26,9 @@ public class ModuleManager {
 	modules.add(new Scaffold());
 	modules.add(new Sprint());
 	modules.add(new Speed());
+	modules.add(new Fly());
+	modules.add(new ESP());
+	modules.add(new Cheststealer());
     }
 
     public Module getModuleByName(final String name) {
