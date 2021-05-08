@@ -152,7 +152,8 @@ public class ClickGUI extends GuiScreen {
 		 animateSearchBar(1);
 		 this.searchBar.setFocused(false);
 	    }
-	    if(!this.searchBar.getText().isBlank()) {
+	    if(!(searchBar.getText() != null && searchBar.getText().isEmpty())) {
+	    //if(!this.searchBar.getText().isBlank()) {
 		colorSearch = new Color(255, 0, 0, 255);
 		hasSearched = true;
 		results.clear();

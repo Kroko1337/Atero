@@ -144,4 +144,8 @@ public class ServerList
 
         serverlist.saveServerList();
     }
+    
+    public ServerData getServerDataByIP(final String IP) {
+	return servers.stream().filter(module -> module.getServerIP() == IP).findFirst().orElse(null);
+    }
 }

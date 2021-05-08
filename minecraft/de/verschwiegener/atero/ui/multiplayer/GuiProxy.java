@@ -171,7 +171,8 @@ public class GuiProxy {
 		selectetTextField = 0;
 	    }
 	    if (isConnectButtonHovered(mouseX, mouseY)) {
-		if(!field1Text.isBlank() && !field2Text.isBlank()) {
+		if(!(field1Text != null && field1Text.isEmpty() && !(field2Text != null && field2Text.isEmpty()))) {
+		//if(!field1Text.isBlank() && !field2Text.isBlank()) {
 		    hasFirstConnected = true;
 		    proxyState = "Pinging...";
 		    messageColor = Color.GREEN;

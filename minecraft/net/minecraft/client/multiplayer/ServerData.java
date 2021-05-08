@@ -152,4 +152,13 @@ public class ServerData
             return this.motd;
         }
     }
+    public String getServerIP() {
+	return serverIP;
+    }
+    public String getServerName() {
+	return serverName;
+    }
+    public long getPingToServer() {
+	return pingToServer;
+    }
 }

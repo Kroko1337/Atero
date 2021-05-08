@@ -24,6 +24,7 @@ import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.proxy.ProxyManager;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
+import de.verschwiegener.atero.ui.mainmenu.AccountManager;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;
@@ -56,6 +57,7 @@ public class Management {
     public GifLoader GIFLoader;
     public GIFManager GIFmgr;
     public FriendManager friendmgr;
+    public AccountManager accountmgr;
     
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
@@ -81,6 +83,7 @@ public class Management {
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
+	accountmgr = new AccountManager();
 
 	clickgui = new ClickGUI();
 

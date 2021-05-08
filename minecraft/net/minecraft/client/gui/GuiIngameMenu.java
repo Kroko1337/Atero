@@ -108,15 +108,23 @@ public class GuiIngameMenu extends GuiScreen
     /**
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 40, 16777215);
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        //System.out.println("Screen: " + Management.instance.currentServer);
-        if(Management.instance.currentServer != null && mc.displayHeight > 700) {
-            ScaledResolution sr  = new ScaledResolution(mc);
-            Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150, (buttonList.get(4).yPosition - 75) , 300, 20, mouseX, mouseY, false, false);
-        }
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	this.drawDefaultBackground();
+	this.drawCenteredString(this.fontRendererObj, I18n.format("menu.game", new Object[0]), this.width / 2, 40,
+		16777215);
+	super.drawScreen(mouseX, mouseY, partialTicks);
+	if (Management.instance.currentServer != null && mc.displayHeight > 700) {
+	    ScaledResolution sr = new ScaledResolution(mc);
+
+	    if (!(Management.instance.currentServer.getServerData().getPingToServer() > 0)) {
+		GuiMultiplayer multiplayer = new GuiMultiplayer(null);
+		Management.instance.currentServer.setServerData(multiplayer.getServerList()
+			.getServerDataByIP(Management.instance.currentServer.getServerData().getServerIP()));
+	    }
+	    if(!mc.isSingleplayer()) {
+		 Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150,
+			    (buttonList.get(4).yPosition - 75), 300, 20, mouseX, mouseY, false, false);
+	    }
+	}
     }
 }

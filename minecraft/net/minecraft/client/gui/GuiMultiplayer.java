@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.ui.multiplayer.CustomGUISlotRenderer;
 import de.verschwiegener.atero.ui.multiplayer.GuiProxy;
 import de.verschwiegener.atero.ui.multiplayer.GuiReconnect;
@@ -593,4 +594,5 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     public boolean isCustomGui() {
 	return useCustomGui;
     }
+    
 }
