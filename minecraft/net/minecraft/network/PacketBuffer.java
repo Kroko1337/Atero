@@ -1,9 +1,6 @@
 package net.minecraft.network;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.*;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
@@ -32,12 +29,15 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 public class PacketBuffer extends ByteBuf {
+  //das ist so dumm xd
+  //weird in eclispe geht ja alles
   private final ByteBuf buf;
   
   public PacketBuffer(ByteBuf paramByteBuf) {
     this.buf = paramByteBuf;
   }
-  
+  //darf ich kurtz was testen? XD
+  //
   public static int getVarIntSize(int paramInt) {
     for (byte b = 1; b < 5; b++) {
       if ((paramInt & -1 << b * 7) == 0)
@@ -317,7 +317,7 @@ public class PacketBuffer extends ByteBuf {
   public boolean isReadOnly() {
     return this.buf.isReadOnly();
   }
-  
+  // in eclispe geht alles da habe ich netty ausgetauscht und alles hat workded dann why net auch in inteliji? XD
   public ByteBuf asReadOnly() {
     return this.buf.asReadOnly();
   }
@@ -877,15 +877,21 @@ public class PacketBuffer extends ByteBuf {
   public int forEachByte(int paramInt1, int paramInt2, ByteProcessor paramByteProcessor) {
     return this.buf.forEachByte(paramInt1, paramInt2, paramByteProcessor);
   }
-  
+
   public int forEachByteDesc(ByteProcessor paramByteProcessor) {
     return this.buf.forEachByteDesc(paramByteProcessor);
   }
-  
-  public int forEachByteDesc(int paramInt1, int paramInt2, ByteProcessor paramByteProcessor) {
-    return this.buf.forEachByteDesc(paramInt1, paramInt2, paramByteProcessor);
+
+//  public int forEachByteDesc(int paramInt1, int paramInt2, ByteProcessor paramByteProcessor) {
+//    return this.buf.forEachByteDesc(paramInt1, paramInt2, paramByteProcessor);
+//  }
+
+
+  @Override
+  public int forEachByteDesc(int index, int length, ByteProcessor processor) {
+    return this.buf.forEachByteDesc(index, length, processor);
   }
-  
+
   public ByteBuf copy() {
     return this.buf.copy();
   }

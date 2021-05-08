@@ -21,7 +21,7 @@ import de.verschwiegener.atero.util.ScreenshotSaverAsync;
 import de.verschwiegener.atero.util.chat.ChatUtil;
 import de.verschwiegener.atero.util.render.ShaderRenderer;
 import de.verschwiegener.atero.util.splashscreen.splashscreen.SplashScreenRenderUtil;
-import de.verschwiegener.atero.util.splashscreen.splashscreen.StartSplashScreenRenderer;
+//import de.verschwiegener.atero.util.splashscreen.splashscreen.StartSplashScreenRenderer;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -375,7 +375,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private String debugProfilerName = "root";
 
     /* isSplashScreen Atero */
-    public StartSplashScreenRenderer ssru;
+    //public StartSplashScreenRenderer ssru;
 
     public Minecraft(GameConfiguration gameConfig) {
 	theMinecraft = this;
@@ -431,7 +431,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	while (true) {
 	    try {
 		while (this.running) {
-		    if (ssru.getRenderer().isFinish()) {
+		   // if (ssru.getRenderer().isFinish()) {
 			if (!this.hasCrashed || this.crashReporter == null) {
 			    try {
 				this.runGameLoop();
@@ -444,7 +444,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			    this.displayCrashReport(this.crashReporter);
 			}
 		    }
-		}
+		//}
 	    } catch (MinecraftError var12) {
 		break;
 	    } catch (ReportedException reportedexception) {
@@ -866,9 +866,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	 * GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	 */
 
-	ssru = new StartSplashScreenRenderer();
+	//ssru = new StartSplashScreenRenderer();
 
-	ssru.draw(this, Display.getDrawable());
+	//ssru.draw(this, Display.getDrawable());
 
 	/*
 	 * ScaledResolution scaledresolution = new ScaledResolution(this); int i =
