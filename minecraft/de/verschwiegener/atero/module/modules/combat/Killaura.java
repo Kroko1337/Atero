@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import god.buddy.aot.BCompiler;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
@@ -90,7 +91,7 @@ public class Killaura extends Module {
 	    //return false;
 	return true;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getClosestPlayer(final double distance) {
 	double d0 = distance;
 	EntityLivingBase entityplayer = null;
@@ -106,7 +107,7 @@ public class Killaura extends Module {
 	}
 	return entityplayer;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     // TODO Names Reworken
     private float[] getEntityRotations(final EntityPlayerSP player, final EntityLivingBase target, final Vec3 targetVec) {
 	final double posX = targetVec.xCoord - player.posX;
@@ -128,7 +129,7 @@ public class Killaura extends Module {
 	pitch -= pitch % (sensitivityOffset * mouseSensitivity);
 	return new float[] { yaw, pitch };
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getHighestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -142,7 +143,7 @@ public class Killaura extends Module {
 	}
 	return target;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getLowestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -156,7 +157,7 @@ public class Killaura extends Module {
 	}
 	return target;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private MovingObjectPosition getTarget(final float partialTicks, final double distance) {
 	Entity pointedEntity;
 	MovingObjectPosition omo = mc.renderViewEntity.rayTrace(distance, partialTicks);
@@ -216,6 +217,7 @@ public class Killaura extends Module {
 	    return omo;
 	return null;
     }
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private float interpolateRotation(final float yaw, final float pitch, final float partialTicks) {
 	float f = MathHelper.wrapAngleTo180_float(pitch - yaw);
 	if (f > partialTicks) {
@@ -226,7 +228,7 @@ public class Killaura extends Module {
 	}
 	return yaw + f;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private Vec3 linearpredict(final EntityLivingBase base) {
 	final double x = base.posX + base.motionX;
 	final double y = base.posY + base.motionY;
@@ -235,6 +237,7 @@ public class Killaura extends Module {
     }
 
     @Override
+
     public void onEnable() {
 	super.onEnable();
 	setting = Management.instance.settingsmgr.getSettingByName(getName());
@@ -242,6 +245,7 @@ public class Killaura extends Module {
     }
 
     @EventTarget
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(final EventPreMotionUpdate pre) {
 	if (target != null) {
 	    facing = getEntityRotations(Minecraft.thePlayer, target, linearpredict(target));
@@ -260,6 +264,7 @@ public class Killaura extends Module {
 	    pitch = interpolateRotation(pitch, facing[1], 180);
 	}
     }
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean canEntityBeSeen(Entity entityIn) {
 	if(!mc.thePlayer.canEntityBeSeen(entityIn)) {
 	    return mc.theWorld.rayTraceBlocks(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ),
@@ -270,8 +275,10 @@ public class Killaura extends Module {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
 	super.onUpdate();
+
 	try {
 	    if (Minecraft.getMinecraft().currentScreen != null)
 		return;
@@ -347,13 +354,14 @@ public class Killaura extends Module {
     }
     
     @EventTarget
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onEvent(EventTest event) {
 	if (setting.getItemByName("CorrectMM").isState() && (target != null || preaimtarget != null)) {
 	    ((EventTest) event).setYaw(EventPreMotionUpdate.getInstance.getYaw());
 	    ((EventTest) event).setSilentMoveFix(true);
 	}
     }
-    
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private int random(int min, int max) {
 	Random random = new Random();
 	int zufallZahl = random.nextInt(max);
@@ -364,6 +372,7 @@ public class Killaura extends Module {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setup() {
 	super.setup();
 	final ArrayList<SettingsItem> items = new ArrayList<>();

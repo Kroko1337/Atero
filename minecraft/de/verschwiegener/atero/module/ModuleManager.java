@@ -12,6 +12,7 @@ import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.render.ESP;
 import de.verschwiegener.atero.module.modules.world.Cheststealer;
 import de.verschwiegener.atero.module.modules.world.Scaffold;
+import god.buddy.aot.BCompiler;
 import net.minecraft.client.Minecraft;
 
 public class ModuleManager {
@@ -30,12 +31,12 @@ public class ModuleManager {
 	modules.add(new ESP());
 	modules.add(new Cheststealer());
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Module getModuleByName(final String name) {
 	return modules.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
 		.findFirst().orElse(null);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Module getModulebyStartsWith(final String name) {
 	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase())).findFirst().orElse(null);
     }
@@ -43,7 +44,7 @@ public class ModuleManager {
     public ArrayList<Module> getModules() {
 	return modules;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onKey(final int key) {
 	if (Minecraft.getMinecraft().currentScreen == null) {
 	    for (final Module m : modules) {
@@ -53,7 +54,7 @@ public class ModuleManager {
 	    }
 	}
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
 	for (final Module m : modules) {
 	    if (m.isEnabled()) {

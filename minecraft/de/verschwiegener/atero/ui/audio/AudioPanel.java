@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import god.buddy.aot.BCompiler;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +30,7 @@ public class AudioPanel extends GuiScreen {
     private final Minecraft mc = Minecraft.getMinecraft();
     private Provider currentProvider = Provider.values()[0];
 
-    private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=";
+    private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789ï¿½$%&?/{}()[].,;:-_|+*ï¿½`\"=";
 
     private final Fontrenderer titlefont;
     private final Fontrenderer songFont;
@@ -56,7 +57,7 @@ public class AudioPanel extends GuiScreen {
 	scrollY = 0;
 	createChannelButtons();
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void createChannelButtons() {
 	channelbuttons.clear();
 	final int maxX = width / 5 * 4;
@@ -81,6 +82,7 @@ public class AudioPanel extends GuiScreen {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void handleMouseInput() throws IOException {
 	final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
 	final int scaleFactor = scale.getScaleFactor();
@@ -103,6 +105,7 @@ public class AudioPanel extends GuiScreen {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void drawScreen(final int mouseX, final int mouseY, float partialTicks) {
 	super.drawScreen(mouseX, mouseY, partialTicks);
 	x = mc.displayWidth / 4 - width / 2;
@@ -181,70 +184,71 @@ public class AudioPanel extends GuiScreen {
 
 	GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private void drawSlider() {
 	double percent = Management.instance.streamer.getVolume();
 	RenderUtil.fillRect(x + ((width / 5) * 4), y + (height - 15), 75, 1.5D, Management.instance.colorBlack);
 	RenderUtil.fillRect(x + ((width / 5) * 4), y + (height - 15), (percent * 10) * 75, 1.5D,
 		Management.instance.colorBlue);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public ProviderButton getButtonByPosition(final AudioPanel audiopanel, final int x, final int y) {
 	return providerButtons.stream().filter(module -> x > audiopanel.x && x < audiopanel.x + audiopanel.width / 5
 		&& y > audiopanel.y + module.y && y < audiopanel.y + module.y + 12).findFirst().orElse(null);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean isMouseHovered(int mouseX, int mouseY) {
 	return mouseX > (x + (width / 5)) && mouseX < (x + width) && mouseY > y && mouseY < (y + height - 30);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean isMouseSliderHovered(int mouseX, int mouseY) {
 	return mouseX > (x + ((width / 5) * 4) - 1) && mouseX < (x + ((width / 5) * 4) + 76)
 		&& mouseY > (y + (height - 16.5D)) && mouseY < y + (height - 13.5D);
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean isMouseSliderHoveredNoneY(int mouseX, int mouseY) {
 	return mouseX > (x + ((width / 5) * 4) - 1) && mouseX < (x + ((width / 5) * 4) + 76);
     }
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean isPlayPauseHovered(int mouseX, int mouseY) {
 	return mouseX > (x + ((width - (width / 5)) / 2) + (width / 5) - 8) && mouseX < (x + ((width - (width / 5)) / 2) + (width / 5) + 5) &&
 		mouseY > (y + (height - 25)) && mouseY < (y + (height - 5));
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private double getSliderValue(int mouseX, int mouseY) {
 	double dif = 100D / 75D;
 	double x = (mouseX - (this.x + ((width / 5) * 4)));
 	return (x * dif) / 100;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Provider getCurrentProvider() {
 	return currentProvider;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public int getHeight() {
 	return height;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Fontrenderer getSongFont() {
 	return songFont;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Fontrenderer getTitlefont() {
 	return titlefont;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public int getWidth() {
 	return width;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public int getX() {
 	return x;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public int getY() {
 	return y;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setCurrentStream(Stream currentStream) {
 	Management.instance.currentStream = currentStream;
 	Management.instance.streamer.updateStream();
@@ -253,6 +257,7 @@ public class AudioPanel extends GuiScreen {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) throws IOException {
 	super.mouseClicked(mouseX, mouseY, mouseButton);
 	if (mouseY < (y + height - 30) && mouseY > y) {
@@ -276,6 +281,7 @@ public class AudioPanel extends GuiScreen {
     }
 
     @Override
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     protected void mouseReleased(final int mouseX, final int mouseY, final int state) {
 	super.mouseReleased(mouseX, mouseY, state);
 	sliderselected = false;

@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.ui.multiplayer.GuiProxy;
+import god.buddy.aot.BCompiler;
 
 public class ProxyManager {
 
@@ -18,43 +19,44 @@ public class ProxyManager {
 
     private Proxy currentProxy;
     private boolean useProxy;
-    
+
     private GuiProxy gui;
-    
+
     public ProxyManager() {
 	gui = new GuiProxy();
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public ArrayList<Proxy> getProxys() {
 	return proxys;
     }
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public GuiProxy getGui() {
 	return gui;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setProxys(ArrayList<Proxy> proxys) {
 	this.proxys = proxys;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public Proxy getCurrentProxy() {
 	return currentProxy;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setCurrentProxy(Proxy currentProxy) {
 	this.currentProxy = currentProxy;
 	testProxy = Management.instance.EXECUTOR_SERVICE.submit(() -> {
 	    pingHost(currentProxy);
 	});
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public boolean isUseProxy() {
 	return useProxy;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setUseProxy(boolean useProxy) {
 	this.useProxy = useProxy;
     }
-    
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private void pingHost(Proxy proxy) {
 	Socket socket = new Socket();
 	try {
