@@ -8,7 +8,7 @@ import de.verschwiegener.atero.module.Module;
 
 public class AutoComplete {
 
-    static boolean hasAutoComplete;
+    public static boolean hasAutoComplete;
 
     public static String onAutoComplete(final String text) {
 	if (!text.startsWith("."))

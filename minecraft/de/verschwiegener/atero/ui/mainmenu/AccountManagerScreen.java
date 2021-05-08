@@ -18,14 +18,14 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Session;
 import org.lwjgl.input.Keyboard;
 
-public class AltManager extends GuiScreen {
+public class AccountManagerScreen extends GuiScreen {
   public GuiTextField clipboard;
   
   public GuiScreen oldscreen;
   
   public String status;
   
-  public AltManager(GuiScreen old) {
+  public AccountManagerScreen(GuiScreen old) {
     this.oldscreen = old;
   }
   

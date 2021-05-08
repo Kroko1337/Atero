@@ -3,7 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.design.font.Fontrenderer;
-import de.verschwiegener.atero.ui.mainmenu.AltManager;
+import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
@@ -317,7 +317,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             }
         }
         if(button.id == 500) {
-            this.mc.displayGuiScreen(new AltManager(this)); 
+            this.mc.displayGuiScreen(new AccountManagerScreen(this)); 
         }
     }
 

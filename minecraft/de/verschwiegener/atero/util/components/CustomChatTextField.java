@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.util.chat;
+package de.verschwiegener.atero.util.components;
 
 import org.lwjgl.opengl.GL11;
 
@@ -7,6 +7,7 @@ import com.google.common.base.Predicates;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.util.chat.AutoComplete;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;

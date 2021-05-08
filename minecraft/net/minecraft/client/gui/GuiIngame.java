@@ -357,6 +357,7 @@ public class GuiIngame extends Gui
         
         CustomGUIIngame.drawArrayList();
         CustomGUIIngame.drawMusikTab();
+        CustomGUIIngame.renderTargetHud(scaledresolution);
         //Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign).drawGUIIngame(this);
         
 

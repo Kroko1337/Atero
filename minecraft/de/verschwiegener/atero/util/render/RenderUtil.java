@@ -11,11 +11,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderUtil {
-    
+
     private static ResourceLocation background = new ResourceLocation("atero/assets/background.jpg");
+
     public static void disable() {
 	GL11.glEnd();
 	GL11.glDisable(3042);
@@ -26,7 +30,6 @@ public class RenderUtil {
 	GL11.glPopAttrib();
 	GL11.glPopMatrix();
     }
-
 
     private static void drawCircle(final float x, final float y, final float diameter, final int start, final int stop,
 	    final Color color) {
@@ -58,6 +61,39 @@ public class RenderUtil {
 	GL11.glEnd();
 	GL11.glPopMatrix();
 	Display.update();
+    }
+
+    public static void drawRect(double left, double top, double right, double bottom, int color) {
+	if (left < right) {
+	    double i = left;
+	    left = right;
+	    right = i;
+	}
+
+	if (top < bottom) {
+	    double j = top;
+	    top = bottom;
+	    bottom = j;
+	}
+
+	float f3 = (float) (color >> 24 & 255) / 255.0F;
+	float f = (float) (color >> 16 & 255) / 255.0F;
+	float f1 = (float) (color >> 8 & 255) / 255.0F;
+	float f2 = (float) (color & 255) / 255.0F;
+	Tessellator tessellator = Tessellator.getInstance();
+	WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+	GlStateManager.enableBlend();
+	GlStateManager.disableTexture2D();
+	GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+	GlStateManager.color(f, f1, f2, f3);
+	worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+	worldrenderer.pos(left, bottom, 0.0D).endVertex();
+	worldrenderer.pos(right, bottom, 0.0D).endVertex();
+	worldrenderer.pos(right, top, 0.0D).endVertex();
+	worldrenderer.pos(left, top, 0.0D).endVertex();
+	tessellator.draw();
+	GlStateManager.enableTexture2D();
+	GlStateManager.disableBlend();
     }
 
     /**
@@ -100,7 +136,8 @@ public class RenderUtil {
 	GL11.glPopMatrix();
     }
 
-    public static void drawPlay(final float x, final float y, final float width, final float height, final Color color) {
+    public static void drawPlay(final float x, final float y, final float width, final float height,
+	    final Color color) {
 	enable();
 	GL11.glBegin(GL11.GL_TRIANGLES);
 	GL11.glColor4f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F,
@@ -110,11 +147,12 @@ public class RenderUtil {
 	GL11.glVertex2d(x + width, y + (height / 2));
 	disable();
     }
+
     public static void drawPause(final int x, final int y, final int width, final int height, final Color color) {
 	fillRect(x, y, width / 2 - 3, height, color);
 	fillRect(x + (width / 3) * 2 - 2, y, width / 2 - 3, height, color);
     }
-    
+
     public static void drawlefthalf(final float x, final float y, final float thicknes, final Color color) {
 	final float radius = 70;
 	GL11.glPushMatrix();
@@ -153,10 +191,11 @@ public class RenderUtil {
 	RenderUtil.disable();
 
     }
-    
-    public static void drawCircle(final float x, final float y, final float diameter, final Color color, boolean longPressed) {
+
+    public static void drawCircle(final float x, final float y, final float diameter, final Color color,
+	    boolean longPressed) {
 	final double twicePi = Math.PI * 2;
-	
+
 	final int triageAmount = longPressed ? (int) Math.max(4, diameter * twicePi / 4) : 10;
 
 	RenderUtil.enable();
@@ -173,8 +212,9 @@ public class RenderUtil {
 
 	RenderUtil.disable();
     }
-    
-    public static void drawLine(final int x1, final int y1, final int x2, final int y2, final float thickness, final Color color) {
+
+    public static void drawLine(final int x1, final int y1, final int x2, final int y2, final float thickness,
+	    final Color color) {
 
 	RenderUtil.enable();
 
@@ -184,9 +224,9 @@ public class RenderUtil {
 	GL11.glLineWidth(thickness);
 
 	GL11.glBegin(GL11.GL_LINES);
-	
-	GL11.glVertex2f(x1,y1);
-	GL11.glVertex2f(x2,y2);
+
+	GL11.glVertex2f(x1, y1);
+	GL11.glVertex2f(x2, y2);
 
 	RenderUtil.disable();
 
@@ -205,22 +245,25 @@ public class RenderUtil {
      */
     public static void drawRectRound(final int x, final int y, final int width, final int height, final int diameter,
 	    final Color color) {
-	//RenderUtil.fillRect(x - diameter, y - diameter, width - diameter * 2, height - diameter * 2, color);
+	// RenderUtil.fillRect(x - diameter, y - diameter, width - diameter * 2, height
+	// - diameter * 2, color);
 
-	//RenderUtil.fillRect(x, y - diameter * 2, width - diameter * 4, diameter, color);
+	// RenderUtil.fillRect(x, y - diameter * 2, width - diameter * 4, diameter,
+	// color);
 
-	//RenderUtil.fillRect(x, y + height - diameter * 3, width - diameter * 4, diameter, color);
+	// RenderUtil.fillRect(x, y + height - diameter * 3, width - diameter * 4,
+	// diameter, color);
 	fillRect(x, y + diameter, width, height - (diameter * 2), color);
 	fillRect(x + 5, y, width - (diameter * 2), height, color);
 
 	RenderUtil.enable();
 
 	GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-	//Oberen Kreise
+	// Oberen Kreise
 	drawCircle(x + diameter, y + diameter, diameter, 0, 360, color);
 	drawCircle(x + width - diameter, y + diameter, diameter, 0, 360, color);
-	
-	//Untere Kreise
+
+	// Untere Kreise
 	drawCircle(x + diameter, y + height - diameter, diameter, 0, 360, color);
 	drawCircle(x + width - diameter, y + height - diameter, diameter, 0, 360, color);
 	RenderUtil.disable();
@@ -315,30 +358,32 @@ public class RenderUtil {
 
 	RenderUtil.disable();
     }
-    
+
     public static void drawImage(ResourceLocation location, int x, int y, int width, int height) {
 	// enable();
 	GL11.glDisable(2929);
 	GL11.glEnable(3042);
 	GL11.glDepthMask(false);
-	//OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-	//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	// OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+	// GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	Minecraft.getMinecraft().getTextureManager().bindTexture(location);
 	Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, width, height, width, height);
 	// disable();
-	//Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, width, height, width, height);
+	// Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0F, 0.0F, width, height,
+	// width, height);
 	GL11.glDepthMask(true);
 	GL11.glDisable(3042);
 	GL11.glEnable(2929);
     }
+
     public static void drawBackround(int width, int height) {
-   	GlStateManager.disableLighting();
-   	GlStateManager.disableFog();
-   	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-   	Minecraft.getMinecraft().getTextureManager().bindTexture(background);
-   	Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, width, height);
-   	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
-   	//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-       }
+	GlStateManager.disableLighting();
+	GlStateManager.disableFog();
+	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	Minecraft.getMinecraft().getTextureManager().bindTexture(background);
+	Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, width, height);
+	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
+	// GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
 
 }

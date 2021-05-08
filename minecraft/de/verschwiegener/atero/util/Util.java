@@ -84,5 +84,12 @@ public class Util {
 	    }
 	}
     }
+    public static int getColor(int red, int green, int blue, int opacity) {
+        int color = MathHelper.clamp_int(opacity, 0, 255) << 24;
+        color |= MathHelper.clamp_int(red, 0, 255) << 16;
+        color |= MathHelper.clamp_int(green, 0, 255) << 8;
+        color |= MathHelper.clamp_int(blue, 0, 255);
+        return color;
+    }
 
 }

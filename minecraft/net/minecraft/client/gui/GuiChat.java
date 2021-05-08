@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
-import de.verschwiegener.atero.util.chat.CustomChatTextField;
+import de.verschwiegener.atero.util.components.CustomChatTextField;
 
 import java.io.IOException;
 import java.util.List;
