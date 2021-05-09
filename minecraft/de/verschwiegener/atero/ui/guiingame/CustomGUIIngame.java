@@ -59,6 +59,7 @@ public class CustomGUIIngame {
 				- xoffset,
 			yoffset, Color.black.getRGB());
 		yoffset += fontRenderer.getBaseStringHeight() * 2;
+
 	    }
 	}
     }
@@ -119,14 +120,14 @@ public class CustomGUIIngame {
             RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
             RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-            fontRenderer.drawString(Killaura.target.getName(), 55, 3F, Util.getColor(255, 255, 255, 255));
+            fontRenderer.drawString(Killaura.target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
 
-            renderPlayer(15, 55, 23, Killaura.target);
+            renderPlayer(25, 55, 23, Killaura.target);
 
             float healthProcent = Killaura.target.getHealth() / Killaura.target.getMaxHealth();
             RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-            fontRenderer.drawString(String.valueOf(Math.round(Killaura.target.getHealth())), 90, 16F,
+            fontRenderer.drawString(String.valueOf(Math.round(Killaura.target.getHealth())), 175, 6F,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
             double winChance = 0;
@@ -139,7 +140,7 @@ public class CustomGUIIngame {
             String message = winChance == 0 ? "You could win"
                     : winChance < 0 ? "You could lose" : "You are going to win";
             fontRenderer.drawString(message,
-                    97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 2F, 35F,
+                    97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
                     Util.getColor(255, 240, 0, 255));
             GlStateManager.popMatrix();
         }
@@ -164,7 +165,7 @@ public class CustomGUIIngame {
 	return protection;
     }
 
-    // schon mal an nen event dafür gedacht - wo renderst du das was rendern?
+    // schon mal an nen event dafï¿½r gedacht - wo renderst du das was rendern?
     // die aary?
 
     private static double getWeaponStrength(ItemStack stack) {
