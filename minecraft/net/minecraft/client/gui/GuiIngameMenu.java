@@ -117,12 +117,12 @@ public class GuiIngameMenu extends GuiScreen
 	    ScaledResolution sr = new ScaledResolution(mc);
 
 	    if (!(Management.instance.currentServer.getServerData().getPingToServer() > 0)) {
-		GuiMultiplayer multiplayer = new GuiMultiplayer(null);
-		Management.instance.currentServer.setServerData(multiplayer.getServerList()
-			.getServerDataByIP(Management.instance.currentServer.getServerData().getServerIP()));
+		//GuiMultiplayer multiplayer = new GuiMultiplayer(null);
+		//Management.instance.currentServer.setServerData(multiplayer.getServerList()
+			//.getServerDataByIP(Management.instance.currentServer.getServerData().getServerIP()));
 	    }
 	    if(!mc.isSingleplayer()) {
-		 Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150,
+		 Management.instance.currentServer.drawEntryNoPing(1, (sr.getScaledWidth() / 2) - 150,
 			    (buttonList.get(4).yPosition - 75), 300, 20, mouseX, mouseY, false, false);
 	    }
 	}

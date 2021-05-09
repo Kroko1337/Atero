@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen;
+import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen2;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
