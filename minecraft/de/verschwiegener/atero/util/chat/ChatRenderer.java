@@ -121,12 +121,12 @@ public class ChatRenderer {
 		    if (underline) {
 			
 			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
-			//fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		    if (strikethrough) {
 			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()), fontRenderer.getStringWidth(str.substring(2)), messagecolor);
 			//System.out.println("Str: " + str.substring(2));
-			//fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		} else {
 		    if (str.startsWith("§")) {

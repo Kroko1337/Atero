@@ -1,18 +1,14 @@
 package de.verschwiegener.atero.module.modules.combat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
-import god.buddy.aot.BCompiler;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventTest;
-import com.google.common.base.Predicates;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
@@ -20,24 +16,18 @@ import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.TimeUtils;
+import god.buddy.aot.BCompiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.EntityRenderer1;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import optifine.Reflector;
 import net.minecraft.util.Vec3;
 
 public class Killaura extends Module {
@@ -47,18 +37,10 @@ public class Killaura extends Module {
     public static float yaw;
     public static float pitch;
     public static float[] facing;
+    
     double reach = 0;
-    private boolean miss;
-
-    public static float getYaw() {
-	return yaw;
-    }
-
-    public static boolean hasTarget() {
-	return target != null || preaimtarget != null;
-    }
-
     private Setting setting, targetset;
+
     private final TimeUtils timer = new TimeUtils();
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -67,7 +49,34 @@ public class Killaura extends Module {
 	super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
     }
 
-    // TODO Reworken
+    public static float getYaw() {
+	return Killaura.yaw;
+    }
+
+    public static boolean hasTarget() {
+	return Killaura.target != null || Killaura.preaimtarget != null;
+    }
+
+    public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
+	final float RotationPitch2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 94, 97);
+	final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 92, RotationPitch2);
+	final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.4);
+	final double posX = target.posX - player.posX;
+	final float RotationY = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, RotationYaw);
+	final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() + RotationY);
+	final double posZ = target.posZ - player.posZ;
+	final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
+	float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - RotationPitch;
+	float pitch = (float) -(Math.atan2(posY, var14) * 180 / Math.PI);
+	final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+	final float f3 = f2 * f2 * f2 * 1.2F;
+	yaw -= yaw % f3;
+	pitch -= pitch % (f3 * f2);
+
+	return new float[] { yaw, pitch };
+    }
+
+
     private boolean canAttack(final EntityLivingBase player) {
 	if (player == Minecraft.thePlayer)
 	    return false;
@@ -87,11 +96,22 @@ public class Killaura extends Module {
 	    return false;
 	if (player.isDead && !targetset.getItemByName("Death").isState())
 	    return false;
-	//if (player.deathTime != 0)
-	    //return false;
+	// if (player.deathTime != 0)
+	// return false;
 	return true;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    private boolean canEntityBeSeen(final Entity entityIn) {
+	if (!Minecraft.thePlayer.canEntityBeSeen(entityIn))
+	    return mc.theWorld.rayTraceBlocks(new Vec3(Minecraft.thePlayer.posX,
+		    Minecraft.thePlayer.posY + Minecraft.thePlayer.getEyeHeight(), Minecraft.thePlayer.posZ),
+		    new Vec3(entityIn.posX, entityIn.posY, entityIn.posZ)) == null;
+	else
+	    return true;
+    }
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getClosestPlayer(final double distance) {
 	double d0 = distance;
 	EntityLivingBase entityplayer = null;
@@ -107,14 +127,16 @@ public class Killaura extends Module {
 	}
 	return entityplayer;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    /*@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     // TODO Names Reworken
-    private float[] getEntityRotations(final EntityPlayerSP player, final EntityLivingBase target, final Vec3 targetVec) {
+    private float[] getEntityRotations(final EntityPlayerSP player, final EntityLivingBase target,
+	    final Vec3 targetVec) {
 	final double posX = targetVec.xCoord - player.posX;
 	double posY;
-	if((targetVec.yCoord) < mc.thePlayer.posY) {
-	    posY = (targetVec.yCoord) - (targetVec.yCoord + player.getEyeHeight()) + 0.1;
-	}else {
+	if (targetVec.yCoord < Minecraft.thePlayer.posY) {
+	    posY = targetVec.yCoord - (targetVec.yCoord + player.getEyeHeight()) + 0.1;
+	} else {
 	    posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
 	}
 	final double posZ = targetVec.zCoord - player.posZ;
@@ -124,32 +146,13 @@ public class Killaura extends Module {
 	final float mouseSensitivity = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 	// Wenn kein Schaden macht
 	// float f3 = mouseSensitivity * mouseSensitivity * mouseSensitivity * 1.2F;
-	final float sensitivityOffset = (mouseSensitivity * 3) * 1.2F;
+	final float sensitivityOffset = mouseSensitivity * 3 * 1.2F;
 	yaw -= yaw % sensitivityOffset;
 	pitch -= pitch % (sensitivityOffset * mouseSensitivity);
 	return new float[] { yaw, pitch };
-    }
+    }*/
 
-
-	public static float[] Intavee(EntityPlayerSP player, EntityLivingBase target) {
-		float RotationPitch2 = (float)MathHelper.getRandomDoubleInRange(new Random(), 94, 97);
-		float RotationPitch = (float)MathHelper.getRandomDoubleInRange(new Random(), 92, RotationPitch2);
-		float RotationYaw = (float)MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.4);
-		final double posX = target.posX - player.posX ;
-		float RotationY = (float)MathHelper.getRandomDoubleInRange(new Random(), 0.1, RotationYaw);
-		final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() + RotationY);
-		final double posZ = target.posZ  - player.posZ ;
-		final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
-		float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - RotationPitch;
-		float pitch = (float) (-(Math.atan2(posY, var14) * 180 / Math.PI));
-		float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
-		float f3 = f2 * f2 * f2 * 1.2F;
-		yaw -= yaw % f3;
-		pitch -= pitch % (f3 * f2);
-
-		return new float[] { yaw, pitch };
-	}
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getHighestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -163,7 +166,8 @@ public class Killaura extends Module {
 	}
 	return target;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getLowestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -177,7 +181,8 @@ public class Killaura extends Module {
 	}
 	return target;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private MovingObjectPosition getTarget(final float partialTicks, final double distance) {
 	Entity pointedEntity;
 	MovingObjectPosition omo = mc.renderViewEntity.rayTrace(distance, partialTicks);
@@ -233,11 +238,12 @@ public class Killaura extends Module {
 		mc.pointedEntity = pointedEntity;
 	    }
 	}
-	if ((omo != null && omo.typeOfHit == MovingObjectType.ENTITY) && (omo.entityHit instanceof EntityLivingBase))
+	if (omo != null && omo.typeOfHit == MovingObjectType.ENTITY && omo.entityHit instanceof EntityLivingBase)
 	    return omo;
 	return null;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private float interpolateRotation(final float yaw, final float pitch, final float partialTicks) {
 	float f = MathHelper.wrapAngleTo180_float(pitch - yaw);
 	if (f > partialTicks) {
@@ -248,16 +254,16 @@ public class Killaura extends Module {
 	}
 	return yaw + f;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
+    /*@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private Vec3 linearpredict(final EntityLivingBase base) {
 	final double x = base.posX + base.motionX;
 	final double y = base.posY + base.motionY;
 	final double z = base.posZ + base.motionZ;
 	return new Vec3(x, y, z);
-    }
+    }*/
 
     @Override
-
     public void onEnable() {
 	super.onEnable();
 	setting = Management.instance.settingsmgr.getSettingByName(getName());
@@ -265,64 +271,67 @@ public class Killaura extends Module {
     }
 
     @EventTarget
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    public void onPre(final EventPreMotionUpdate pre) {
-	if (target != null) {
-	    facing = Intavee(Minecraft.thePlayer, target);
-	    pre.setYaw(yaw);
-	    pre.setPitch(pitch);
-	    //yaw = facing[0];
-	    //pitch = facing[1];
-	    yaw = interpolateRotation(yaw, facing[0], 180);
-	    pitch = interpolateRotation(pitch, facing[1], 180);
-	} else if (preaimtarget != null) {
-	    facing = Intavee(Minecraft.thePlayer, target);
-	    pre.setYaw(yaw);
-	    pre.setPitch(pitch);
-	    yaw = interpolateRotation(yaw, facing[0], 180);
-	    pitch = interpolateRotation(pitch, facing[1], 180);
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    public void onEvent(final EventTest event) {
+	if (setting.getItemByName("CorrectMM").isState()
+		&& (Killaura.target != null || Killaura.preaimtarget != null)) {
+	    event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
+	    event.setSilentMoveFix(true);
 	}
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    private boolean canEntityBeSeen(Entity entityIn) {
-	if(!mc.thePlayer.canEntityBeSeen(entityIn)) {
-	    return mc.theWorld.rayTraceBlocks(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ),
-			new Vec3(entityIn.posX, entityIn.posY, entityIn.posZ)) == null;
-	}else {
-	    return true;
+
+    @EventTarget
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    public void onPre(final EventPreMotionUpdate pre) {
+	if ((Killaura.target != null)) {
+	    Killaura.facing = Killaura.Intavee(Minecraft.thePlayer, Killaura.target);
+	    pre.setYaw(Killaura.yaw);
+	    pre.setPitch(Killaura.pitch);
+	    // yaw = facing[0];
+	    // pitch = facing[1];
+	    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
+	    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
+	}else if(preaimtarget != null) {
+	    Killaura.facing = Killaura.Intavee(Minecraft.thePlayer, Killaura.preaimtarget);
+	    pre.setYaw(Killaura.yaw);
+	    pre.setPitch(Killaura.pitch);
+	    // yaw = facing[0];
+	    // pitch = facing[1];
+	    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
+	    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
 	}
     }
 
     @Override
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
 	super.onUpdate();
 
 	try {
-	    if (Minecraft.getMinecraft().currentScreen != null)
+	    Minecraft.getMinecraft();
+	    if (Minecraft.currentScreen != null)
 		return;
 
 	    reach = setting.getItemByName("Range").getCurrentValue();
 	    final String mode = setting.getItemByName("TargetMode").getCurrent();
 	    if (mode == "Nearest") {
-		target = getClosestPlayer(reach);
+		Killaura.target = getClosestPlayer(reach);
 	    } else if (mode == "Lowest") {
-		target = getLowestPlayer(reach);
+		Killaura.target = getLowestPlayer(reach);
 	    } else if (mode == "Highest") {
-		target = getHighestPlayer(reach);
+		Killaura.target = getHighestPlayer(reach);
 	    }
 
 	    if (setting.getItemByName("PreAim").isState()) {
-		preaimtarget = getClosestPlayer(setting.getItemByName("PreAimRange").getCurrentValue());
-	    }else {
-		preaimtarget = null;
+		Killaura.preaimtarget = getClosestPlayer(setting.getItemByName("PreAimRange").getCurrentValue());
+	    } else {
+		Killaura.preaimtarget = null;
 	    }
 
-	    if (target == null) {
-		if(facing != null) {
-		    	yaw = interpolateRotation(yaw, facing[0], 180);
-			pitch = interpolateRotation(pitch, facing[1], 180);
-			return;
+	    if (Killaura.target == null) {
+		if (Killaura.facing != null) {
+		    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
+		    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
 		}
 		return;
 	    }
@@ -337,22 +346,26 @@ public class Killaura extends Module {
 	    // Minecraft.getMinecraft().thePlayer.setItemInUse(Minecraft.getMinecraft().thePlayer.getHeldItem(),5);
 	    // }
 
-	    //getWinkel(target);
-	    if (!canEntityBeSeen(target) && !setting.getItemByName("ThroughWalls").isState()) {
+	    // getWinkel(target);
+	    if (!canEntityBeSeen(Killaura.target) && !setting.getItemByName("ThroughWalls").isState())
 		return;
+
+	    int maxCPS = (int) setting.getItemByName("MAXCPS").getCurrentValue();
+	    int minCPS = (int) setting.getItemByName("MINCPS").getCurrentValue();
+	    if(minCPS >= maxCPS) {
+		minCPS = maxCPS - 1;
 	    }
-
-	    final float CCPS = 1000 / random(5, 15);
+	    
+	    final float CCPS = 1000 / random(minCPS, maxCPS);
 	    final MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
-	    if (t != null && (t.typeOfHit == MovingObjectType.ENTITY) || setting.getItemByName("ThroughWalls").isState()) {
-		if (timer.hasReached(CCPS)) {
-		    timer.reset();
-		    //mc.clickMouse();
-			mc.thePlayer.swingItem();
-		    mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+	    if ((t != null && t.typeOfHit == MovingObjectType.ENTITY || setting.getItemByName("ThroughWalls").isState())
+		    && TimeUtils.hasReached(CCPS)) {
+		TimeUtils.reset();
+		// mc.clickMouse();
+		Minecraft.thePlayer.swingItem();
+		mc.getNetHandler()
+			.addToSendQueue(new C02PacketUseEntity(Killaura.target, C02PacketUseEntity.Action.ATTACK));
 
-
-		}
 	    }
 	    // AutoBlock
 	    if (setting.getItemByName("AutoBlock").isState()) {
@@ -362,8 +375,9 @@ public class Killaura extends Module {
 		    if (Minecraft.thePlayer.getHeldItem() != null) {
 			Minecraft.getMinecraft();
 			Minecraft.getMinecraft();
-			Minecraft.getMinecraft().playerController.sendUseItem(Minecraft.thePlayer,
-				Minecraft.getMinecraft().theWorld, Minecraft.thePlayer.getHeldItem());
+			Minecraft.getMinecraft();
+			Minecraft.playerController.sendUseItem(Minecraft.thePlayer, Minecraft.getMinecraft().theWorld,
+				Minecraft.thePlayer.getHeldItem());
 		    }
 		    TimeUtils.reset();
 
@@ -374,17 +388,9 @@ public class Killaura extends Module {
 	}
     }
 
-    @EventTarget
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    public void onEvent(EventTest event) {
-	if (setting.getItemByName("CorrectMM").isState() && (target != null || preaimtarget != null)) {
-	    ((EventTest) event).setYaw(EventPreMotionUpdate.getInstance.getYaw());
-	    ((EventTest) event).setSilentMoveFix(true);
-	}
-    }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    private int random(int min, int max) {
-	Random random = new Random();
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    private int random(final int min, final int max) {
+	final Random random = new Random();
 	int zufallZahl = random.nextInt(max);
 	while (zufallZahl < min) {
 	    zufallZahl = random.nextInt(max);
@@ -393,7 +399,7 @@ public class Killaura extends Module {
     }
 
     @Override
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void setup() {
 	super.setup();
 	final ArrayList<SettingsItem> items = new ArrayList<>();
@@ -403,6 +409,8 @@ public class Killaura extends Module {
 	targetModes.add("Highest");
 	items.add(new SettingsItem("TargetMode", targetModes, "Nearest", "", ""));
 	items.add(new SettingsItem("Range", 1.0F, 6.0F, 3.0F, ""));
+	items.add(new SettingsItem("MAXCPS", 1, 20, 4, ""));
+	items.add(new SettingsItem("MINCPS", 1, 20, 3, ""));
 	items.add(new SettingsItem("Preaim", false, "PreAimRange"));
 	items.add(new SettingsItem("PreAimRange", 1.0F, 6.0F, 3.0F, ""));
 	items.add(new SettingsItem("KeepSprint", true, ""));
