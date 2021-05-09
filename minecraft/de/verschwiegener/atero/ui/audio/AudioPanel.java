@@ -29,7 +29,7 @@ public class AudioPanel extends GuiScreen {
     private final Minecraft mc = Minecraft.getMinecraft();
     private Provider currentProvider = Provider.values()[0];
 
-    private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789§$%&?/{}()[].,;:-_|+*´`\"=";
+    private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789ï¿½$%&?/{}()[].,;:-_|+*ï¿½`\"=";
 
     private final Fontrenderer titlefont;
     private final Fontrenderer songFont;

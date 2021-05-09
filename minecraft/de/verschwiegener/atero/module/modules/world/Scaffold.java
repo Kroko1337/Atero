@@ -4,6 +4,7 @@ import java.util.Random;
 
 import javax.swing.text.html.parser.Entity;
 
+import god.buddy.aot.BCompiler;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
@@ -48,17 +49,19 @@ public class Scaffold extends Module {
 
     public void setup() {
     }
-
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
+
         blockData = find(new Vec3(0, 0, 0));
 
         mc.thePlayer.setSprinting(false);
         
-        mc.thePlayer.motionX *= 0.508500000F;
-        mc.thePlayer.motionZ *= 0.508500000F;
+       // mc.thePlayer.motionX *= 0.508500000F;
+        //mc.thePlayer.motionZ *= 0.508500000F;
     }
     
     @EventTarget
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPost(EventPostMotionUpdate post) {
 	BlockPos blockPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.0D, mc.thePlayer.posZ);
 
@@ -74,6 +77,7 @@ public class Scaffold extends Module {
 
 
     @EventTarget
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(EventPreMotionUpdate pre) {
 
         float ROTTS4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 150, 176);
@@ -81,7 +85,7 @@ public class Scaffold extends Module {
 
         float ROTS = (float) MathHelper.getRandomDoubleInRange(new Random(), 166, 169);
 
-        float yaw = mc.thePlayer.rotationYaw + ROTS;
+        float yaw = mc.thePlayer.rotationYaw + 180;
 
         float pitch = ROTS2;
 
@@ -122,7 +126,7 @@ public class Scaffold extends Module {
         }
         return null;
     }
-
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     float[] aac3Rotations(Scaffold.BlockData blockData) {
         //EntitySnowball temp = new EntitySnowball(mc.theWorld);
         double x = blockData.getPos().getX() + 0.5D - mc.thePlayer.posX + blockData.getFacing().getFrontOffsetX() / 2.0D;
@@ -151,13 +155,13 @@ public class Scaffold extends Module {
         return new float[]{yaw, pitch};
     }
 
-
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private Vec3 getPositionByFace(BlockPos position, EnumFacing facing) {
         Vec3 offset = new Vec3((double) facing.getDirectionVec().getX() / 2.0, (double) facing.getDirectionVec().getY() / 2.0, (double) facing.getDirectionVec().getZ() / 2.0);
         Vec3 point = new Vec3((double) position.getX() + 0.5, (double) position.getY() + 0.5, (double) position.getZ() + 0.5);
         return point.add(offset);
     }
-
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     private boolean rayTrace(Vec3 origin, Vec3 position) {
         Vec3 difference = position.subtract(origin);
         int steps = 20;
@@ -179,10 +183,10 @@ public class Scaffold extends Module {
         }
         return false;
     }
-    
 
-    
-    
+
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public class BlockData {
 	private EnumFacing facing;
 	private BlockPos pos;

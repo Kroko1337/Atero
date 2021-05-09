@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class ClickGui extends Module {
 
     public ClickGui() {
-	super("ClickGui", "ClickGui", Keyboard.KEY_G, Category.Combat);
+	super("ClickGui", "ClickGui", Keyboard.KEY_RSHIFT, Category.Combat);
     }
 
     @Override

@@ -18,9 +18,9 @@ public class ProxyManager {
 
     private Proxy currentProxy;
     private boolean useProxy;
-    
+
     private GuiProxy gui;
-    
+
     public ProxyManager() {
 	gui = new GuiProxy();
     }
@@ -54,7 +54,7 @@ public class ProxyManager {
     public void setUseProxy(boolean useProxy) {
 	this.useProxy = useProxy;
     }
-    
+
     private void pingHost(Proxy proxy) {
 	Socket socket = new Socket();
 	try {
