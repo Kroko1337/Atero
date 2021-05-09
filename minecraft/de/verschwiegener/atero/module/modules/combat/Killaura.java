@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Random;
 
 import god.buddy.aot.BCompiler;
+import net.minecraft.network.Packet;
+import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
@@ -49,7 +51,7 @@ public class Killaura extends Module {
     public static float[] facing;
     double reach = 0;
     private boolean miss;
-
+	private boolean block;
     public static float getYaw() {
 	return yaw;
     }
@@ -293,11 +295,19 @@ public class Killaura extends Module {
 	}
     }
 
+
+
     @Override
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
 	super.onUpdate();
+		if (target == null) {
+			if (this.block) {
+				this.block = false;
+				Minecraft.getMinecraft().getNetHandler().addToSendQueue((Packet) new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+			}
 
+		}
 	try {
 	    if (Minecraft.getMinecraft().currentScreen != null)
 		return;
@@ -356,18 +366,14 @@ public class Killaura extends Module {
 	    }
 	    // AutoBlock
 	    if (setting.getItemByName("AutoBlock").isState()) {
+			this.block = true;
 		Minecraft.getMinecraft();
-		if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
-		    Minecraft.getMinecraft();
-		    if (Minecraft.thePlayer.getHeldItem() != null) {
-			Minecraft.getMinecraft();
-			Minecraft.getMinecraft();
-			Minecraft.getMinecraft().playerController.sendUseItem(Minecraft.thePlayer,
-				Minecraft.getMinecraft().theWorld, Minecraft.thePlayer.getHeldItem());
-		    }
-		    TimeUtils.reset();
+			if (Minecraft.thePlayer.getHeldItem() != null)
+				if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+					mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.getMinecraft().theWorld, Minecraft.thePlayer.getHeldItem());
 
-		}
+				}
+
 	    }
 	} catch (final NullPointerException ex) {
 	    ex.printStackTrace();
