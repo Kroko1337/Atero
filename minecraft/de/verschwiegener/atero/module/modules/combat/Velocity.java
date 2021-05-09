@@ -32,6 +32,7 @@ public class Velocity extends Module {
         if (this.isEnabled()) {
             super.onUpdate();
             try{
+                //XD
             if (Minecraft.thePlayer.hurtTime != 0) {
                 Minecraft.thePlayer.motionX = 0F;
                 Minecraft.thePlayer.motionZ = 0F;
