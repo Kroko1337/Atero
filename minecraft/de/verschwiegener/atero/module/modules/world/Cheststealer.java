@@ -20,9 +20,9 @@ import god.buddy.aot.BCompiler;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Cheststealer extends Module {
+public class ChestStealer extends Module {
     TimeUtils timeUtils;
-    public Cheststealer() {
+    public ChestStealer() {
         super("ChestStealer", "ChestStealer", Keyboard.KEY_NONE, Category.World);
     }
 
@@ -39,9 +39,8 @@ public class Cheststealer extends Module {
         if (this.isEnabled()) {
             super.onUpdate();
 
-
-            if (Minecraft.thePlayer.openContainer != null
-                    && Minecraft.thePlayer.openContainer instanceof ContainerChest) {
+            try{
+            if (Minecraft.thePlayer.openContainer != null && Minecraft.thePlayer.openContainer instanceof ContainerChest) {
                 ContainerChest container = (ContainerChest) Minecraft.thePlayer.openContainer;
                 int i = 0;
                 while (i < container.getLowerChestInventory().getSizeInventory()) {
@@ -60,6 +59,9 @@ public class Cheststealer extends Module {
                     Minecraft.thePlayer.closeScreen();
 
                 }
+            }
+            }catch (NullPointerException e) {
+
             }
         }
 

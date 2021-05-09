@@ -56,8 +56,8 @@ public class Scaffold extends Module {
 
         mc.thePlayer.setSprinting(false);
         
-        mc.thePlayer.motionX *= 0.508500000F;
-        mc.thePlayer.motionZ *= 0.508500000F;
+       // mc.thePlayer.motionX *= 0.508500000F;
+        //mc.thePlayer.motionZ *= 0.508500000F;
     }
     
     @EventTarget
@@ -85,7 +85,7 @@ public class Scaffold extends Module {
 
         float ROTS = (float) MathHelper.getRandomDoubleInRange(new Random(), 166, 169);
 
-        float yaw = mc.thePlayer.rotationYaw + ROTS;
+        float yaw = mc.thePlayer.rotationYaw + 180;
 
         float pitch = ROTS2;
 

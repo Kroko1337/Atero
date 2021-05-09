@@ -64,7 +64,7 @@ public class Killaura extends Module {
     private final Minecraft mc = Minecraft.getMinecraft();
 
     public Killaura() {
-	super("Killaura", "Killaura", Keyboard.KEY_NONE, Category.Combat);
+	super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
     }
 
     // TODO Reworken
@@ -115,7 +115,7 @@ public class Killaura extends Module {
 	if((targetVec.yCoord) < mc.thePlayer.posY) {
 	    posY = (targetVec.yCoord) - (targetVec.yCoord + player.getEyeHeight()) + 0.1;
 	}else {
-	    posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);   
+	    posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
 	}
 	final double posZ = targetVec.zCoord - player.posZ;
 	final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
@@ -129,6 +129,26 @@ public class Killaura extends Module {
 	pitch -= pitch % (sensitivityOffset * mouseSensitivity);
 	return new float[] { yaw, pitch };
     }
+
+
+	public static float[] Intavee(EntityPlayerSP player, EntityLivingBase target) {
+		float RotationPitch2 = (float)MathHelper.getRandomDoubleInRange(new Random(), 94, 97);
+		float RotationPitch = (float)MathHelper.getRandomDoubleInRange(new Random(), 92, RotationPitch2);
+		float RotationYaw = (float)MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.4);
+		final double posX = target.posX - player.posX ;
+		float RotationY = (float)MathHelper.getRandomDoubleInRange(new Random(), 0.1, RotationYaw);
+		final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() + RotationY);
+		final double posZ = target.posZ  - player.posZ ;
+		final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
+		float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - RotationPitch;
+		float pitch = (float) (-(Math.atan2(posY, var14) * 180 / Math.PI));
+		float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+		float f3 = f2 * f2 * f2 * 1.2F;
+		yaw -= yaw % f3;
+		pitch -= pitch % (f3 * f2);
+
+		return new float[] { yaw, pitch };
+	}
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getHighestPlayer(final double distance) {
 	EntityLivingBase target = null;
@@ -248,7 +268,7 @@ public class Killaura extends Module {
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(final EventPreMotionUpdate pre) {
 	if (target != null) {
-	    facing = getEntityRotations(Minecraft.thePlayer, target, linearpredict(target));
+	    facing = Intavee(Minecraft.thePlayer, target);
 	    pre.setYaw(yaw);
 	    pre.setPitch(pitch);
 	    //yaw = facing[0];
@@ -256,8 +276,7 @@ public class Killaura extends Module {
 	    yaw = interpolateRotation(yaw, facing[0], 180);
 	    pitch = interpolateRotation(pitch, facing[1], 180);
 	} else if (preaimtarget != null) {
-	    facing = getEntityRotations(Minecraft.thePlayer, preaimtarget,
-		    linearpredict(preaimtarget));
+	    facing = Intavee(Minecraft.thePlayer, target);
 	    pre.setYaw(yaw);
 	    pre.setPitch(pitch);
 	    yaw = interpolateRotation(yaw, facing[0], 180);
@@ -317,19 +336,21 @@ public class Killaura extends Module {
 	    // if (setting.getItemByName("FakeBlock").isState()) {
 	    // Minecraft.getMinecraft().thePlayer.setItemInUse(Minecraft.getMinecraft().thePlayer.getHeldItem(),5);
 	    // }
-	    
+
 	    //getWinkel(target);
 	    if (!canEntityBeSeen(target) && !setting.getItemByName("ThroughWalls").isState()) {
 		return;
 	    }
-	    
-	    final float CCPS = 1000 / random(1, 5);
+
+	    final float CCPS = 1000 / random(5, 15);
 	    final MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
 	    if (t != null && (t.typeOfHit == MovingObjectType.ENTITY) || setting.getItemByName("ThroughWalls").isState()) {
 		if (timer.hasReached(CCPS)) {
 		    timer.reset();
+		    //mc.clickMouse();
+			mc.thePlayer.swingItem();
 		    mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-		    mc.thePlayer.swingItem();
+
 
 		}
 	    }
@@ -352,7 +373,7 @@ public class Killaura extends Module {
 	    ex.printStackTrace();
 	}
     }
-    
+
     @EventTarget
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onEvent(EventTest event) {

@@ -118,8 +118,7 @@ public class GuiIngameMenu extends GuiScreen
 
 	    if (!(Management.instance.currentServer.getServerData().getPingToServer() > 0)) {
 		GuiMultiplayer multiplayer = new GuiMultiplayer(null);
-		Management.instance.currentServer.setServerData(multiplayer.getServerList()
-			.getServerDataByIP(Management.instance.currentServer.getServerData().getServerIP()));
+		//Management.instance.currentServer.setServerData(multiplayer.getServerList().getServerDataByIP(Management.instance.currentServer.getServerData().getServerIP()));
 	    }
 	    if(!mc.isSingleplayer()) {
 		 Management.instance.currentServer.drawEntry(1, (sr.getScaledWidth() / 2) - 150,

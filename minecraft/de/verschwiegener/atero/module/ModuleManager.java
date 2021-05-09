@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import de.verschwiegener.atero.module.modules.Test;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.combat.Target;
+import de.verschwiegener.atero.module.modules.combat.Velocity;
 import de.verschwiegener.atero.module.modules.movement.Fly;
 import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.module.modules.movement.Sprint;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.render.ESP;
-import de.verschwiegener.atero.module.modules.world.Cheststealer;
+import de.verschwiegener.atero.module.modules.world.ChestStealer;
 import de.verschwiegener.atero.module.modules.world.Scaffold;
-import god.buddy.aot.BCompiler;
 import net.minecraft.client.Minecraft;
 
 public class ModuleManager {
@@ -29,14 +29,15 @@ public class ModuleManager {
 	modules.add(new Speed());
 	modules.add(new Fly());
 	modules.add(new ESP());
-	modules.add(new Cheststealer());
+	modules.add(new ChestStealer());
+	modules.add(new Velocity());
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public Module getModuleByName(final String name) {
 	return modules.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
 		.findFirst().orElse(null);
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public Module getModulebyStartsWith(final String name) {
 	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase())).findFirst().orElse(null);
     }
@@ -44,7 +45,7 @@ public class ModuleManager {
     public ArrayList<Module> getModules() {
 	return modules;
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onKey(final int key) {
 	if (Minecraft.getMinecraft().currentScreen == null) {
 	    for (final Module m : modules) {
@@ -54,7 +55,7 @@ public class ModuleManager {
 	    }
 	}
     }
-	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onUpdate() {
 	for (final Module m : modules) {
 	    if (m.isEnabled()) {
