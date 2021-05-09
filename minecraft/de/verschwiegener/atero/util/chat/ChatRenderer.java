@@ -119,6 +119,7 @@ public class ChatRenderer {
 			xoffset += fontRenderer.getStringWidth(str);
 		    }
 		    if (underline) {
+			
 			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
 			//fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
