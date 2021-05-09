@@ -59,6 +59,7 @@ public class CustomGUIIngame {
 				- xoffset,
 			yoffset, Color.black.getRGB());
 		yoffset += fontRenderer.getBaseStringHeight() * 2;
+
 	    }
 	}
     }
