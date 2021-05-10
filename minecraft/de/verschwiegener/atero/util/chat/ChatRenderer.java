@@ -9,6 +9,10 @@ import org.lwjgl.opengl.GL11;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.render.RenderUtil;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class ChatRenderer {
 
@@ -58,6 +62,7 @@ public class ChatRenderer {
 		if (colorCodes.containsKey(str.substring(1, 2))) {
 		    messagecolor = colorCodes.get(str.substring(1, 2).toLowerCase());
 		} else {
+		    //System.out.println("Case: " + str.substring(1, 2));
 		    switch (str.substring(1, 2)) {
 		    case "k":
 			effekt = true;
@@ -114,11 +119,13 @@ public class ChatRenderer {
 			xoffset += fontRenderer.getStringWidth(str);
 		    }
 		    if (underline) {
-			drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
+			
+			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		    if (strikethrough) {
-			drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()), fontRenderer.getStringWidth(str.substring(2)), messagecolor);
+			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()), fontRenderer.getStringWidth(str.substring(2)), messagecolor);
+			//System.out.println("Str: " + str.substring(2));
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		} else {
@@ -135,7 +142,27 @@ public class ChatRenderer {
     }
 
     private void drawLine(int x, int y, int width, Color color) {
-	RenderUtil.fillRect(x / 2, y / 2, width, 1, color);
+	RenderUtil.enable();
+	GL11.glScaled(0.5D, 0.5D, 0.5D);
+	GL11.glBegin(GL11.GL_LINES);
+	GL11.glVertex2f(x, y);
+	GL11.glVertex2f(x + width, y);
+	//GL11.glEnd();
+	RenderUtil.disable();
+	
+	
+	/*Tessellator tessellator1 = Tessellator.getInstance();
+        WorldRenderer worldrenderer1 = tessellator1.getWorldRenderer();
+        GlStateManager.disableTexture2D();
+        worldrenderer1.begin(7, DefaultVertexFormats.POSITION);
+        int l = -1;
+        worldrenderer1.pos((double)(x + (float)l), (double)(y + (float)10), 0.0D).endVertex();
+        worldrenderer1.pos((double)(x), (double)(y + (float)10), 0.0D).endVertex();
+        worldrenderer1.pos((double)(x), (double)(y + (float)10 - 1.0F), 0.0D).endVertex();
+        worldrenderer1.pos((double)(x + (float)l), (double)(y + (float)10 - 1.0F), 0.0D).endVertex();
+        tessellator1.draw();
+        GlStateManager.enableTexture2D();*/
+	
     }
 
     private String getRandomString(int count) {

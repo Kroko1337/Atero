@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.util.components.CustomChatTextField;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class GuiChat extends GuiScreen
     private List<String> foundPlayerNames = Lists.<String>newArrayList();
 
     /** Chat entry field */
-    protected CustomGuiTextField inputField;
+    protected CustomChatTextField inputField;
 
     /**
      * is the text that appears when you press the chat key and the input box appears pre-filled
@@ -58,7 +59,7 @@ public class GuiChat extends GuiScreen
     {
         Keyboard.enableRepeatEvents(true);
         this.sentHistoryCursor = this.mc.ingameGUI.getChatGUI().getSentMessages().size();
-        this.inputField = new CustomGuiTextField(0, this.fontRendererObj, 4, this.height - 12, this.width - 4, 12);
+        this.inputField = new CustomChatTextField(0, this.fontRendererObj, 4, this.height - 12, this.width - 4, 12);
         this.inputField.setMaxStringLength(100);
         this.inputField.setEnableBackgroundDrawing(false);
         this.inputField.setFocused(true);

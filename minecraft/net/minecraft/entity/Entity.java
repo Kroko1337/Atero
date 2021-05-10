@@ -1178,7 +1178,7 @@ public abstract class Entity implements ICommandSender
 		//AddScaffold
 		//MovFix Julius
 
-		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() &&(Killaura.target != null)) {
+		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.target != null) || Killaura.preaimtarget != null) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState()) {
 		    yaw = Killaura.getYaw();
 		}else {
 		    yaw = this.rotationYaw;
