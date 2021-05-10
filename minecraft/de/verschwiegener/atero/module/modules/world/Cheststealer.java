@@ -1,7 +1,4 @@
 package de.verschwiegener.atero.module.modules.world;
-
-
-
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import net.minecraft.client.Minecraft;
