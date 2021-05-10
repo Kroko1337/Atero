@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import god.buddy.aot.BCompiler;
+import net.minecraft.network.Packet;
+import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
@@ -24,7 +27,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -37,8 +43,10 @@ public class Killaura extends Module {
     public static float yaw;
     public static float pitch;
     public static float[] facing;
-    
+
     double reach = 0;
+    private boolean miss;
+    private boolean block;
     private Setting setting, targetset;
 
     private final TimeUtils timer = new TimeUtils();
@@ -75,7 +83,6 @@ public class Killaura extends Module {
 
 	return new float[] { yaw, pitch };
     }
-
 
     private boolean canAttack(final EntityLivingBase player) {
 	if (player == Minecraft.thePlayer)
@@ -128,29 +135,24 @@ public class Killaura extends Module {
 	return entityplayer;
     }
 
-    /*@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    // TODO Names Reworken
-    private float[] getEntityRotations(final EntityPlayerSP player, final EntityLivingBase target,
-	    final Vec3 targetVec) {
-	final double posX = targetVec.xCoord - player.posX;
-	double posY;
-	if (targetVec.yCoord < Minecraft.thePlayer.posY) {
-	    posY = targetVec.yCoord - (targetVec.yCoord + player.getEyeHeight()) + 0.1;
-	} else {
-	    posY = targetVec.yCoord + target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5);
-	}
-	final double posZ = targetVec.zCoord - player.posZ;
-	final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
-	float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - 90.0f;
-	float pitch = (float) -(Math.atan2(posY, var14) * 180.0 / Math.PI);
-	final float mouseSensitivity = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-	// Wenn kein Schaden macht
-	// float f3 = mouseSensitivity * mouseSensitivity * mouseSensitivity * 1.2F;
-	final float sensitivityOffset = mouseSensitivity * 3 * 1.2F;
-	yaw -= yaw % sensitivityOffset;
-	pitch -= pitch % (sensitivityOffset * mouseSensitivity);
-	return new float[] { yaw, pitch };
-    }*/
+    /*
+     * @BCompiler(aot = BCompiler.AOT.AGGRESSIVE) // TODO Names Reworken private
+     * float[] getEntityRotations(final EntityPlayerSP player, final
+     * EntityLivingBase target, final Vec3 targetVec) { final double posX =
+     * targetVec.xCoord - player.posX; double posY; if (targetVec.yCoord <
+     * Minecraft.thePlayer.posY) { posY = targetVec.yCoord - (targetVec.yCoord +
+     * player.getEyeHeight()) + 0.1; } else { posY = targetVec.yCoord +
+     * target.getEyeHeight() - (targetVec.yCoord + player.getEyeHeight() + 0.5); }
+     * final double posZ = targetVec.zCoord - player.posZ; final double var14 =
+     * MathHelper.sqrt_double(posX * posX + posZ * posZ); float yaw = (float)
+     * (Math.atan2(posZ, posX) * 180.0 / Math.PI) - 90.0f; float pitch = (float)
+     * -(Math.atan2(posY, var14) * 180.0 / Math.PI); final float mouseSensitivity =
+     * mc.gameSettings.mouseSensitivity * 0.6F + 0.2F; // Wenn kein Schaden macht //
+     * float f3 = mouseSensitivity * mouseSensitivity * mouseSensitivity * 1.2F;
+     * final float sensitivityOffset = mouseSensitivity * 3 * 1.2F; yaw -= yaw %
+     * sensitivityOffset; pitch -= pitch % (sensitivityOffset * mouseSensitivity);
+     * return new float[] { yaw, pitch }; }
+     */
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public EntityLivingBase getHighestPlayer(final double distance) {
@@ -255,13 +257,12 @@ public class Killaura extends Module {
 	return yaw + f;
     }
 
-    /*@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    private Vec3 linearpredict(final EntityLivingBase base) {
-	final double x = base.posX + base.motionX;
-	final double y = base.posY + base.motionY;
-	final double z = base.posZ + base.motionZ;
-	return new Vec3(x, y, z);
-    }*/
+    /*
+     * @BCompiler(aot = BCompiler.AOT.AGGRESSIVE) private Vec3 linearpredict(final
+     * EntityLivingBase base) { final double x = base.posX + base.motionX; final
+     * double y = base.posY + base.motionY; final double z = base.posZ +
+     * base.motionZ; return new Vec3(x, y, z); }
+     */
 
     @Override
     public void onEnable() {
@@ -291,7 +292,7 @@ public class Killaura extends Module {
 	    // pitch = facing[1];
 	    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
 	    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
-	}else if(preaimtarget != null) {
+	} else if (preaimtarget != null) {
 	    Killaura.facing = Killaura.Intavee(Minecraft.thePlayer, Killaura.preaimtarget);
 	    pre.setYaw(Killaura.yaw);
 	    pre.setPitch(Killaura.pitch);
@@ -306,7 +307,13 @@ public class Killaura extends Module {
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
 	super.onUpdate();
+		if (target == null) {
+			if (this.block) {
+				this.block = false;
+				Minecraft.getMinecraft().getNetHandler().addToSendQueue((Packet) new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+			}
 
+		}
 	try {
 	    Minecraft.getMinecraft();
 	    if (Minecraft.currentScreen != null)
@@ -369,7 +376,13 @@ public class Killaura extends Module {
 	    }
 	    // AutoBlock
 	    if (setting.getItemByName("AutoBlock").isState()) {
+			this.block = true;
 		Minecraft.getMinecraft();
+			if (Minecraft.thePlayer.getHeldItem() != null)
+				if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+					mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.getMinecraft().theWorld, Minecraft.thePlayer.getHeldItem());
+
+				}
 		if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
 		    Minecraft.getMinecraft();
 		    if (Minecraft.thePlayer.getHeldItem() != null) {
@@ -381,7 +394,7 @@ public class Killaura extends Module {
 		    }
 		    TimeUtils.reset();
 
-		}
+	    }
 	    }
 	} catch (final NullPointerException ex) {
 	    ex.printStackTrace();

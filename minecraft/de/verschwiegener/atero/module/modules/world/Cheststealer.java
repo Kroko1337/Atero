@@ -20,9 +20,9 @@ import god.buddy.aot.BCompiler;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChestStealer extends Module {
+public class Cheststealer extends Module {
     TimeUtils timeUtils;
-    public ChestStealer() {
+    public Cheststealer() {
         super("ChestStealer", "ChestStealer", Keyboard.KEY_NONE, Category.World);
     }
 

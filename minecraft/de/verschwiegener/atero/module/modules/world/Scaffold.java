@@ -59,21 +59,26 @@ public class Scaffold extends Module {
        // mc.thePlayer.motionX *= 0.508500000F;
         //mc.thePlayer.motionZ *= 0.508500000F;
     }
-    
+
+
+
+
     @EventTarget
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPost(EventPostMotionUpdate post) {
-	BlockPos blockPos = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.0D, mc.thePlayer.posZ);
+        BlockPos blockPos = new BlockPos(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY - 0.0D, Minecraft.getMinecraft().thePlayer.posZ);
+        Minecraft.getMinecraft().rightClickMouse();
+        if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
 
-        if (mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
-            if(mc.rightClickDelayTimer == 0) {
-        	 mc.rightClickMouse();
-            }
-        } else {
-            mc.rightClickDelayTimer = (int) 4F;
-            //mc.thePlayer.setSprinting(false);
+            mc.gameSettings.keyBindSneak.pressed = true;
+
+
+        }
+        if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() != Blocks.air) {
+    mc.gameSettings.keyBindSneak.pressed = false;
         }
     }
+
 
 
     @EventTarget
@@ -100,7 +105,7 @@ public class Scaffold extends Module {
 
 
     Scaffold.BlockData find(Vec3 offset3) {
-
+try{
         double x = mc.thePlayer.posX;
         double y = mc.thePlayer.posY;
         double z = mc.thePlayer.posZ;
@@ -124,6 +129,9 @@ public class Scaffold extends Module {
                 return new Scaffold.BlockData(invert[facing.ordinal()], offset2);
             }
         }
+}catch (NullPointerException e) {
+
+}
         return null;
     }
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
