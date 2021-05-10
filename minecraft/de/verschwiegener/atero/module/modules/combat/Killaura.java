@@ -7,6 +7,9 @@ import java.util.Random;
 import god.buddy.aot.BCompiler;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
+import god.buddy.aot.BCompiler;
+import net.minecraft.network.Packet;
+import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventTarget;
@@ -45,6 +48,7 @@ public class Killaura extends Module {
     public static float[] facing;
 
     double reach = 0;
+    
     private boolean miss;
     private boolean block;
     private Setting setting, targetset;
@@ -56,7 +60,6 @@ public class Killaura extends Module {
     public Killaura() {
 	super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
     }
-
     public static float getYaw() {
 	return Killaura.yaw;
     }
@@ -303,6 +306,8 @@ public class Killaura extends Module {
 	}
     }
 
+
+
     @Override
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
@@ -393,7 +398,6 @@ public class Killaura extends Module {
 				Minecraft.thePlayer.getHeldItem());
 		    }
 		    TimeUtils.reset();
-
 	    }
 	    }
 	} catch (final NullPointerException ex) {
