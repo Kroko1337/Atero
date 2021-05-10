@@ -7,6 +7,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import de.verschwiegener.atero.util.account.Account;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.network.NetworkPlayerInfo;
 

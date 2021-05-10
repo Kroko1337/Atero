@@ -24,7 +24,7 @@ import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.proxy.ProxyManager;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
-import de.verschwiegener.atero.ui.mainmenu.AccountManager;
+import de.verschwiegener.atero.util.account.AccountManager;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;

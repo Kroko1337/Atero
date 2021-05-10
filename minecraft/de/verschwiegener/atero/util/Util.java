@@ -13,13 +13,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 
+import com.mojang.authlib.GameProfile;
+
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.module.Module;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class Util {
-    
+
     Minecraft mc = Minecraft.getMinecraft();
 
     /**
@@ -84,12 +89,22 @@ public class Util {
 	    }
 	}
     }
+
     public static int getColor(int red, int green, int blue, int opacity) {
-        int color = MathHelper.clamp_int(opacity, 0, 255) << 24;
-        color |= MathHelper.clamp_int(red, 0, 255) << 16;
-        color |= MathHelper.clamp_int(green, 0, 255) << 8;
-        color |= MathHelper.clamp_int(blue, 0, 255);
-        return color;
+	int color = MathHelper.clamp_int(opacity, 0, 255) << 24;
+	color |= MathHelper.clamp_int(red, 0, 255) << 16;
+	color |= MathHelper.clamp_int(green, 0, 255) << 8;
+	color |= MathHelper.clamp_int(blue, 0, 255);
+	return color;
+    }
+
+    public static GameProfile getGameProfileFromName(String name) {
+	return TileEntitySkull.updateGameprofile(new GameProfile(null, name));
+    }
+
+    public static ResourceLocation getSkin(String name) {
+	NetworkPlayerInfo networkinfo = new NetworkPlayerInfo(getGameProfileFromName(name));
+	return networkinfo.getLocationSkin();
     }
 
 }
