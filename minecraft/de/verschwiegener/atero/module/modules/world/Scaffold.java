@@ -29,7 +29,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class Scaffold extends Module {
-    
+
     Minecraft mc = Minecraft.getMinecraft();
     private BlockData blockData;
 
@@ -43,6 +43,7 @@ public class Scaffold extends Module {
     }
 
     public void onDisable() {
+        Minecraft.thePlayer.var19 = false;
         super.onDisable();
     }
 
@@ -51,11 +52,31 @@ public class Scaffold extends Module {
     }
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {
+        Minecraft.thePlayer.var19 = true;
+        try {
 
+            if (Minecraft.thePlayer.hurtTime > 0) {
+                Minecraft.thePlayer.var19 = false;
+            }
+            if (Minecraft.thePlayer.isSprinting()) {
+                Minecraft.thePlayer.var19 = true;
+            }
+            if (Minecraft.thePlayer.capabilities.isFlying) {
+                Minecraft.thePlayer.var19 = true;
+            }
+            if (mc.gameSettings.keyBindJump.isKeyDown()) {
+                Minecraft.thePlayer.var19 = true;
+            }
+            if (!Minecraft.thePlayer.onGround) {
+                Minecraft.thePlayer.var19 = true;
+            }
+        } catch (Exception x) {
+            x.printStackTrace();
+        }
         blockData = find(new Vec3(0, 0, 0));
 
         mc.thePlayer.setSprinting(false);
-        
+
        // mc.thePlayer.motionX *= 0.508500000F;
         //mc.thePlayer.motionZ *= 0.508500000F;
     }
@@ -68,16 +89,9 @@ public class Scaffold extends Module {
     public void onPost(EventPostMotionUpdate post) {
         BlockPos blockPos = new BlockPos(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY - 0.0D, Minecraft.getMinecraft().thePlayer.posZ);
         Minecraft.getMinecraft().rightClickMouse();
-        if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
 
-            mc.gameSettings.keyBindSneak.pressed = true;
-
-
-        }
-        if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() != Blocks.air) {
-    mc.gameSettings.keyBindSneak.pressed = false;
-        }
     }
+
 
 
 
@@ -211,6 +225,8 @@ try{
 	public BlockPos getPos() {
 	    return pos;
 	}
+
     }
+
 
 }

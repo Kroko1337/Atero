@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen;
+import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen2;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
@@ -524,8 +525,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         //Tessellator tessellator = Tessellator.getInstance();
         //WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         int i = 274;
-        int j = this.width / 3 - i / 2;
-        int k = 30;
+        int j = this.width / 2 - i / 2;
+        int k = 60;
         //this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
         //this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
         //this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
@@ -545,7 +546,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         RenderUtil.drawBackround(width, height);
         //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-      //  this.fontRenderer.drawString("ATERO", j * 4 + (fontRenderer.getStringWidth2("Atero")), k * 2, Color.WHITE.getRGB());
+        this.fontRenderer.drawString("ATERO", j * 2 + (fontRenderer.getStringWidth2("Atero") - 20), k * 2, Color.WHITE.getRGB());
 
         
         //GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);

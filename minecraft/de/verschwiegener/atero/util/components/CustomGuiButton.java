@@ -3,6 +3,7 @@ package de.verschwiegener.atero.util.components;
 import java.awt.Color;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -16,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomGuiButton extends GuiButton {
     
-    boolean light;
+    boolean light, align;
 
     public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
 	super(buttonId, x, y, widthIn, heightIn, buttonText);
@@ -31,7 +32,7 @@ public class CustomGuiButton extends GuiButton {
 	this.height = heightIn;
 	this.displayString = buttonText;
     }
-    public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean light) {
+    public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean light, boolean align) {
 	super(buttonId, x, y, widthIn, heightIn, buttonText);
 	this.width = 200;
 	this.height = 20;
@@ -44,6 +45,7 @@ public class CustomGuiButton extends GuiButton {
 	this.height = heightIn;
 	this.displayString = buttonText;
 	this.light = light;
+	this.align = align;
     }
 
     public CustomGuiButton(int buttonId, int x, int y, String buttonText) {
@@ -107,6 +109,7 @@ public class CustomGuiButton extends GuiButton {
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 	if (this.visible) {
+	    Fontrenderer fontRenderer = Management.instance.fontrenderer;
 	    if (!light) {
 		RenderUtil.fillRect(xPosition, yPosition, width, height, Management.instance.colorGray);
 		Management.instance.fontrenderer.drawString(this.displayString,
@@ -117,10 +120,11 @@ public class CustomGuiButton extends GuiButton {
 		RenderUtil.fillRect(this.xPosition, this.yPosition + this.height - 1, this.width, 1,
 			Management.instance.colorBlue);
 	    } else {
-		Management.instance.fontrenderer.drawString(this.displayString,
-			((this.xPosition * 2)
-				+ (this.width - Management.instance.fontrenderer.getStringWidth2(this.displayString))),
-			(this.yPosition) * 2 + (Management.instance.fontrenderer.getBaseStringHeight() / 2),
+		int xOffset = (xPosition > (mc.displayWidth / 2)) ? width - fontRenderer.getStringWidth(displayString) : 0;
+		int xOffset2 =  width + (align ? (xPosition < (mc.displayWidth / 2)) ? width - fontRenderer.getStringWidth(displayString) : 0 : (this.width - fontRenderer.getStringWidth2(this.displayString)));
+			fontRenderer.drawString(this.displayString,
+			((this.xPosition * 2) + xOffset2),
+			(this.yPosition) * 2 + (fontRenderer.getBaseStringHeight() / 2),
 			Color.WHITE.getRGB());
 	    }
 	}

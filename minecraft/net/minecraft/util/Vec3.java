@@ -209,4 +209,7 @@ public class Vec3
         double d2 = this.zCoord * (double)f - this.xCoord * (double)f1;
         return new Vec3(d0, d1, d2);
     }
+    public Vec3 multi(double multiplier) {
+        return new Vec3(this.xCoord * multiplier, this.yCoord * multiplier, this.zCoord * multiplier);
+    }
 }

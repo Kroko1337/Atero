@@ -30,11 +30,9 @@ public class Fontrenderer {
 	// unicodefont = new UnicodeFont(font.deriveFont(fontSize *
 	// antiAliasingFactor));
 	unicodefont = new UnicodeFont(font, (int) (fontSize * antiAliasingFactor), bold, italic);
-	unicodefont.addAsciiGlyphs();
-	unicodefont.addNeheGlyphs();
-	unicodefont.addGlyphs(chars);
-	unicodefont.addGlyphs(0, 2579);
 	unicodefont.getEffects().add(new ColorEffect(Color.white));
+	unicodefont.addAsciiGlyphs();
+	unicodefont.addGlyphs(0, 65535);
 	try {
 	    unicodefont.loadGlyphs();
 	} catch (final Exception e) {
@@ -45,6 +43,10 @@ public class Fontrenderer {
     public void drawString(final String text, final float x, final float y, final int color) {
 	if (text == null)
 	    return;
+	
+	for(int i = 0; i < text.length();i++) {
+	    //System.out.println("Char: " + text.charAt(i) + " Unicode: " + escapeNonAscii(Character.toString(text.charAt(i))));
+	}
 	GL11.glPushMatrix();
 	GL11.glPushAttrib(1048575);
 	GL11.glDisable(2929);
@@ -66,12 +68,12 @@ public class Fontrenderer {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
 
 
-	unicodefont.addGlyphs(text);
-	try {
-	    unicodefont.loadGlyphs();
-	} catch (final Exception e) {
-	    e.printStackTrace();
-	}
+	//unicodefont.addGlyphs(text);
+	//try {
+	    //unicodefont.loadGlyphs();
+	//} catch (final Exception e) {
+	    //e.printStackTrace();
+	//}
 
 	unicodefont.drawString(x, y, text, new org.newdawn.slick.Color(color));
 	
@@ -89,6 +91,28 @@ public class Fontrenderer {
 	GL11.glDisable(3042);
 	GL11.glPopAttrib();
 	GL11.glPopMatrix();
+    }
+    
+    private static String escapeNonAscii(String str) {
+
+	StringBuilder retStr = new StringBuilder();
+	for (int i = 0; i < str.length(); i++) {
+	    int cp = Character.codePointAt(str, i);
+	    int charCount = Character.charCount(cp);
+	    if (charCount > 1) {
+		i += charCount - 1; // 2.
+		if (i >= str.length()) {
+		    throw new IllegalArgumentException("truncated unexpectedly");
+		}
+	    }
+
+	    if (cp < 128) {
+		retStr.appendCodePoint(cp);
+	    } else {
+		retStr.append(String.format("\\u%x", cp));
+	    }
+	}
+	return retStr.toString();
     }
 
     public void drawStringScaled(final String text, final float x, final float y, final int color, final float scaled) {

@@ -1,27 +1,49 @@
 package de.verschwiegener.atero.ui.mainmenu;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+
+import javax.imageio.ImageIO;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
 
 public class Account {
 
     private String email;
     private String password;
     private String username;
+    private String UUID;
     private boolean lastLoginSuccess;
     private String[] bannedServer;
+    private BufferedImage image;
+    private ResourceLocation location;
 
-    public Account(String email, String password, String username, boolean lastLoginSuccess, String[] bannedServer) {
+    public Account(String email, String password, String username, String UUID, boolean lastLoginSuccess, String[] bannedServer) {
 	this.email = email;
 	this.password = password;
 	this.username = username;
+	this.UUID = UUID;
 	this.lastLoginSuccess = lastLoginSuccess;
 	this.bannedServer = bannedServer;
+	if(this.UUID != null && !this.UUID.isEmpty()) {
+	    try {
+		image = ImageIO.read(new URL("https://crafatar.com/avatars/" + this.UUID).openStream());
+		location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(username, new DynamicTexture(image));
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
     }
 
     public Account(String email, String password) {
 	this.email = email;
 	this.password = password;
 	this.username = "";
+	this.UUID = "";
 	this.lastLoginSuccess = false;
 	this.bannedServer = new String[] {};
     }
@@ -68,6 +90,9 @@ public class Account {
     public void addBannedServer(String ServerIP) {
 	bannedServer = Arrays.copyOf(bannedServer, bannedServer.length + 1);
 	bannedServer[bannedServer.length - 1] = ServerIP;
+    }
+    public String getUUID() {
+	return UUID;
     }
 
 }

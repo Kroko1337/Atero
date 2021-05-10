@@ -80,6 +80,8 @@ public abstract class Entity implements ICommandSender
     public double prevPosX;
     public double prevPosY;
     public double prevPosZ;
+    public boolean var19;
+    boolean safewalk;
 
     /** Entity position X */
     public double posX;
@@ -593,297 +595,301 @@ public abstract class Entity implements ICommandSender
     /**
      * Tries to moves the entity by the passed in displacement. Args: x, y, z
      */
-	public void moveEntity(double x, double y, double z) {
-		if (this.noClip) {
-			this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
-			this.resetPositionToBB();
-		} else {
-			this.worldObj.theProfiler.startSection("move");
-			double d0 = this.posX;
-			double d1 = this.posY;
-			double d2 = this.posZ;
+    public void moveEntity(double x, double y, double z) {
+        if (this.noClip) {
+            this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
+            this.resetPositionToBB();
+        } else {
+            this.worldObj.theProfiler.startSection("move");
+            double d0 = this.posX;
+            double d1 = this.posY;
+            double d2 = this.posZ;
 
-			if (this.isInWeb) {
-				this.isInWeb = false;
-				x *= 0.25D;
-				y *= 0.05000000074505806D;
-				z *= 0.25D;
-				this.motionX = 0.0D;
-				this.motionY = 0.0D;
-				this.motionZ = 0.0D;
-			}
+            if (this.isInWeb) {
+                this.isInWeb = false;
+                x *= 0.25D;
+                y *= 0.05000000074505806D;
+                z *= 0.25D;
+                this.motionX = 0.0D;
+                this.motionY = 0.0D;
+                this.motionZ = 0.0D;
+            }
 
-			double d3 = x;
-			double d4 = y;
-			double d5 = z;
-			boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
+            double d3 = x;
+            double d4 = y;
+            double d5 = z;
+            //Zeus
+            //boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
+            //boolean flag = this.onGround && (this.isSneaking() || Zeus.instance.moduleManager.getModule(AACScaffold.class).getState()) && this instanceof EntityPlayer;
+            //   if (Atero.instance.moduleManager.getModuleByName("Scaffold").isEnabled()) {
+            // if (Atero.setmgr.getSettingByName("SAFEWALK").getValBoolean()) {
 
-			if (flag) {
-				double d6;
+                if (this.onGround && this.isSneaking() && this instanceof EntityPlayer) {
+                    safewalk = true;
+                } else {
+                    if (!var19) {
+                        safewalk = false;
+                    }
+                }
+                if (var19) {
+                    safewalk = true;
+                }
 
-				for (d6 = 0.05D; x != 0.0D && this.worldObj
-						.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, 0.0D))
-						.isEmpty(); d3 = x) {
-					if (x < d6 && x >= -d6) {
-						x = 0.0D;
-					} else if (x > 0.0D) {
-						x -= d6;
-					} else {
-						x += d6;
-					}
-				}
+                if (safewalk) {
+                    double d6;
+           /* if (flag)
+            {
+                double d6;
+				*/
+                    for (d6 = 0.05D; x != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, 0.0D)).isEmpty(); d3 = x) {
+                        if (x < d6 && x >= -d6) {
+                            x = 0.0D;
+                        } else if (x > 0.0D) {
+                            x -= d6;
+                        } else {
+                            x += d6;
+                        }
+                    }
 
-				for (; z != 0.0D && this.worldObj
-						.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(0.0D, -1.0D, z))
-						.isEmpty(); d5 = z) {
-					if (z < d6 && z >= -d6) {
-						z = 0.0D;
-					} else if (z > 0.0D) {
-						z -= d6;
-					} else {
-						z += d6;
-					}
-				}
+                    for (; z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(0.0D, -1.0D, z)).isEmpty(); d5 = z) {
+                        if (z < d6 && z >= -d6) {
+                            z = 0.0D;
+                        } else if (z > 0.0D) {
+                            z -= d6;
+                        } else {
+                            z += d6;
+                        }
+                    }
 
-				for (; x != 0.0D && z != 0.0D
-						&& this.worldObj
-								.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, z))
-								.isEmpty(); d5 = z) {
-					if (x < d6 && x >= -d6) {
-						x = 0.0D;
-					} else if (x > 0.0D) {
-						x -= d6;
-					} else {
-						x += d6;
-					}
+                    for (; x != 0.0D && z != 0.0D && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().offset(x, -1.0D, z)).isEmpty(); d5 = z) {
+                        if (x < d6 && x >= -d6) {
+                            x = 0.0D;
+                        } else if (x > 0.0D) {
+                            x -= d6;
+                        } else {
+                            x += d6;
+                        }
 
-					d3 = x;
+                        d3 = x;
 
-					if (z < d6 && z >= -d6) {
-						z = 0.0D;
-					} else if (z > 0.0D) {
-						z -= d6;
-					} else {
-						z += d6;
-					}
-				}
-			}
+                        if (z < d6 && z >= -d6) {
+                            z = 0.0D;
+                        } else if (z > 0.0D) {
+                            z -= d6;
+                        } else {
+                            z += d6;
+                        }
+                    }
+                }
 
-			List<AxisAlignedBB> list1 = this.worldObj.getCollidingBoundingBoxes(this,
-					this.getEntityBoundingBox().addCoord(x, y, z));
-			AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
 
-			for (AxisAlignedBB axisalignedbb1 : list1) {
-				y = axisalignedbb1.calculateYOffset(this.getEntityBoundingBox(), y);
-			}
+            List<AxisAlignedBB> list1 = this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().addCoord(x, y, z));
+            AxisAlignedBB axisalignedbb = this.getEntityBoundingBox();
 
-			this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
-			boolean flag1 = this.onGround || d4 != y && d4 < 0.0D;
+            for (AxisAlignedBB axisalignedbb1 : list1) {
+                y = axisalignedbb1.calculateYOffset(this.getEntityBoundingBox(), y);
+            }
 
-			for (AxisAlignedBB axisalignedbb2 : list1) {
-				x = axisalignedbb2.calculateXOffset(this.getEntityBoundingBox(), x);
-			}
+            this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
+            boolean flag1 = this.onGround || d4 != y && d4 < 0.0D;
 
-			this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
+            for (AxisAlignedBB axisalignedbb2 : list1) {
+                x = axisalignedbb2.calculateXOffset(this.getEntityBoundingBox(), x);
+            }
 
-			for (AxisAlignedBB axisalignedbb13 : list1) {
-				z = axisalignedbb13.calculateZOffset(this.getEntityBoundingBox(), z);
-			}
+            this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, 0.0D, 0.0D));
 
-			this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
+            for (AxisAlignedBB axisalignedbb13 : list1) {
+                z = axisalignedbb13.calculateZOffset(this.getEntityBoundingBox(), z);
+            }
 
-			if (this.stepHeight > 0.0F && flag1 && (d3 != x || d5 != z)) {
-				double d11 = x;
-				double d7 = y;
-				double d8 = z;
-				AxisAlignedBB axisalignedbb3 = this.getEntityBoundingBox();
-				this.setEntityBoundingBox(axisalignedbb);
-				y = (double) this.stepHeight;
-				List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this,
-						this.getEntityBoundingBox().addCoord(d3, y, d5));
-				AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
-				AxisAlignedBB axisalignedbb5 = axisalignedbb4.addCoord(d3, 0.0D, d5);
-				double d9 = y;
+            this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
 
-				for (AxisAlignedBB axisalignedbb6 : list) {
-					d9 = axisalignedbb6.calculateYOffset(axisalignedbb5, d9);
-				}
+            if (this.stepHeight > 0.0F && flag1 && (d3 != x || d5 != z)) {
+                double d11 = x;
+                double d7 = y;
+                double d8 = z;
+                AxisAlignedBB axisalignedbb3 = this.getEntityBoundingBox();
+                this.setEntityBoundingBox(axisalignedbb);
+                y = (double) this.stepHeight;
+                List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().addCoord(d3, y, d5));
+                AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
+                AxisAlignedBB axisalignedbb5 = axisalignedbb4.addCoord(d3, 0.0D, d5);
+                double d9 = y;
 
-				axisalignedbb4 = axisalignedbb4.offset(0.0D, d9, 0.0D);
-				double d15 = d3;
+                for (AxisAlignedBB axisalignedbb6 : list) {
+                    d9 = axisalignedbb6.calculateYOffset(axisalignedbb5, d9);
+                }
 
-				for (AxisAlignedBB axisalignedbb7 : list) {
-					d15 = axisalignedbb7.calculateXOffset(axisalignedbb4, d15);
-				}
+                axisalignedbb4 = axisalignedbb4.offset(0.0D, d9, 0.0D);
+                double d15 = d3;
 
-				axisalignedbb4 = axisalignedbb4.offset(d15, 0.0D, 0.0D);
-				double d16 = d5;
+                for (AxisAlignedBB axisalignedbb7 : list) {
+                    d15 = axisalignedbb7.calculateXOffset(axisalignedbb4, d15);
+                }
 
-				for (AxisAlignedBB axisalignedbb8 : list) {
-					d16 = axisalignedbb8.calculateZOffset(axisalignedbb4, d16);
-				}
+                axisalignedbb4 = axisalignedbb4.offset(d15, 0.0D, 0.0D);
+                double d16 = d5;
 
-				axisalignedbb4 = axisalignedbb4.offset(0.0D, 0.0D, d16);
-				AxisAlignedBB axisalignedbb14 = this.getEntityBoundingBox();
-				double d17 = y;
+                for (AxisAlignedBB axisalignedbb8 : list) {
+                    d16 = axisalignedbb8.calculateZOffset(axisalignedbb4, d16);
+                }
 
-				for (AxisAlignedBB axisalignedbb9 : list) {
-					d17 = axisalignedbb9.calculateYOffset(axisalignedbb14, d17);
-				}
+                axisalignedbb4 = axisalignedbb4.offset(0.0D, 0.0D, d16);
+                AxisAlignedBB axisalignedbb14 = this.getEntityBoundingBox();
+                double d17 = y;
 
-				axisalignedbb14 = axisalignedbb14.offset(0.0D, d17, 0.0D);
-				double d18 = d3;
+                for (AxisAlignedBB axisalignedbb9 : list) {
+                    d17 = axisalignedbb9.calculateYOffset(axisalignedbb14, d17);
+                }
 
-				for (AxisAlignedBB axisalignedbb10 : list) {
-					d18 = axisalignedbb10.calculateXOffset(axisalignedbb14, d18);
-				}
+                axisalignedbb14 = axisalignedbb14.offset(0.0D, d17, 0.0D);
+                double d18 = d3;
 
-				axisalignedbb14 = axisalignedbb14.offset(d18, 0.0D, 0.0D);
-				double d19 = d5;
+                for (AxisAlignedBB axisalignedbb10 : list) {
+                    d18 = axisalignedbb10.calculateXOffset(axisalignedbb14, d18);
+                }
 
-				for (AxisAlignedBB axisalignedbb11 : list) {
-					d19 = axisalignedbb11.calculateZOffset(axisalignedbb14, d19);
-				}
+                axisalignedbb14 = axisalignedbb14.offset(d18, 0.0D, 0.0D);
+                double d19 = d5;
 
-				axisalignedbb14 = axisalignedbb14.offset(0.0D, 0.0D, d19);
-				double d20 = d15 * d15 + d16 * d16;
-				double d10 = d18 * d18 + d19 * d19;
+                for (AxisAlignedBB axisalignedbb11 : list) {
+                    d19 = axisalignedbb11.calculateZOffset(axisalignedbb14, d19);
+                }
 
-				if (d20 > d10) {
-					x = d15;
-					z = d16;
-					y = -d9;
-					this.setEntityBoundingBox(axisalignedbb4);
-				} else {
-					x = d18;
-					z = d19;
-					y = -d17;
-					this.setEntityBoundingBox(axisalignedbb14);
-				}
+                axisalignedbb14 = axisalignedbb14.offset(0.0D, 0.0D, d19);
+                double d20 = d15 * d15 + d16 * d16;
+                double d10 = d18 * d18 + d19 * d19;
 
-				for (AxisAlignedBB axisalignedbb12 : list) {
-					y = axisalignedbb12.calculateYOffset(this.getEntityBoundingBox(), y);
-				}
+                if (d20 > d10) {
+                    x = d15;
+                    z = d16;
+                    y = -d9;
+                    this.setEntityBoundingBox(axisalignedbb4);
+                } else {
+                    x = d18;
+                    z = d19;
+                    y = -d17;
+                    this.setEntityBoundingBox(axisalignedbb14);
+                }
 
-				this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
+                for (AxisAlignedBB axisalignedbb12 : list) {
+                    y = axisalignedbb12.calculateYOffset(this.getEntityBoundingBox(), y);
+                }
 
-				if (d11 * d11 + d8 * d8 >= x * x + z * z) {
-					x = d11;
-					y = d7;
-					z = d8;
-					this.setEntityBoundingBox(axisalignedbb3);
-				}
-			}
+                this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, y, 0.0D));
 
-			this.worldObj.theProfiler.endSection();
-			this.worldObj.theProfiler.startSection("rest");
-			this.resetPositionToBB();
-			this.isCollidedHorizontally = d3 != x || d5 != z;
-			this.isCollidedVertically = d4 != y;
-			this.onGround = this.isCollidedVertically && d4 < 0.0D;
-			this.isCollided = this.isCollidedHorizontally || this.isCollidedVertically;
-			int i = MathHelper.floor_double(this.posX);
-			int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			int k = MathHelper.floor_double(this.posZ);
-			BlockPos blockpos = new BlockPos(i, j, k);
-			Block block1 = this.worldObj.getBlockState(blockpos).getBlock();
+                if (d11 * d11 + d8 * d8 >= x * x + z * z) {
+                    x = d11;
+                    y = d7;
+                    z = d8;
+                    this.setEntityBoundingBox(axisalignedbb3);
+                }
+            }
 
-			if (block1.getMaterial() == Material.air) {
-				Block block = this.worldObj.getBlockState(blockpos.down()).getBlock();
+            this.worldObj.theProfiler.endSection();
+            this.worldObj.theProfiler.startSection("rest");
+            this.resetPositionToBB();
+            this.isCollidedHorizontally = d3 != x || d5 != z;
+            this.isCollidedVertically = d4 != y;
+            this.onGround = this.isCollidedVertically && d4 < 0.0D;
+            this.isCollided = this.isCollidedHorizontally || this.isCollidedVertically;
+            int i = MathHelper.floor_double(this.posX);
+            int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+            int k = MathHelper.floor_double(this.posZ);
+            BlockPos blockpos = new BlockPos(i, j, k);
+            Block block1 = this.worldObj.getBlockState(blockpos).getBlock();
 
-				if (block instanceof BlockFence || block instanceof BlockWall || block instanceof BlockFenceGate) {
-					block1 = block;
-					blockpos = blockpos.down();
-				}
-			}
+            if (block1.getMaterial() == Material.air) {
+                Block block = this.worldObj.getBlockState(blockpos.down()).getBlock();
 
-			this.updateFallState(y, this.onGround, block1, blockpos);
+                if (block instanceof BlockFence || block instanceof BlockWall || block instanceof BlockFenceGate) {
+                    block1 = block;
+                    blockpos = blockpos.down();
+                }
+            }
 
-			if (d3 != x) {
-				this.motionX = 0.0D;
-			}
+            this.updateFallState(y, this.onGround, block1, blockpos);
 
-			if (d5 != z) {
-				this.motionZ = 0.0D;
-			}
+            if (d3 != x) {
+                this.motionX = 0.0D;
+            }
 
-			if (d4 != y) {
-				block1.onLanded(this.worldObj, this);
-			}
+            if (d5 != z) {
+                this.motionZ = 0.0D;
+            }
 
-			if (this.canTriggerWalking() && !flag && this.ridingEntity == null) {
-				double d12 = this.posX - d0;
-				double d13 = this.posY - d1;
-				double d14 = this.posZ - d2;
+            if (d4 != y) {
+                block1.onLanded(this.worldObj, this);
+            }
+            //Zeus
+            //if (this.canTriggerWalking() && !flag && this.ridingEntity == null)
+            if (this.canTriggerWalking() && !safewalk && this.ridingEntity == null) {
+                double d12 = this.posX - d0;
+                double d13 = this.posY - d1;
+                double d14 = this.posZ - d2;
 
-				if (block1 != Blocks.ladder) {
-					d13 = 0.0D;
-				}
+                if (block1 != Blocks.ladder) {
+                    d13 = 0.0D;
+                }
 
-				if (block1 != null && this.onGround) {
-					block1.onEntityCollidedWithBlock(this.worldObj, blockpos, this);
-				}
+                if (block1 != null && this.onGround) {
+                    block1.onEntityCollidedWithBlock(this.worldObj, blockpos, this);
+                }
 
-				this.distanceWalkedModified = (float) ((double) this.distanceWalkedModified
-						+ (double) MathHelper.sqrt_double(d12 * d12 + d14 * d14) * 0.6D);
-				this.distanceWalkedOnStepModified = (float) ((double) this.distanceWalkedOnStepModified
-						+ (double) MathHelper.sqrt_double(d12 * d12 + d13 * d13 + d14 * d14) * 0.6D);
+                this.distanceWalkedModified = (float) ((double) this.distanceWalkedModified + (double) MathHelper.sqrt_double(d12 * d12 + d14 * d14) * 0.6D);
+                this.distanceWalkedOnStepModified = (float) ((double) this.distanceWalkedOnStepModified + (double) MathHelper.sqrt_double(d12 * d12 + d13 * d13 + d14 * d14) * 0.6D);
 
-				if (this.distanceWalkedOnStepModified > (float) this.nextStepDistance
-						&& block1.getMaterial() != Material.air) {
-					this.nextStepDistance = (int) this.distanceWalkedOnStepModified + 1;
+                if (this.distanceWalkedOnStepModified > (float) this.nextStepDistance && block1.getMaterial() != Material.air) {
+                    this.nextStepDistance = (int) this.distanceWalkedOnStepModified + 1;
 
-					if (this.isInWater()) {
-						float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.20000000298023224D
-								+ this.motionY * this.motionY + this.motionZ * this.motionZ * 0.20000000298023224D)
-								* 0.35F;
+                    if (this.isInWater()) {
+                        float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.20000000298023224D + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.20000000298023224D) * 0.35F;
 
-						if (f > 1.0F) {
-							f = 1.0F;
-						}
+                        if (f > 1.0F) {
+                            f = 1.0F;
+                        }
 
-						this.playSound(this.getSwimSound(), f,
-								1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
-					}
+                        this.playSound(this.getSwimSound(), f, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
+                    }
 
-					this.playStepSound(blockpos, block1);
-				}
-			}
+                    this.playStepSound(blockpos, block1);
+                }
+            }
 
-			try {
-				this.doBlockCollisions();
-			} catch (Throwable throwable) {
-				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Checking entity block collision");
-				CrashReportCategory crashreportcategory = crashreport
-						.makeCategory("Entity being checked for collision");
-				this.addEntityCrashInfo(crashreportcategory);
-				throw new ReportedException(crashreport);
-			}
+            try {
+                this.doBlockCollisions();
+            } catch (Throwable throwable) {
+                CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Checking entity block collision");
+                CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being checked for collision");
+                this.addEntityCrashInfo(crashreportcategory);
+                throw new ReportedException(crashreport);
+            }
 
-			boolean flag2 = this.isWet();
+            boolean flag2 = this.isWet();
 
-			if (this.worldObj.isFlammableWithin(this.getEntityBoundingBox().contract(0.001D, 0.001D, 0.001D))) {
-				this.dealFireDamage(1);
+            if (this.worldObj.isFlammableWithin(this.getEntityBoundingBox().contract(0.001D, 0.001D, 0.001D))) {
+                this.dealFireDamage(1);
 
-				if (!flag2) {
-					++this.fire;
+                if (!flag2) {
+                    ++this.fire;
 
-					if (this.fire == 0) {
-						this.setFire(8);
-					}
-				}
-			} else if (this.fire <= 0) {
-				this.fire = -this.fireResistance;
-			}
+                    if (this.fire == 0) {
+                        this.setFire(8);
+                    }
+                }
+            } else if (this.fire <= 0) {
+                this.fire = -this.fireResistance;
+            }
 
-			if (flag2 && this.fire > 0) {
-				this.playSound("random.fizz", 0.7F, 1.6F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
-				this.fire = -this.fireResistance;
-			}
+            if (flag2 && this.fire > 0) {
+                this.playSound("random.fizz", 0.7F, 1.6F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
+                this.fire = -this.fireResistance;
+            }
 
-			this.worldObj.theProfiler.endSection();
-		}
-	}
+            this.worldObj.theProfiler.endSection();
+        }
+    }
 
     /**
      * Resets the entity's position to the center (planar) and bottom (vertical) points of its bounding box.
@@ -1178,7 +1184,7 @@ public abstract class Entity implements ICommandSender
 		//AddScaffold
 		//MovFix Julius
 
-		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() &&(Killaura.target != null)) {
+		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.target != null) || Killaura.preaimtarget != null) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState()) {
 		    yaw = Killaura.getYaw();
 		}else {
 		    yaw = this.rotationYaw;
