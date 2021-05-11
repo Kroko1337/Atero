@@ -141,10 +141,15 @@ public class ClickGUI extends GuiScreen {
 
     @Override
     protected void keyTyped(final char typedChar, final int keyCode) throws IOException {
-	if(!this.searchBar.getVisible()) {
-	    super.keyTyped(typedChar, keyCode);
+	//if(this.searchBar.getVisible()) {
+	super.keyTyped(typedChar, keyCode);
+	//}
+	if(searchBar.getVisible()) {
+	    
 	}
-	this.searchBar.textboxKeyTyped(typedChar, keyCode);
+	if(searchBar.getVisible()) {
+	    this.searchBar.textboxKeyTyped(typedChar, keyCode);
+	}
 	panels.forEach(panel -> panel.keyTyped(typedChar, keyCode));
 	switch (keyCode) {
 	case 28:
@@ -152,7 +157,7 @@ public class ClickGUI extends GuiScreen {
 		 animateSearchBar(1);
 		 this.searchBar.setFocused(false);
 	    }
-	    if(!(searchBar.getText() != null && searchBar.getText().isEmpty())) {
+	    if(!(searchBar.getText() != null && searchBar.getText().isEmpty()) && searchBar.getVisible()) {
 	    //if(!this.searchBar.getText().isBlank()) {
 		colorSearch = new Color(255, 0, 0, 255);
 		hasSearched = true;
