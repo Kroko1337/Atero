@@ -65,9 +65,9 @@ public class ClickGUIPanel {
 		    switch (pExtendet.getState()) {
 		    case 1:
 			pExtendet.setAnimationX(pExtendet.getAnimationX() + 1);
-			if (pExtendet.getAnimationX() == width || pExtendet.getAnimationX() > width) {
+			if (pExtendet.getAnimationX() == pExtendet.getWidth() || pExtendet.getAnimationX() > pExtendet.getWidth()) {
 			    pExtendet.setAnimate(false);
-			    pExtendet.setAnimationX(width);
+			    pExtendet.setAnimationX(pExtendet.getWidth());
 			    pExtendet.setState(2);
 			}
 			break;

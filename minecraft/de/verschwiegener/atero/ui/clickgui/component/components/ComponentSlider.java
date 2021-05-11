@@ -46,9 +46,9 @@ public class ComponentSlider extends Component {
 		    / (getItem().getMaxValue() - getItem().getMinValue());
 	    fontRenderer.drawString(getName(), (getComponentX() + 3) * 2,
 		    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+	    int textX = (getComponentX() + getPanelExtendet().getWidth()) * 2 - 40;
 	    if (textFieldSelected) {
 		try {
-		    int textX = (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2)) * 2 - 39;
 		    String split1 = currentValue.substring(0, textFieldEditPosition);
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
 		    
@@ -74,11 +74,11 @@ public class ComponentSlider extends Component {
 		}
 	    } else {
 		fontRenderer.drawString(currentValue,
-			(getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2)) * 2 - 40,
+			textX,
 			(getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
 	    }
 
-	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, getPanelExtendet().getWidth() + getPanelWidthOffset(), 1.5D,
+	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, getPanelExtendet().getWidth(), 1.5D,
 		    Management.instance.colorGray);
 	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, percent * getPanelExtendet().getWidth(),
 		    1.5D, Management.instance.colorBlue);
@@ -201,8 +201,8 @@ public class ComponentSlider extends Component {
     }
 
     private boolean isTextFieldHovered(int mouseX, int mouseY) {
-	return mouseX > ((getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2)) - 20)
-		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2))
+	return mouseX > ((getComponentX() + getPanelExtendet().getWidth()) - 40)
+		&& mouseX < (getComponentX() + getPanelExtendet().getWidth())
 		&& mouseY > getComponentY() - 9 && mouseY < getComponentY() + 3;
     }
 

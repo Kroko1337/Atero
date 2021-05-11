@@ -37,7 +37,6 @@ public class Component {
 	}
 	public int getComponentX() {
 	    int checkPanelWidth = (getPanelExtendet().getPanel().getWidth() > 100) ? (getPanelExtendet().getPanel().getWidth() - 100) : 0;
-	    System.out.println("CheckPanelWidth: " + checkPanelWidth);
 	    return getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + checkPanelWidth;
 	}
 	public int getComponentY() {
