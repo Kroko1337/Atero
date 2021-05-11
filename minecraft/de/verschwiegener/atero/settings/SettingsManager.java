@@ -13,7 +13,7 @@ public class SettingsManager {
     public ArrayList<Setting> getSearchResult(final String search) {
 	final ArrayList<Setting> result = new ArrayList<>();
 	for (final Setting s : settings) {
-	    if (s.getName().toLowerCase().startsWith(search.toLowerCase()) || (s.getItemByStartsWith(search) != null)) {
+	    if (s.getName().toLowerCase().startsWith(search.toLowerCase()) || (s.getItemByStartsWith(search) != null) || (s.getItemByContains(search) != null)) {
 		result.add(s);
 	    }
 	}

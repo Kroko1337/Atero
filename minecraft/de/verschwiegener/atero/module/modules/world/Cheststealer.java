@@ -32,6 +32,13 @@ public class Cheststealer extends Module {
     public void onDisable() {
 	super.onDisable();
     }
+    @Override
+    public void setup() {
+        super.setup();
+        final ArrayList<SettingsItem> items = new ArrayList<>();
+        items.add(new SettingsItem("Delay", 0, 100, 10, ""));
+	Management.instance.settingsmgr.addSetting(new Setting(this, items));
+    }
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onUpdate() {

@@ -43,6 +43,7 @@ public class Speed extends Module {
 	final ArrayList<String> modes = new ArrayList<>();
 	modes.add("HypixelOnGround");
 	items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "", ""));
+	Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)

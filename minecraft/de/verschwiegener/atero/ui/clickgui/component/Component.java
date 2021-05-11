@@ -36,13 +36,19 @@ public class Component {
 		return y;
 	}
 	public int getComponentX() {
-		return getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth();
+	    int checkPanelWidth = (getPanelExtendet().getPanel().getWidth() > 100) ? (getPanelExtendet().getPanel().getWidth() - 100) : 0;
+	    System.out.println("CheckPanelWidth: " + checkPanelWidth);
+	    return getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + checkPanelWidth;
 	}
 	public int getComponentY() {
 		return getY() + getPanelExtendet().getPanel().getY() + getPanelExtendet().getY();
 	}
 	public PanelExtendet getPanelExtendet() {
 		return pe;
+	}
+	//Returns the value the ClickGUIPanel is bigger than 100
+	public int getPanelWidthOffset() {
+	    return (getPanelExtendet().getPanel().getWidth() > 100) ? (getPanelExtendet().getPanel().getWidth() - 100) : 0;
 	}
 	public SettingsItem getItem() {
 		return item;

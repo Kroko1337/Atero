@@ -25,7 +25,7 @@ public class ComponentCombobox extends Component {
 	if (!isParentextendet()) {
 	    int textx = (getComponentX() + 1);
 	    int texty = (getComponentY()) - 6;
-	    fontRenderer.drawString(getName(), (textx + (fontRenderer.getStringWidth(getName()) / 4)) * 2, texty * 2, Color.WHITE.getRGB());
+	    fontRenderer.drawString(getName(), (textx * 2) + (getPanelExtendet().getWidth() - fontRenderer.getStringWidth2(getName())), texty * 2, Color.WHITE.getRGB());
 	    RenderUtil.fillRect((getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + 1),
 		    getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
 	    if (extendet) {
@@ -52,17 +52,19 @@ public class ComponentCombobox extends Component {
     public void onMouseClicked(int x, int y, int button) {
 	super.onMouseClicked(x, y, button);
 	if (button == 0) {
+	    if (extendet) {
+		String value = getComboboxItem(x, y);
+		if(value != null) {
+		    getItem().setCurrent(getComboboxItem(x, y));
+		}
+	    }
+	}else if(button == 1) {
 	    if (isComboboxHovered(x, y)) {
 		extendet = !extendet;
 		if (extendet) {
 		    getPanelExtendet().extendPanelByYOffset(12 * getItem().getModes().size(), getName());
 		} else {
 		    getPanelExtendet().collapsePanelByYOffset(12 * getItem().getModes().size(), getName());
-		}
-	    } else if (extendet) {
-		String value = getComboboxItem(x, y);
-		if(value != null) {
-		    getItem().setCurrent(getComboboxItem(x, y));
 		}
 	    }
 	}

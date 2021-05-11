@@ -36,6 +36,7 @@ public class ComponentSlider extends Component {
     @Override
     public void drawComponent(int x, int y) {
 	super.drawComponent(x, y);
+	//Pulses if Textfield is selected
 	if(buttonleft) {
 	    if(prev - System.currentTimeMillis() <= -500) {
 	    }
@@ -77,7 +78,7 @@ public class ComponentSlider extends Component {
 			(getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
 	    }
 
-	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, getPanelExtendet().getWidth(), 1.5D,
+	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, getPanelExtendet().getWidth() + getPanelWidthOffset(), 1.5D,
 		    Management.instance.colorGray);
 	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, percent * getPanelExtendet().getWidth(),
 		    1.5D, Management.instance.colorBlue);
