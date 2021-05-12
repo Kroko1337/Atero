@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.ui.mainmenu;
+package de.verschwiegener.atero.util.account;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
+import de.verschwiegener.atero.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +20,6 @@ public class Account {
     private String UUID;
     private boolean lastLoginSuccess;
     private String[] bannedServer;
-    private BufferedImage image;
     private ResourceLocation location;
 
     public Account(String email, String password, String username, String UUID, boolean lastLoginSuccess, String[] bannedServer) {
@@ -29,14 +29,15 @@ public class Account {
 	this.UUID = UUID;
 	this.lastLoginSuccess = lastLoginSuccess;
 	this.bannedServer = bannedServer;
-	if(this.UUID != null && !this.UUID.isEmpty()) {
+	location = Util.getSkin(username);
+	/*if(this.UUID != null && !this.UUID.isEmpty()) {
 	    try {
 		image = ImageIO.read(new URL("https://crafatar.com/avatars/" + this.UUID).openStream());
 		location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(username, new DynamicTexture(image));
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
-	}
+	}*/
     }
 
     public Account(String email, String password) {
@@ -93,6 +94,9 @@ public class Account {
     }
     public String getUUID() {
 	return UUID;
+    }
+    public ResourceLocation getLocation() {
+	return location;
     }
 
 }

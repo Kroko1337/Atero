@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.account.Account;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,7 +22,7 @@ public class AccountManagerScreen2 extends GuiScreen {
 	    items.add(new AccountManagerItem(this, YOffset, null));
 	    YOffset += 50;
 	}
-	for(Account account : Management.instance.accountmgr.accounts) {
+	for(Account account : Management.instance.accountmgr.getAccounts()) {
 	    items.add(new AccountManagerItem(this, YOffset, account));
 	    YOffset += 30;
 	}

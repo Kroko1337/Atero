@@ -23,6 +23,10 @@ public class Setting {
 	return items.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase()))
 		.findFirst().orElse(null);
     }
+    public SettingsItem getItemByContains(final String name) {
+	return items.stream().filter(module -> module.getName().toLowerCase().contains(name.toLowerCase()))
+		.findFirst().orElse(null);
+    }
 
     public ArrayList<SettingsItem> getItems() {
 	return items;

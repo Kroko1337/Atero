@@ -1,5 +1,6 @@
 package de.verschwiegener.atero.module.modules.world;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.text.html.parser.Entity;
@@ -16,8 +17,11 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 
+import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
+import de.verschwiegener.atero.settings.Setting;
+import de.verschwiegener.atero.settings.SettingsItem;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -59,7 +63,6 @@ public class Scaffold extends Module {
         Minecraft.thePlayer.var19 = false;
         super.onDisable();
     }
-
 
     public void setup() {
     }
@@ -131,7 +134,7 @@ public class Scaffold extends Module {
         pre.setPitch(aac3Rotations(blockData)[1]);
 
     }
-
+    }
 
     Scaffold.BlockData find(Vec3 offset3) {
         try{
@@ -163,6 +166,7 @@ public class Scaffold extends Module {
         }
         return null;
     }
+
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     float[] aac3Rotations(Scaffold.BlockData blockData) {
         double x = blockData.getPos().getX() + 0.5D - mc.thePlayer.posX + blockData.getFacing().getFrontOffsetX() / 2.0D;
@@ -182,9 +186,11 @@ public class Scaffold extends Module {
     }
 
     private Vec3 getPositionByFace(BlockPos position, EnumFacing facing) {
-        Vec3 offset = new Vec3((double) facing.getDirectionVec().getX() / 2.0, (double) facing.getDirectionVec().getY() / 2.0, (double) facing.getDirectionVec().getZ() / 2.0);
-        Vec3 point = new Vec3((double) position.getX() + 0.5, (double) position.getY() + 0.5, (double) position.getZ() + 0.5);
-        return point.add(offset);
+	Vec3 offset = new Vec3((double) facing.getDirectionVec().getX() / 2.0,
+		(double) facing.getDirectionVec().getY() / 2.0, (double) facing.getDirectionVec().getZ() / 2.0);
+	Vec3 point = new Vec3((double) position.getX() + 0.5, (double) position.getY() + 0.5,
+		(double) position.getZ() + 0.5);
+	return point.add(offset);
     }
 
     private boolean rayTrace(Vec3 origin, Vec3 position) {
@@ -208,8 +214,6 @@ public class Scaffold extends Module {
         }
         return false;
     }
-
-
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public class BlockData {
