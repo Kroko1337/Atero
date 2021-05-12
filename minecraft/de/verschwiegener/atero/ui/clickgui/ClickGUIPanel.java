@@ -56,12 +56,12 @@ public class ClickGUIPanel {
     }
 
     private void animateExtension(final PanelExtendet pExtendet) {
-	new TimeUtils();
+	TimeUtils timer = new TimeUtils();
 	Management.instance.ANIMATION_EXECUTOR.submit(() -> {
 	    while (pExtendet.isAnimate()) {
 		// if (pExtendet.isAnimate()) {
-		if (TimeUtils.hasReached(5)) {
-		    TimeUtils.reset();
+		if (timer.hasReached(5)) {
+		    timer.reset();
 		    switch (pExtendet.getState()) {
 		    case 1:
 			pExtendet.setAnimationX(pExtendet.getAnimationX() + 1);

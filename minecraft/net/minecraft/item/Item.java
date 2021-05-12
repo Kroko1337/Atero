@@ -81,6 +81,9 @@ public class Item
     {
         return itemIn == null ? 0 : itemRegistry.getIDForObject(itemIn);
     }
+    public int getBlockId() {
+	return itemRegistry.getIDForObject(this);
+    }
 
     public static Item getItemById(int id)
     {

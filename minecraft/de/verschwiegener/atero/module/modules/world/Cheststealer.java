@@ -19,7 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Cheststealer extends Module {
-    TimeUtils timeUtils;
+    TimeUtils timer = new TimeUtils();
 
     public Cheststealer() {
 	super("ChestStealer", "ChestStealer", Keyboard.KEY_NONE, Category.World);
@@ -52,10 +52,10 @@ public class Cheststealer extends Module {
 		    int i = 0;
 		    while (i < container.getLowerChestInventory().getSizeInventory()) {
 			if (container.getLowerChestInventory().getStackInSlot(i) != null
-				&& TimeUtils.hasReached((long) 200F)) {
+				&& timer.hasReached((long) 200F)) {
 
 			    Minecraft.playerController.windowClick(container.windowId, i, 0, 1, Minecraft.thePlayer);
-			    TimeUtils.reset();
+			    timer.reset();
 			}
 			++i;
 		    }

@@ -26,7 +26,7 @@ public class ComponentCombobox extends Component {
 	    int textx = (getComponentX() + 1);
 	    int texty = (getComponentY()) - 6;
 	    fontRenderer.drawString(getName(), (textx * 2) + (getPanelExtendet().getWidth() - fontRenderer.getStringWidth2(getName())), texty * 2, Color.WHITE.getRGB());
-	    RenderUtil.fillRect((getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + 1),
+	    RenderUtil.fillRect(textx,
 		    getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
 	    if (extendet) {
 		texty += 2;
