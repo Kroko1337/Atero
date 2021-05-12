@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.combat.Killaura;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -361,21 +363,36 @@ public class ItemRenderer
 
                     case 4:
                         this.transformFirstPersonItem(f, 0.0F);
+                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
+                        GlStateManager.translate(0,0.4,0);
+                        GlStateManager.rotate(-rot * 25F, (float) 0.08, 0, 0);
                         this.func_178103_d();
+
                         break;
 
                     case 5:
                         this.transformFirstPersonItem(f, 0.0F);
                         this.func_178098_a(partialTicks, entityplayersp);
                 }
-            }
-            else
-            {
-                this.func_178105_d(f1);
-                this.transformFirstPersonItem(f, f1);
-            }
+            } else {
+                if (Killaura.instance.hasTarget()) {
+                    if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
+                        this.transformFirstPersonItem(f, 0.0F);
+                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
+                        GlStateManager.translate(0, 0.4, 0);
+                        GlStateManager.rotate(-rot * 25F, (float) 0.08, 0, 0);
+                       this.func_178103_d();
 
-            this.renderItem(entityplayersp, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
+                    }else {
+                        this.func_178105_d(f1);
+                        this.transformFirstPersonItem(f, f1);
+                    }
+                } else {
+               this.func_178105_d(f1);
+               this.transformFirstPersonItem(f, f1);
+           }
+}
+                    this.renderItem(entityplayersp, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);
         }
         else if (!entityplayersp.isInvisible())
         {

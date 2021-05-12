@@ -33,7 +33,6 @@ public class Sprint extends Module {
     public void onUpdate() {
 	if (this.isEnabled()) {
 	    super.onUpdate();
-
 	    if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
 		Minecraft.getMinecraft().thePlayer.setSprinting(false);
 	    } else {

@@ -85,8 +85,8 @@ public class ComponentCombobox extends Component {
     }
 
     public boolean isComboboxHovered(int mouseX, int mouseY) {
-	return mouseX > (getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + 1)
-		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2) + 1)
+	return mouseX > (getComponentX())
+		&& mouseX < (getComponentX() + 1 + getPanelExtendet().getWidth())
 		&& mouseY > (getComponentY() - 6) && mouseY < (getComponentY() + 7);
     }
 

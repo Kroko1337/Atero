@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.*;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -17,6 +18,7 @@ import god.buddy.aot.BCompiler;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Cheststealer extends Module {
     TimeUtils timer = new TimeUtils();
@@ -51,8 +53,10 @@ public class Cheststealer extends Module {
 		    ContainerChest container = (ContainerChest) Minecraft.thePlayer.openContainer;
 		    int i = 0;
 		    while (i < container.getLowerChestInventory().getSizeInventory()) {
+				final float MAAD = (float) MathHelper.getRandomDoubleInRange(new Random(), 250, 300);
 			if (container.getLowerChestInventory().getStackInSlot(i) != null
-				&& timer.hasReached((long) 200F)) {
+
+				&& timer.hasReached((long) MAAD)) {
 
 			    Minecraft.playerController.windowClick(container.windowId, i, 0, 1, Minecraft.thePlayer);
 			    timer.reset();

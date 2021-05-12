@@ -2406,6 +2406,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
     public boolean replaceItemInInventory(int inventorySlot, ItemStack itemStackIn)
     {
+	
         if (inventorySlot >= 0 && inventorySlot < this.inventory.mainInventory.length)
         {
             this.inventory.setInventorySlotContents(inventorySlot, itemStackIn);

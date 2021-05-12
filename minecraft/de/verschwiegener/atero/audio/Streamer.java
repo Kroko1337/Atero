@@ -60,6 +60,7 @@ public class Streamer {
 	    basicPlayer.setGain(currentVolume);
 	} catch (BasicPlayerException | java.io.IOException e) {
 	    e.printStackTrace();
+	    System.out.println("StreamURL: " + stream.getChannelURL());
 	}
     }
 

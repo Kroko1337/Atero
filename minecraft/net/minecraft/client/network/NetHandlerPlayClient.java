@@ -1,9 +1,12 @@
 package net.minecraft.client.network;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.callables.EventSendPacket;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.mojang.authlib.GameProfile;
+import de.verschwiegener.atero.Management;
 import io.netty.buffer.Unpooled;
 import java.io.File;
 import java.io.IOException;
@@ -813,6 +816,11 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
     public void addToSendQueue(Packet p_147297_1_)
     {
+        EventSendPacket eventSendPacket = new EventSendPacket(p_147297_1_);
+        EventManager.call(eventSendPacket);
+        if(eventSendPacket.isCancelled()) {
+            return;
+        }
         this.netManager.sendPacket(p_147297_1_);
     }
 

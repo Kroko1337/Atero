@@ -3,8 +3,9 @@ package de.verschwiegener.atero.module;
 import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.Wrapper;
 
-public abstract class Module {
+public abstract class Module implements Wrapper{
 
 	Category category;
 	boolean enabled;
@@ -69,6 +70,14 @@ public abstract class Module {
 
 	public void toggle() {
 	    enabled = !enabled;
+	    if (enabled)
+		onEnable();
+	    else
+		onDisable();
+	    Management.instance.modulechange = true;
+	}
+	public void toggle(boolean state) {
+	    enabled = state;
 	    if (enabled)
 		onEnable();
 	    else

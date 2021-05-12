@@ -1,6 +1,9 @@
 package net.minecraft.client.gui.inventory;
 
 import com.google.common.collect.Sets;
+
+import de.verschwiegener.atero.module.modules.player.InventoryManager;
+
 import java.io.IOException;
 import java.util.Set;
 import net.minecraft.client.Minecraft;

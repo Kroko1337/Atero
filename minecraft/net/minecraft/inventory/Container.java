@@ -77,8 +77,7 @@ public abstract class Container
     /**
      * Looks for changes made in the container, sends them to every listener.
      */
-    public void detectAndSendChanges()
-    {
+    public void detectAndSendChanges() {
         for (int i = 0; i < this.inventorySlots.size(); ++i)
         {
             ItemStack itemstack = ((Slot)this.inventorySlots.get(i)).getStack();
@@ -120,9 +119,8 @@ public abstract class Container
         return null;
     }
 
-    public Slot getSlot(int slotId)
-    {
-        return (Slot)this.inventorySlots.get(slotId);
+    public Slot getSlot(int slotId) {
+	return (Slot) this.inventorySlots.get(slotId);
     }
 
     /**
@@ -133,7 +131,6 @@ public abstract class Container
         Slot slot = (Slot)this.inventorySlots.get(index);
         return slot != null ? slot.getStack() : null;
     }
-
     /**
      * Handles slot click.
      */
@@ -537,6 +534,7 @@ public abstract class Container
      */
     public void putStackInSlot(int slotID, ItemStack stack)
     {
+	//System.out.println("Index2: " + slotID);
         this.getSlot(slotID).putStack(stack);
     }
 

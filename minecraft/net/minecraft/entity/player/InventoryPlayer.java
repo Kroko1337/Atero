@@ -1,6 +1,8 @@
 package net.minecraft.entity.player;
 
 import java.util.concurrent.Callable;
+
+import de.verschwiegener.atero.module.modules.player.InventoryManager;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -39,9 +41,8 @@ public class InventoryPlayer implements IInventory
      */
     public boolean inventoryChanged;
 
-    public InventoryPlayer(EntityPlayer playerIn)
-    {
-        this.player = playerIn;
+    public InventoryPlayer(EntityPlayer playerIn) {
+	this.player = playerIn;
     }
 
     /**
@@ -391,79 +392,59 @@ public class InventoryPlayer implements IInventory
     /**
      * Adds the item stack to the inventory, returns false if it is impossible.
      */
-    public boolean addItemStackToInventory(final ItemStack itemStackIn)
-    {
-        if (itemStackIn != null && itemStackIn.stackSize != 0 && itemStackIn.getItem() != null)
-        {
-            try
-            {
-                if (itemStackIn.isItemDamaged())
-                {
-                    int j = this.getFirstEmptyStack();
+    public boolean addItemStackToInventory(final ItemStack itemStackIn) {
 
-                    if (j >= 0)
-                    {
-                        this.mainInventory[j] = ItemStack.copyItemStack(itemStackIn);
-                        this.mainInventory[j].animationsToGo = 5;
-                        itemStackIn.stackSize = 0;
-                        return true;
-                    }
-                    else if (this.player.capabilities.isCreativeMode)
-                    {
-                        itemStackIn.stackSize = 0;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    int i;
+	if (itemStackIn != null && itemStackIn.stackSize != 0 && itemStackIn.getItem() != null) {
+	    try {
+		if (itemStackIn.isItemDamaged()) {
+		    int j = this.getFirstEmptyStack();
 
-                    while (true)
-                    {
-                        i = itemStackIn.stackSize;
-                        itemStackIn.stackSize = this.storePartialItemStack(itemStackIn);
+		    if (j >= 0) {
+			this.mainInventory[j] = ItemStack.copyItemStack(itemStackIn);
+			this.mainInventory[j].animationsToGo = 5;
+			itemStackIn.stackSize = 0;
+			return true;
+		    } else if (this.player.capabilities.isCreativeMode) {
+			itemStackIn.stackSize = 0;
+			return true;
+		    } else {
+			return false;
+		    }
+		} else {
+		    int i;
 
-                        if (itemStackIn.stackSize <= 0 || itemStackIn.stackSize >= i)
-                        {
-                            break;
-                        }
-                    }
+		    while (true) {
+			i = itemStackIn.stackSize;
+			itemStackIn.stackSize = this.storePartialItemStack(itemStackIn);
 
-                    if (itemStackIn.stackSize == i && this.player.capabilities.isCreativeMode)
-                    {
-                        itemStackIn.stackSize = 0;
-                        return true;
-                    }
-                    else
-                    {
-                        return itemStackIn.stackSize < i;
-                    }
-                }
-            }
-            catch (Throwable throwable)
-            {
-                CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Adding item to inventory");
-                CrashReportCategory crashreportcategory = crashreport.makeCategory("Item being added");
-                crashreportcategory.addCrashSection("Item ID", Integer.valueOf(Item.getIdFromItem(itemStackIn.getItem())));
-                crashreportcategory.addCrashSection("Item data", Integer.valueOf(itemStackIn.getMetadata()));
-                crashreportcategory.addCrashSectionCallable("Item name", new Callable<String>()
-                {
-                    public String call() throws Exception
-                    {
-                        return itemStackIn.getDisplayName();
-                    }
-                });
-                throw new ReportedException(crashreport);
-            }
-        }
-        else
-        {
-            return false;
-        }
+			if (itemStackIn.stackSize <= 0 || itemStackIn.stackSize >= i) {
+			    break;
+			}
+		    }
+
+		    if (itemStackIn.stackSize == i && this.player.capabilities.isCreativeMode) {
+			itemStackIn.stackSize = 0;
+			return true;
+		    } else {
+			return itemStackIn.stackSize < i;
+		    }
+		}
+	    } catch (Throwable throwable) {
+		CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Adding item to inventory");
+		CrashReportCategory crashreportcategory = crashreport.makeCategory("Item being added");
+		crashreportcategory.addCrashSection("Item ID",
+			Integer.valueOf(Item.getIdFromItem(itemStackIn.getItem())));
+		crashreportcategory.addCrashSection("Item data", Integer.valueOf(itemStackIn.getMetadata()));
+		crashreportcategory.addCrashSectionCallable("Item name", new Callable<String>() {
+		    public String call() throws Exception {
+			return itemStackIn.getDisplayName();
+		    }
+		});
+		throw new ReportedException(crashreport);
+	    }
+	} else {
+	    return false;
+	}
     }
 
     /**
@@ -535,6 +516,7 @@ public class InventoryPlayer implements IInventory
      */
     public void setInventorySlotContents(int index, ItemStack stack)
     {
+	//System.err.println("index: " + index);
         ItemStack[] aitemstack = this.mainInventory;
 
         if (index >= aitemstack.length)

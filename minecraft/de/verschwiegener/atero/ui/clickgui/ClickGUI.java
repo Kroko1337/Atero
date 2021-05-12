@@ -79,7 +79,12 @@ public class ClickGUI extends GuiScreen {
 	}
     }
 
-    private void animateExtension(final ClickGUIPanel p2) {
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+
+	private void animateExtension(final ClickGUIPanel p2) {
 	final TimeUtils animationTimer = new TimeUtils();
 	Management.instance.ANIMATION_EXECUTOR.submit(() -> {
 	    while (p2.isAnimate()) {

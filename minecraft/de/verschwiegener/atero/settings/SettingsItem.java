@@ -1,5 +1,6 @@
 package de.verschwiegener.atero.settings;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class SettingsItem {
@@ -9,6 +10,7 @@ public class SettingsItem {
 	ArrayList<String> modes;
 	boolean state;
 	Category category;
+	Color color;
 	
 	public SettingsItem(String name, float minValue, float maxValue, float currentValue, String child) {
 		this.name = name;
@@ -16,26 +18,33 @@ public class SettingsItem {
 		this.maxValue = maxValue;
 		this.currentValue = currentValue;
 		this.child = child;
-		this.category = Category.Slider;
+		this.category = Category.SLIDER;
 	}
+
 	public SettingsItem(String name, ArrayList<String> modes, String current, String child, String childselect) {
 		this.name = name;
 		this.modes = modes;
 		this.current = current;
 		this.child = child;
 		this.childselect = childselect;
-		this.category = Category.Combobox;
+		this.category = Category.COMBO_BOX;
 	}
 	public SettingsItem(String name, boolean state, String child) {
 		this.name = name;
 		this.state = state;
 		this.child = child;
-		this.category = Category.Checkbox;
+		this.category = Category.CHECKBOX;
+	}
+	public SettingsItem(String name, Color color, String child) {
+		this.name = name;
+		this.color = color;
+		this.child = child;
+		this.category = Category.COLOR_PICKER;
 	}
 	public SettingsItem(String name, String currentText) {
 		this.name = name;
 		this.current = currentText;
-		this.category = Category.Textfield;
+		this.category = Category.TEXT_FIELD;
 	}
 	
 	public String getName() {
@@ -80,13 +89,22 @@ public class SettingsItem {
 	public String getCurrent() {
 		return current;
 	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 	public void setCurrent(String current) {
 		this.current = current;
 	}
 	
 	public enum Category{
-		
-		Slider, Combobox, Checkbox, Textfield
+
+		SLIDER, COMBO_BOX, CHECKBOX, TEXT_FIELD, COLOR_PICKER;
 		
 	}
 

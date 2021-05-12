@@ -59,6 +59,9 @@ public class Item
 
     /** Maximum damage an item can handle. */
     private int maxDamage;
+    
+    protected float attackDamage = 0;
+    protected float damageVsEntity = 0;
 
     /** If true, render the object in full 3D, like weapons and tools. */
     protected boolean bFull3D;
@@ -76,10 +79,20 @@ public class Item
 
     /** The unlocalized name of this item. */
     private String unlocalizedName;
+    
+    public float getAttackDamage() {
+	return attackDamage;
+    }
+    public float getDamageVsEntity() {
+	return damageVsEntity;
+    }
 
     public static int getIdFromItem(Item itemIn)
     {
         return itemIn == null ? 0 : itemRegistry.getIDForObject(itemIn);
+    }
+    public int getID() {
+	return itemRegistry.getIDForObject(this);
     }
     public int getBlockId() {
 	return itemRegistry.getIDForObject(this);

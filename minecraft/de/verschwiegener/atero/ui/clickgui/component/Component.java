@@ -37,7 +37,7 @@ public class Component {
 		return y;
 	}
 	public int getComponentX() {
-	    int checkPanelWidth = (getPanelExtendet().getPanel().getWidth() > 100) ? (getPanelExtendet().getPanel().getWidth() - 100) : 0;
+	    int checkPanelWidth = (getPanelExtendet().getPanel().getWidth() > 100 || getPanelExtendet().getPanel().getWidth() < 100) ? (getPanelExtendet().getPanel().getWidth() - 100) : 0;
 	    return getPanelExtendet().getPanel().getX() + getPanelExtendet().getWidth() + checkPanelWidth;
 	}
 	public int getComponentY() {

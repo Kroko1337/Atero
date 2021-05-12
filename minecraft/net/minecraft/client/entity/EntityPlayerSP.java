@@ -4,7 +4,9 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 
+import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.world.Scaffold;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -47,15 +49,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class EntityPlayerSP extends AbstractClientPlayer
 {
@@ -174,6 +172,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
+            Management.instance.colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
+
             super.onUpdate();
 
             if (this.isRiding())
@@ -199,7 +199,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (preMotion.isCancelled()) {
             return;
         }
-        
+
+
         this.motionX = preMotion.getMotionX();
         this.motionZ = preMotion.getMotionZ();
     	
@@ -953,5 +954,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.capabilities.isFlying = false;
             this.sendPlayerAbilities();
         }
+    }
+    public void moveEntity(double motionX, double motionY, double motionZ) {
+        PlayerMoveEvent movement = new PlayerMoveEvent(motionX, motionY, motionZ);
+        EventManager.call(movement);
+        motionX = movement.getX();
+        motionY = movement.getY();
+        motionZ = movement.getZ();
+        super.moveEntity(motionX, motionY, motionZ);
     }
 }

@@ -9,6 +9,9 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+import com.darkmagician6.eventapi.EventTarget;
+import com.darkmagician6.eventapi.events.callables.EventRenderShader;
+
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.design.font.Fontrenderer;
@@ -60,20 +63,20 @@ public class CustomGUIIngame {
 		fontRenderer.drawString(mm.modules.get(i).getName(),
 			((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
 				- xoffset,
-			yoffset, Color.black.getRGB());
+			yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
 		yoffset += fontRenderer.getBaseStringHeight() * 2;
 
 	    }
 	}
     }
-
-    public static void renderShader() {
+    @EventTarget
+    public static void renderShader(EventRenderShader event) {
 	if (mc.currentScreen == null) {
 	    // Render Tabgui Blur shader
 	    try {
-	//	ScaledResolution sr = new ScaledResolution(mc);
+		//ScaledResolution sr = new ScaledResolution(mc);
 		//shader.prepareRender();
-	//	ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
+		//ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
 		//shader.renderShader(sr);
 	    } catch (Exception e) {
 		e.printStackTrace();

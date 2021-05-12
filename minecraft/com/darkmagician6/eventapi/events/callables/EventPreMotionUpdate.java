@@ -77,7 +77,7 @@ public class EventPreMotionUpdate extends EventCancellable {
 		super.setCancelled(state);
 	}
 
-	public float getYaw() {
+	public static float getYaw() {
 		return yaw;
 	}
 

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.verschwiegener.atero.configsystem.ConfigManager;
+
 import org.lwjgl.input.Keyboard;
+
+import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
@@ -25,8 +27,11 @@ import de.verschwiegener.atero.proxy.ProxyManager;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
+import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.account.AccountManager;
 import de.verschwiegener.atero.util.files.FileManager;
+import de.verschwiegener.atero.util.inventory.InventoryUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;
@@ -50,7 +55,7 @@ public class Management {
     public FontManager fontmgr;
     public SettingsManager settingsmgr;
     public ModuleManager modulemgr;
-    public ConfigManager configManager;
+
     public CommandManager commandmgr;
     public ClickGUI clickgui;
     public Fontrenderer fontrenderer;
@@ -83,14 +88,17 @@ public class Management {
 	GIFLoader = new GifLoader();
 	GIFmgr = new GIFManager();
 	
-	//GIFmgr.addGif(new GIF("dad", "dad"));
-	GIFmgr.addGif(new GIF("test", "test"));
+	GIFmgr.addGif(new GIF("dad", "dad"));
+	GIFmgr.addGif(new GIF("Hentai", "test"));
+	//GIFmgr.addGif(new GIF("Hero", "hero"));
+	GIFmgr.addGif(new GIF("Fire", "tenor"));
+	GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
-	configManager = new ConfigManager();
+
 	accountmgr = new AccountManager();
 
 	fileManager = new FileManager();
@@ -122,6 +130,10 @@ public class Management {
 	}catch(Exception e) {
 	    e.printStackTrace();
 	}
+	
+	InventoryUtil.addGroups();
+
+	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
 
     }
 
@@ -147,6 +159,11 @@ public class Management {
 	}catch(Exception e) {
 	    
 	}
+    }
+    
+    private void registerEvents() {
+	EventManager.register(new CustomGUIIngame());
+	EventManager.register(Minecraft.getMinecraft());
     }
     
     public String getTitle() {

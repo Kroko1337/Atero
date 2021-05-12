@@ -10,6 +10,7 @@ import de.verschwiegener.atero.module.modules.movement.Fly;
 import de.verschwiegener.atero.module.modules.movement.HighJump;
 import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.module.modules.movement.Sprint;
+import de.verschwiegener.atero.module.modules.player.InventoryManager;
 import de.verschwiegener.atero.module.modules.render.CapeManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.render.ESP;
@@ -35,6 +36,7 @@ public class ModuleManager {
 	modules.add(new Velocity());
 	modules.add(new HighJump());
 	modules.add(new CapeManager());
+	modules.add(new InventoryManager());
     }
 
     public Module getModuleByName(final String name) {
@@ -75,7 +77,7 @@ public class ModuleManager {
 		try {
 		    m.onUpdate();
 		}catch(Exception e) {
-		    
+		    e.printStackTrace();
 		}
 	    }
 	}
