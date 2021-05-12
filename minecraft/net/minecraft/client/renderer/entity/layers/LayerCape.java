@@ -23,7 +23,7 @@ public class LayerCape implements LayerRenderer {
     public void doRenderLayer(final AbstractClientPlayer entitylivingbaseIn, final float p_177141_2_,
 	    final float p_177141_3_, final float partialTicks, final float p_177141_5_, final float p_177141_6_,
 	    final float p_177141_7_, final float scale) {
-	
+
 	if(Management.instance.friendmgr.isFriend(entitylivingbaseIn.getName()) || entitylivingbaseIn == mc.thePlayer){
 	    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	    mc.getTextureManager().bindTexture(Management.instance.GIFmgr.getGIFByName("test").getNext().getLocation());
