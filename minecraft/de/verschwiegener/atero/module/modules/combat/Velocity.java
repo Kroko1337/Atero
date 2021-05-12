@@ -39,16 +39,21 @@ public class Velocity extends Module {
         if (this.isEnabled()) {
             try{
                 Packet p = ppe.getPacket();
-                if (p instanceof S12PacketEntityVelocity) {
-                    S12PacketEntityVelocity packet = (S12PacketEntityVelocity) p;
-                    if (packet.getEntityID() == Minecraft.thePlayer.getEntityId())
-                        ppe.setCancelled(true);
-                    System.out.println("ppe.setCancelled(true)");
-                }
-                if (p instanceof net.minecraft.network.play.server.S27PacketExplosion)
-                    ppe.setCancelled(true);
+                //if (p instanceof S12PacketEntityVelocity) {
+               //     S12PacketEntityVelocity packet = (S12PacketEntityVelocity) p;
+               //     if (packet.getEntityID() == Minecraft.thePlayer.getEntityId())
+                //        ppe.setCancelled(true);
+                //    System.out.println("ppe.setCancelled(true)");
+               // }
+               // if (p instanceof net.minecraft.network.play.server.S27PacketExplosion)
+               //     ppe.setCancelled(true);
 
+                    if(Minecraft.thePlayer.hurtTime != 0){
 
+                        Minecraft.thePlayer.motionX *= -1F;
+                        Minecraft.thePlayer.motionZ *= -1F;
+
+                    }
             }catch (NullPointerException e) {
 
             }

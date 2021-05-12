@@ -36,7 +36,7 @@ public class Cheststealer extends Module {
     public void setup() {
         super.setup();
         final ArrayList<SettingsItem> items = new ArrayList<>();
-        items.add(new SettingsItem("Delay", 0, 100, 10, ""));
+        items.add(new SettingsItem("Delay", 0, 500, 10, ""));
 	Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 

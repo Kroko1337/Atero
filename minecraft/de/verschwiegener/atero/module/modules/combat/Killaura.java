@@ -67,7 +67,7 @@ public class Killaura extends Module {
     public boolean hasTarget() {
 	return target != null || preaimtarget != null;
     }
-
+	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
 	final float RotationPitch2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 94, 97);
 	final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 92, RotationPitch2);
@@ -111,7 +111,7 @@ public class Killaura extends Module {
 	return true;
     }
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     private boolean canEntityBeSeen(final Entity entityIn) {
 	if (!Minecraft.thePlayer.canEntityBeSeen(entityIn))
 	    return mc.theWorld.rayTraceBlocks(new Vec3(Minecraft.thePlayer.posX,
@@ -121,7 +121,7 @@ public class Killaura extends Module {
 	    return true;
     }
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public EntityLivingBase getClosestPlayer(final double distance) {
 	double d0 = distance;
 	EntityLivingBase entityplayer = null;
@@ -157,7 +157,7 @@ public class Killaura extends Module {
      * return new float[] { yaw, pitch }; }
      */
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public EntityLivingBase getHighestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -172,7 +172,7 @@ public class Killaura extends Module {
 	return target;
     }
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public EntityLivingBase getLowestPlayer(final double distance) {
 	EntityLivingBase target = null;
 	for (final Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
@@ -187,7 +187,7 @@ public class Killaura extends Module {
 	return target;
     }
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     private MovingObjectPosition getTarget(final float partialTicks, final double distance) {
 	Entity pointedEntity;
 	MovingObjectPosition omo = mc.renderViewEntity.rayTrace(distance, partialTicks);
@@ -275,7 +275,7 @@ public class Killaura extends Module {
     }
 
     @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onEvent(final EventTest event) {
 	if (setting.getItemByName("CorrectMM").isState()
 		&& (target != null || preaimtarget != null)) {
@@ -285,7 +285,7 @@ public class Killaura extends Module {
     }
 
     @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onPre(final EventPreMotionUpdate pre) {
 	if ((target != null)) {
 	    facing = Killaura.Intavee(Minecraft.thePlayer, target);
@@ -309,7 +309,7 @@ public class Killaura extends Module {
 
 
     @Override
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void onUpdate() {
 	super.onUpdate();
 		if (target == null) {
@@ -406,7 +406,7 @@ public class Killaura extends Module {
 	return setting;
     }
 
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     private int random(final int min, final int max) {
 	final Random random = new Random();
 	int zufallZahl = random.nextInt(max);
@@ -417,7 +417,7 @@ public class Killaura extends Module {
     }
 
     @Override
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void setup() {
 	super.setup();
 	final ArrayList<SettingsItem> items = new ArrayList<>();

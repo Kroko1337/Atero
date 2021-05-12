@@ -60,7 +60,7 @@ public class Scaffold extends Module {
 	super("Scaffold", "Scaffold", Keyboard.KEY_NONE, Category.World);
 	instance = this;
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public void setup() {
 	final ArrayList<SettingsItem> items = new ArrayList<>();
 	items.add(new SettingsItem("Delay", 0, 500, 0, ""));
@@ -76,7 +76,7 @@ public class Scaffold extends Module {
 	items.add(new SettingsItem("SameY", false, ""));
 	Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     @Override
     public void onEnable() {
 	super.onEnable();
@@ -122,7 +122,7 @@ public class Scaffold extends Module {
 	    }
 	}
     }
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     @EventTarget
     public void onPost(EventPostMotionUpdate post) {
 	if (isEnabled()) {

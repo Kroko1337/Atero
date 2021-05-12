@@ -83,6 +83,7 @@ public class Management {
 	GIFLoader = new GifLoader();
 	GIFmgr = new GIFManager();
 	
+	//GIFmgr.addGif(new GIF("dad", "dad"));
 	GIFmgr.addGif(new GIF("test", "test"));
 	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();

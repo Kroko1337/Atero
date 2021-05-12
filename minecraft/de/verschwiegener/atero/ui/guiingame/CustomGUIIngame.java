@@ -71,10 +71,10 @@ public class CustomGUIIngame {
 	if (mc.currentScreen == null) {
 	    // Render Tabgui Blur shader
 	    try {
-		ScaledResolution sr = new ScaledResolution(mc);
-		shader.prepareRender();
-		ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
-		shader.renderShader(sr);
+	//	ScaledResolution sr = new ScaledResolution(mc);
+		//shader.prepareRender();
+	//	ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
+		//shader.renderShader(sr);
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
