@@ -10,51 +10,50 @@ import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
 public class ComponentCheckBox extends Component {
-	
 
-    	private final Fontrenderer fontRenderer;
-    
-	public ComponentCheckBox(String name, int y, PanelExtendet pe) {
-		super(name, y, pe);
-		fontRenderer = Management.instance.fontrenderer;
+    private final Fontrenderer fontRenderer;
+
+    public ComponentCheckBox(String name, int y, PanelExtendet pe) {
+	super(name, y, pe);
+	fontRenderer = Management.instance.fontrenderer;
+    }
+
+    @Override
+    public void drawComponent(int x, int y) {
+	super.drawComponent(x, y);
+	if (!isParentextendet() && isValid()) {
+	    fontRenderer.drawString(getName(), (getComponentX() + 3) * 2,
+		    (getComponentY()) * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+	    if (Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName()).getItemByName(getName())
+		    .isState()) {
+		RenderUtil.fillRect(getXPos() - 12, getComponentY() - 5, 9, 9, Management.instance.colorBlue);
+	    } else {
+		RenderUtil.fillRect(getXPos() - 12, getComponentY() - 5, 9, 9, Management.instance.colorGray);
+	    }
 	}
-	
-	
-	@Override
-	public void drawComponent(int x, int y) {
-		super.drawComponent(x, y);
-		if(!isParentextendet() && isValid()) {
-		    fontRenderer.drawString(getName(),
-					(getComponentX() + 3) * 2,
-					(getComponentY()) * 2 - getPanelExtendet().getPanel().getPanelYOffset(),
-					Color.white.getRGB());
-			if (Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName()).getItemByName(getName())
-					.isState()) {
-				RenderUtil.fillRect(getXPos() - 12, getComponentY() - 5, 9, 9, Management.instance.colorBlue);
-			} else {
-				RenderUtil.fillRect(getXPos() - 12, getComponentY() - 5, 9, 9, Management.instance.colorGray);
-			}
+    }
+
+    @Override
+    public void onMouseClicked(int x, int y, int button) {
+	super.onMouseClicked(x, y, button);
+	if (isValid()) {
+	    if (button == 0) {
+		if (isCheckboxHovered(x, y)) {
+		    setChange(true);
+		    Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName())
+			    .getItemByName(getName()).toggleState();
 		}
+	    }
 	}
-	@Override
-	public void onMouseClicked(int x, int y, int button) {
-		super.onMouseClicked(x, y, button);
-		if(isValid()) {
-		    if (button == 0) {
-			    if (isCheckboxHovered(x, y)) {
-				setChange(true);
-				Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName())
-					.getItemByName(getName()).toggleState();
-			    }
-			}
-		}
-	}
-	public int getXPos() {
-		return getComponentX() + getPanelExtendet().getAnimationX();
-	}
-	
-	private boolean isCheckboxHovered(int mouseX, int mouseY) {
-		return mouseX > (getXPos() - 15) && mouseX < (getXPos() - 3) && mouseY > (getComponentY() - 7) && mouseY < (getComponentY() + 4);
-	}
-	
+    }
+
+    public int getXPos() {
+	return getComponentX() + getPanelExtendet().getAnimationX();
+    }
+
+    private boolean isCheckboxHovered(int mouseX, int mouseY) {
+	return mouseX > (getXPos() - 15) && mouseX < (getXPos() - 3) && mouseY > (getComponentY() - 7)
+		&& mouseY < (getComponentY() + 4);
+    }
+
 }

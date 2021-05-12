@@ -1537,6 +1537,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	    }
 	}
     }
+    
 
     /**
      * Toggles fullscreen mode.

@@ -67,7 +67,11 @@ public class Scaffold extends Module {
 	items.add(new SettingsItem("Safewalk", false, ""));
 	items.add(new SettingsItem("Sprint", false, ""));
 	items.add(new SettingsItem("Sneak", false, ""));
-	items.add(new SettingsItem("Silent", true, ""));
+	items.add(new SettingsItem("Silent", true, "SilentModes"));
+	ArrayList<String> modes = new ArrayList<>();
+	modes.add("Switch");
+	modes.add("Spoof");
+	items.add(new SettingsItem("SilentModes", modes, "Switch", "", ""));
 	items.add(new SettingsItem("Down", false, ""));
 	items.add(new SettingsItem("SameY", false, ""));
 	Management.instance.settingsmgr.addSetting(new Setting(this, items));
@@ -83,6 +87,7 @@ public class Scaffold extends Module {
     }
     public void onDisable() {
 	super.onDisable();
+	 mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
     }
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     @EventTarget
@@ -142,18 +147,41 @@ public class Scaffold extends Module {
 		float z = (float) (mvp.hitVec.zCoord - blockData.getPos().getZ());
 
 		int currentslot = mc.thePlayer.inventory.currentItem;
+		int blockSlot = 0;
+		String mode = setting.getItemByName("SilentModes").getCurrent();
 		if (setting.getItemByName("Silent").isState()) {
-		    int blockSlot = getBlockSlot();
-		    mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(blockSlot));
-		    mc.thePlayer.inventory.currentItem = blockSlot;
-		    mc.playerController.updateController();
+		    
+		    switch (mode) {
+		    case "Switch":
+			blockSlot = getBlockSlot();
+			mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(blockSlot));
+			mc.thePlayer.inventory.currentItem = blockSlot;
+			mc.playerController.updateController();
+			break;
+
+		    case "Spoof":
+			if (blockSlot != -1) {
+		            if (mc.thePlayer.inventory.getStackInSlot(blockSlot) == null || !(mc.thePlayer.inventory.getStackInSlot(blockSlot).getItem() instanceof ItemBlock))
+		        	blockSlot = -1;
+		        }
+		        if (blockSlot == -1) {
+		            blockSlot = getBlockSlot();
+		            mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(blockSlot));
+		        }
+		        
+		        Minecraft.getMinecraft().rightClickMouse(blockSlot);
+		        
+			break;
+		    }
 		}
 		
-		if (mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(mc.thePlayer.inventory.getCurrentItem().getItem())) {
-		    if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld,
-	                        mc.thePlayer.getHeldItem(), blockData.getPos(), blockData.getFacing(), mvp.hitVec)) {
-	                    mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
-		    }
+		if((setting.getItemByName("Silent").isState() && mode == "Switch") || !setting.getItemByName("Silent").isState()) {
+		    if (mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(mc.thePlayer.inventory.getCurrentItem().getItem())) {
+			    if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld,
+		                        mc.thePlayer.getHeldItem(), mvp.getBlockPos(), blockData.getFacing(), mvp.hitVec)) {
+		                    mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+			    }
+			}
 		}
 		
 		if(setting.getItemByName("Sneak").isState()) {

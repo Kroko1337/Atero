@@ -69,6 +69,12 @@ public class ComponentCombobox extends Component {
 	    }
 	}
     }
+    public void collapse() {
+	if(extendet) {
+	    extendet = false;
+	    getPanelExtendet().collapsePanelByYOffset(12 * getItem().getModes().size(), getName());
+	}
+    }
 
     public void onMouseReleased(int mouseX, int mouseY, int state) {
 	super.onMouseReleased(mouseX, mouseY, state);

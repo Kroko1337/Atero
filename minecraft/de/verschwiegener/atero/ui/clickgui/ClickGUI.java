@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
+import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
@@ -17,7 +19,7 @@ import net.minecraft.client.gui.GuiTextField;
 public class ClickGUI extends GuiScreen {
 
     private final ArrayList<ClickGUIPanel> panels = new ArrayList<>();
-    private ArrayList<Setting> results = new ArrayList<>();
+    private ArrayList<Module> results = new ArrayList<>();
     private CustomGuiTextField searchBar;
     private Color colorSearch;
     private TimeUtils colorTimer = new TimeUtils();
@@ -130,20 +132,15 @@ public class ClickGUI extends GuiScreen {
 	return panels.stream().filter(module -> x > module.getX() && x < module.getX() + module.getWidth()
 		&& y > module.getY() && y < module.getY() + module.getPanelYOffset()).findFirst().orElse(null);
     }
-    public ArrayList<Setting> getResults() {
-	return results;
-    }
     
-    public Setting getSettingByName(final String name) {
+    public Module getSettingByName(final String name) {
 	return results.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
 		.findFirst().orElse(null);
     }
 
     @Override
     protected void keyTyped(final char typedChar, final int keyCode) throws IOException {
-	//if(this.searchBar.getVisible()) {
 	super.keyTyped(typedChar, keyCode);
-	//}
 	if(searchBar.getVisible()) {
 	    
 	}
@@ -152,7 +149,7 @@ public class ClickGUI extends GuiScreen {
 	}
 	panels.forEach(panel -> panel.keyTyped(typedChar, keyCode));
 	switch (keyCode) {
-	case 28:
+	case Keyboard.KEY_RETURN:
 	    if(this.searchBar.isFocused()) {
 		 animateSearchBar(1);
 		 this.searchBar.setFocused(false);
@@ -167,12 +164,12 @@ public class ClickGUI extends GuiScreen {
 	    }
 	    
 	    break;
-	case 15:
+	case Keyboard.KEY_TAB:
 	    this.searchBar.setText("");
 	    this.searchBar.setFocused(true);
 	    animateSearchBar(2);
 	    break;
-	case 1:
+	case Keyboard.KEY_ESCAPE:
 	    if(this.searchBar.getVisible()) {
 		animateSearchBar(1);
 	    }

@@ -30,6 +30,7 @@ public class ComponentSlider extends Component {
     public ComponentSlider(String name, int y, PanelExtendet pe) {
 	super(name, y, pe);
 	this.fontRenderer = Management.instance.fontrenderer;
+	currentValue = df.format(getItem().getCurrentValue());
     }
 
     @Override
@@ -48,7 +49,6 @@ public class ComponentSlider extends Component {
 	    int textX = (getComponentX() + getPanelExtendet().getWidth()) * 2 - 50;
 	    if (textFieldSelected) {
 		try {
-		    currentValue = df.format(getItem().getCurrentValue());
 		    String split1 = currentValue.substring(0, textFieldEditPosition);
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
 		    
@@ -99,7 +99,7 @@ public class ComponentSlider extends Component {
 	    count = 0;
 	}
 	if(draw) {
-	    RenderUtil.fillRect(x + 1, getComponentY() - fontRenderer.getBaseStringHeight() + 6, 0.5, fontRenderer.getBaseStringHeight(), Color.WHITE);
+	    RenderUtil.fillRect(x, getComponentY() - fontRenderer.getBaseStringHeight() + 6, 0.5, fontRenderer.getBaseStringHeight(), Color.WHITE);
 	}
     }
 

@@ -3,6 +3,7 @@ package de.verschwiegener.atero.ui.clickgui.component;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.settings.SettingsItem.Category;
+import de.verschwiegener.atero.ui.clickgui.component.components.ComponentCombobox;
 
 public class Component {
 	
@@ -72,6 +73,10 @@ public class Component {
 			c.parentextendet = true;
 			pe.collapsePanelByItemName(c.getName());
 			c.setValid(false);
+			if(c instanceof ComponentCombobox) {
+			    ComponentCombobox combobox = (ComponentCombobox) c;
+			    combobox.collapse();
+			}
 		    }
 		}
 	    }

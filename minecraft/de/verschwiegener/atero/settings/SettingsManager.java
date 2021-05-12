@@ -2,6 +2,9 @@ package de.verschwiegener.atero.settings;
 
 import java.util.ArrayList;
 
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.Module;
+
 public class SettingsManager {
 
     ArrayList<Setting> settings = new ArrayList<>();
@@ -10,11 +13,27 @@ public class SettingsManager {
 	settings.add(setting);
     }
 
-    public ArrayList<Setting> getSearchResult(final String search) {
-	final ArrayList<Setting> result = new ArrayList<>();
+    public ArrayList<Module> getSearchResult(final String search) {
+	final ArrayList<Module> result = new ArrayList<>();
 	for (final Setting s : settings) {
-	    if (s.getName().toLowerCase().startsWith(search.toLowerCase()) || (s.getItemByStartsWith(search) != null) || (s.getItemByContains(search) != null)) {
-		result.add(s);
+	    if(s.getName().equalsIgnoreCase(search)) {
+		result.add(s.getModule());
+		break;
+	    }
+	    if(s.getItemByStartsWith(search) != null) {
+		result.add(s.getModule());
+		break;
+	    }
+	    if(s.getItemByContains(search) != null) {
+		result.add(s.getModule());
+		break;
+	    }
+	}
+	for(Module m : Management.instance.modulemgr.modules) {
+	    if(m.getName().equalsIgnoreCase(search)) {
+		if(!result.contains(m)) {
+		    result.add(m);
+		}
 	    }
 	}
 	return result;
