@@ -41,6 +41,8 @@ import net.minecraft.item.ItemTool;
 
 public class CustomGUIIngame {
 
+    private static Minecraft mc = Minecraft.getMinecraft();
+    public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
 
     public static void drawArrayList() {
 	Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
@@ -108,44 +110,43 @@ public class CustomGUIIngame {
 
     public static void renderTargetHud(ScaledResolution scaledResolution) {
 
-	
 	Fontrenderer fontRenderer = Management.instance.fontrenderer;
 	EntityLivingBase target = Killaura.instance.getTarget();
-	
-        if (target != null && target instanceof EntityPlayer
-                || target instanceof EntityAnimal) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
-            RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
-            RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
-            RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
-            RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
-            RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-            fontRenderer.drawString(target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
+	if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal) {
+	    GlStateManager.pushMatrix();
+	    GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F,
+		    0);
+	    RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
+	    RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
+	    RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
+	    RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
+	    RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-            renderPlayer(25, 55, 23, target);
+	    fontRenderer.drawString(target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
 
-            float healthProcent = target.getHealth() / target.getMaxHealth();
-            RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
-                    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-            fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
-                    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
+	    renderPlayer(25, 55, 23, target);
 
-            double winChance = 0;
+	    float healthProcent = target.getHealth() / target.getMaxHealth();
+	    RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
+		    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
+	    fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
+		    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
-            double TargetStrength = getWeaponStrength(target.getHeldItem());
-            winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
-            winChance += getProtection(mc.thePlayer) - getProtection(target);
-            winChance += mc.thePlayer.getHealth() - (target).getHealth();
+	    double winChance = 0;
 
-            String message = winChance == 0 ? "You could win"
-                    : winChance < 0 ? "You could lose" : "You are going to win";
-            fontRenderer.drawString(message,
-                    97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
-                    Util.getColor(255, 240, 0, 255));
-            GlStateManager.popMatrix();
-        }
+	    double TargetStrength = getWeaponStrength(target.getHeldItem());
+	    winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
+	    winChance += getProtection(mc.thePlayer) - getProtection(target);
+	    winChance += mc.thePlayer.getHealth() - (target).getHealth();
+
+	    String message = winChance == 0 ? "You could win"
+		    : winChance < 0 ? "You could lose" : "You are going to win";
+	    fontRenderer.drawString(message,
+		    97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
+		    Util.getColor(255, 240, 0, 255));
+	    GlStateManager.popMatrix();
+	}
     }
 
     private static double getProtection(EntityLivingBase target) {
@@ -216,20 +217,23 @@ public class CustomGUIIngame {
 	GlStateManager.disableTexture2D();
 	GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
-	public static void drawWatermark() {
-		final Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("WaterMarkFont").getFontrenderer();
-		int xP = 10;
-		int yP = 5;
-		int widthP = (int) ((int) fontRenderer.getStringWidth("atero") );
-		int heightP = (int) fontRenderer.getStringHeight("atero") / 2;
-		fontRenderer.drawString("atero", xP, yP, 0x292929);
-		drawImage((int) (xP ), (int) (yP + fontRenderer.getStringHeight("atero")), widthP - 80, heightP, new ResourceLocation("atero/assets/arrow.png"));
-	}
-	private static void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
-		mc.getTextureManager().bindTexture(resourceLocation);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	}
+
+    public static void drawWatermark() {
+	final Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("WaterMarkFont").getFontrenderer();
+	int xP = 10;
+	int yP = 5;
+	int widthP = (int) ((int) fontRenderer.getStringWidth("atero"));
+	int heightP = (int) fontRenderer.getStringHeight("atero") / 2;
+	fontRenderer.drawString("atero", xP, yP, 0x292929);
+	drawImage((int) (xP), (int) (yP + fontRenderer.getStringHeight("atero")), widthP - 80, heightP,
+		new ResourceLocation("atero/assets/arrow.png"));
+    }
+
+    private static void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
+	mc.getTextureManager().bindTexture(resourceLocation);
+	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
 
 }

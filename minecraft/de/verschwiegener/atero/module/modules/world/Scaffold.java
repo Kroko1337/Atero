@@ -167,6 +167,7 @@ public class Scaffold extends Module {
 		        if (blockSlot == -1) {
 		            blockSlot = getBlockSlot();
 		            mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(blockSlot));
+		            
 		        }
 		        
 		        Minecraft.getMinecraft().rightClickMouse(blockSlot);
