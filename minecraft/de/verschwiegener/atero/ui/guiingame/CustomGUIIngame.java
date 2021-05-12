@@ -2,8 +2,8 @@ package de.verschwiegener.atero.ui.guiingame;
 
 import java.awt.Color;
 
-import de.verschwiegener.atero.design.font.FontManager;
-import net.minecraft.util.ResourceLocation;
+import javax.swing.text.html.parser.Entity;
+
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -39,19 +39,9 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 
 public class CustomGUIIngame {
-	public static void drawWatermark() {
-		final Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("WaterMarkFont").getFontrenderer();
-		int xP = 10;
-		int yP = 5;
-		int widthP = (int) ((int) fontRenderer.getStringWidth("atero") );
-		int heightP = (int) fontRenderer.getStringHeight("atero") / 2;
-		fontRenderer.drawString("atero", xP, yP, 0x292929);
-		drawImage((int) (xP ), (int) (yP + fontRenderer.getStringHeight("atero")), widthP - 80, heightP, new ResourceLocation("atero/assets/arrow.png"));
-	}
-    private static Minecraft mc = Minecraft.getMinecraft();
-    //public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
-//By Roko
 
+    private static Minecraft mc = Minecraft.getMinecraft();
+    public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
 
     public static void drawArrayList() {
 	Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
@@ -66,11 +56,10 @@ public class CustomGUIIngame {
 	ScaledResolution sr = new ScaledResolution(mc);
 	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
 	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-	    	//Gui.drawRect(sr.getScaledWidth() - fontRenderer.getStringWidth(mm.modules.get(i).getName()), yoffset, sr.getScaledWidth(), yoffset + fontRenderer.getBaseStringHeight() * 2, - 1);
 		fontRenderer.drawString(mm.modules.get(i).getName(),
 			((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
 				- xoffset,
-			yoffset, Color.BLUE.getRGB());
+			yoffset, Color.black.getRGB());
 		yoffset += fontRenderer.getBaseStringHeight() * 2;
 
 	    }
@@ -82,9 +71,9 @@ public class CustomGUIIngame {
 	    // Render Tabgui Blur shader
 	    try {
 		ScaledResolution sr = new ScaledResolution(mc);
-		//shader.prepareRender();
-		//ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
-		//shader.renderShader(sr);
+		shader.prepareRender();
+		ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
+		shader.renderShader(sr);
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -118,20 +107,14 @@ public class CustomGUIIngame {
 	Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0.0F, 0.0F, width, height, width, height);
     }
 
-    private static void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
-		mc.getTextureManager().bindTexture(resourceLocation);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	}
-
     public static void renderTargetHud(ScaledResolution scaledResolution) {
 
 	
 	Fontrenderer fontRenderer = Management.instance.fontrenderer;
+	EntityLivingBase target = Killaura.instance.getTarget();
 	
-        if (Killaura.target != null && Killaura.target instanceof EntityPlayer
-                || Killaura.target instanceof EntityAnimal) {
+        if (target != null && target instanceof EntityPlayer
+                || target instanceof EntityAnimal) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
             RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
@@ -140,22 +123,22 @@ public class CustomGUIIngame {
             RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
             RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-            fontRenderer.drawString(Killaura.target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
+            fontRenderer.drawString(target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
 
-            renderPlayer(25, 55, 23, Killaura.target);
+            renderPlayer(25, 55, 23, target);
 
-            float healthProcent = Killaura.target.getHealth() / Killaura.target.getMaxHealth();
+            float healthProcent = target.getHealth() / target.getMaxHealth();
             RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-            fontRenderer.drawString(String.valueOf(Math.round(Killaura.target.getHealth())), 175, 6F,
+            fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
             double winChance = 0;
 
-            double TargetStrength = getWeaponStrength(Killaura.target.getHeldItem());
+            double TargetStrength = getWeaponStrength(target.getHeldItem());
             winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
-            winChance += getProtection(mc.thePlayer) - getProtection(Killaura.target);
-            winChance += mc.thePlayer.getHealth() - (Killaura.target).getHealth();
+            winChance += getProtection(mc.thePlayer) - getProtection(target);
+            winChance += mc.thePlayer.getHealth() - (target).getHealth();
 
             String message = winChance == 0 ? "You could win"
                     : winChance < 0 ? "You could lose" : "You are going to win";
@@ -234,6 +217,5 @@ public class CustomGUIIngame {
 	GlStateManager.disableTexture2D();
 	GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
-
 
 }

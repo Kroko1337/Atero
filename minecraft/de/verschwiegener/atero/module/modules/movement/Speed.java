@@ -109,7 +109,7 @@ public class Speed extends Module {
 		    if (Minecraft.thePlayer.ticksExisted % 10 == 0) {
 			Minecraft.getMinecraft().timer.timerSpeed = 1;
 		    }
-		    if (Killaura.target != null) {
+		    if (Killaura.instance.getTarget() != null) {
 			Minecraft.getMinecraft().timer.timerSpeed = 1.0F;
 		    }
 		}

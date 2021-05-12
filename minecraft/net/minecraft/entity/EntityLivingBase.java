@@ -1,5 +1,6 @@
 package net.minecraft.entity;
 
+import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Maps;
@@ -1395,8 +1396,8 @@ public abstract class EntityLivingBase extends Entity {
 
 	if (this.isSprinting()) {
 	    float f;
-	    if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && (Killaura.target != null || Killaura.preaimtarget != null)) {
-		f = Killaura.getYaw() * 0.017453292F;
+	    if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && (Killaura.instance.hasTarget())) {
+		f = EventPreMotionUpdate.getInstance.getYaw() * 0.017453292F;
 	    } else {
 		f = this.rotationYaw * 0.017453292F;
 	    }

@@ -39,7 +39,8 @@ public class ModuleManager {
     }
 
     public Module getModulebyStartsWith(final String name) {
-	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase())).findFirst().orElse(null);
+	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase()))
+		.findFirst().orElse(null);
     }
 
     public ArrayList<Module> getModules() {
@@ -52,6 +53,14 @@ public class ModuleManager {
 		if (m.getKey() == key) {
 		    m.toggle();
 		}
+	    }
+	}
+    }
+
+    public void onRender() {
+	for (final Module m : modules) {
+	    if (m.isEnabled()) {
+		m.onRender();
 	    }
 	}
     }
