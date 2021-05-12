@@ -1,5 +1,7 @@
 package net.minecraft.network;
 
+import com.darkmagician6.eventapi.EventManager;
+import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -158,6 +160,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
 
     protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception
     {
+        EventReceivedPacket eventReceivedPacket = new EventReceivedPacket(p_channelRead0_2_);
+        EventManager.call(eventReceivedPacket);
+        if(eventReceivedPacket.isCancelled()) {
+            return;
+        }
         if (this.channel.isOpen())
         {
             try

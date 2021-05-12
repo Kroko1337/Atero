@@ -46,7 +46,12 @@ public abstract class Module {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
+	public void setEnabled(boolean enabled) {
+		Management.instance.fileManager.writeClientData();
+		this.enabled = enabled;
+	}
+
 	public void setKey(int key) {
 		this.key = key;
 	}
@@ -68,6 +73,7 @@ public abstract class Module {
 			onEnable();
 		else
 			onDisable();
+		Management.instance.fileManager.writeClientData();
 		Management.instance.modulechange = true;
 	}
 

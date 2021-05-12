@@ -3,11 +3,10 @@ package de.verschwiegener.atero;
 import java.awt.Color;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
+import de.LCA_MODZ.FileManager;
+import de.verschwiegener.atero.configsystem.ConfigManager;
 import org.lwjgl.input.Keyboard;
-
-import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
@@ -20,13 +19,10 @@ import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
 import de.verschwiegener.atero.module.ModuleManager;
-import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.proxy.ProxyManager;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.mainmenu.AccountManager;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;
 
 public class Management {
@@ -34,7 +30,7 @@ public class Management {
     public static Management instance = new Management();
 
     public final String CLIENT_NAME = "Atero";
-    public final String CLIENT_VERSION = "0.0.0.1";
+    public final String CLIENT_VERSION = "B2";
     public String selectedDesign = "AteroDesign";
 
     public Color colorBlue = new Color(0, 161, 249);
@@ -46,6 +42,7 @@ public class Management {
     public FontManager fontmgr;
     public SettingsManager settingsmgr;
     public ModuleManager modulemgr;
+    public ConfigManager configManager;
     public CommandManager commandmgr;
     public ClickGUI clickgui;
     public Fontrenderer fontrenderer;
@@ -57,6 +54,7 @@ public class Management {
     public GifLoader GIFLoader;
     public GIFManager GIFmgr;
     public FriendManager friendmgr;
+    public FileManager fileManager;
     public AccountManager accountmgr;
     
     public ExecutorService EXECUTOR_SERVICE;
@@ -77,15 +75,20 @@ public class Management {
 	GIFLoader = new GifLoader();
 	GIFmgr = new GIFManager();
 	
-	GIFmgr.addGif(new GIF("TEst", "hero"));
+	GIFmgr.addGif(new GIF("test", "test"));
 	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
+	configManager = new ConfigManager();
 	accountmgr = new AccountManager();
 
+	fileManager = new FileManager();
+
 	clickgui = new ClickGUI();
+	fileManager.setupClientEnvironment();
+	fileManager.readClientData();
 
     }
 

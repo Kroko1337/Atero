@@ -2,8 +2,14 @@ package de.verschwiegener.atero.module.modules.combat;
 
 
 
+import com.darkmagician6.eventapi.EventTarget;
+import com.darkmagician6.eventapi.events.callables.EventCancellable;
+import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
+import de.verschwiegener.atero.util.Util;
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -28,15 +34,21 @@ public class Velocity extends Module {
         super.onDisable();
     }
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    public void onUpdate() {
+    @EventTarget
+    public void onEvent(EventReceivedPacket ppe) {
         if (this.isEnabled()) {
-            super.onUpdate();
             try{
-                //XD
-            if (Minecraft.thePlayer.hurtTime != 0) {
-                Minecraft.thePlayer.motionX = 0F;
-                Minecraft.thePlayer.motionZ = 0F;
-            }
+                Packet p = ppe.getPacket();
+                if (p instanceof S12PacketEntityVelocity) {
+                    S12PacketEntityVelocity packet = (S12PacketEntityVelocity) p;
+                    if (packet.getEntityID() == Minecraft.thePlayer.getEntityId())
+                        ppe.setCancelled(true);
+                    System.out.println("ppe.setCancelled(true)");
+                }
+                if (p instanceof net.minecraft.network.play.server.S27PacketExplosion)
+                    ppe.setCancelled(true);
+
+
             }catch (NullPointerException e) {
 
             }

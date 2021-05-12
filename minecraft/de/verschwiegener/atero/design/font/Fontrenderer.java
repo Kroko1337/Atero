@@ -151,7 +151,7 @@ public class Fontrenderer {
 	drawString(text, x, y, color);
     }
 
-    public int gerStringHeight(final String text) {
+    public int getStringHeight(final String text) {
 	return unicodefont.getHeight(text) / 2;
     }
 

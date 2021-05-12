@@ -50,7 +50,15 @@ public class SettingsItem {
 	public void toggleState() {
 		state = !state;
 	}
-	
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public void setChild(String child) {
+		this.child = child;
+	}
+
 	public float getCurrentValue() {
 		return currentValue;
 	}

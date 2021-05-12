@@ -1137,7 +1137,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			    (float) this.gameSettings.limitFramerate == GameSettings.Options.FRAMERATE_LIMIT
 				    .getValueMax() ? "inf" : Integer.valueOf(this.gameSettings.limitFramerate),
 			    this.gameSettings.enableVsync ? " vsync" : "",
-			    this.gameSettings.fancyGraphics ? "" : " fast",
+			    this.gameSettings.fancyGraphics ? "" : " fancy",
 			    this.gameSettings.clouds == 0 ? ""
 				    : (this.gameSettings.clouds == 1 ? " fast-clouds" : " fancy-clouds"),
 			    OpenGlHelper.useVbo() ? " vbo" : "" });
@@ -1475,11 +1475,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     /**
      * Called when user clicked he's mouse right button (place)
      */
-    public void rightClickMouse() {
+
+	public void rightClickMouse() {
+		this.rightClickMouse(this.thePlayer.inventory.currentItem);
+	}
+
+    public void rightClickMouse(int slot) {
 	if (!this.playerController.func_181040_m()) {
 	    this.rightClickDelayTimer = 4;
 	    boolean flag = true;
-	    ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
+	    ItemStack itemstack = this.thePlayer.inventory.getStackInSlot(slot);
 
 	    if (this.objectMouseOver == null) {
 		logger.warn("Null returned as \'hitResult\', this shouldn\'t happen!");
@@ -1514,7 +1519,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 			}
 
 			if (itemstack.stackSize == 0) {
-			    this.thePlayer.inventory.mainInventory[this.thePlayer.inventory.currentItem] = null;
+			    this.thePlayer.inventory.mainInventory[slot] = null;
 			} else if (itemstack.stackSize != i || this.playerController.isInCreativeMode()) {
 			    this.entityRenderer.itemRenderer.resetEquippedProgress();
 			}
@@ -1523,7 +1528,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 	    }
 
 	    if (flag) {
-		ItemStack itemstack1 = this.thePlayer.inventory.getCurrentItem();
+		ItemStack itemstack1 = this.thePlayer.inventory.getStackInSlot(slot);
 
 		if (itemstack1 != null
 			&& this.playerController.sendUseItem(this.thePlayer, this.theWorld, itemstack1)) {

@@ -610,7 +610,7 @@ public class CustomChatTextField extends GuiTextField {
 		    widthoffset = fr.getStringWidth(getText());
 		}
 		System.out.println("Text: " + getText() + " Custom: " + text);
-		fr.drawString(AutoComplete.onAutoComplete(text), l + 27 + widthoffset, (i1 * 2) - 5, i);
+		//fr.drawString(AutoComplete.onAutoComplete(text), l + 27 + widthoffset, (i1 * 2) - 5, i);
                 
             }
 

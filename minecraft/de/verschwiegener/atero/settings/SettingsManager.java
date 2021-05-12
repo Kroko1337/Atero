@@ -20,7 +20,11 @@ public class SettingsManager {
 	return result;
     }
 
-    public Setting getSettingByName(final String name) {
+	public ArrayList<Setting> getSettings() {
+		return settings;
+	}
+
+	public Setting getSettingByName(final String name) {
 	return settings.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
 		.findFirst().orElse(null);
     }

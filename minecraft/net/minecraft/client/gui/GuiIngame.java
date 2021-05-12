@@ -210,6 +210,7 @@ public class GuiIngame extends Gui
             this.mc.mcProfiler.endSection();
         }
 
+        CustomGUIIngame.drawWatermark();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int i2 = i / 2 - 91;
 
@@ -354,7 +355,7 @@ public class GuiIngame extends Gui
             this.overlayPlayerList.updatePlayerList(true);
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
         }
-        
+
         CustomGUIIngame.drawArrayList();
         CustomGUIIngame.drawMusikTab();
         CustomGUIIngame.renderTargetHud(scaledresolution);
