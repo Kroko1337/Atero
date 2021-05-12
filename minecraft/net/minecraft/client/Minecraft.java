@@ -1002,6 +1002,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
     public void shutdownMinecraftApplet() {
 	try {
+	    
+	    Management.instance.stop();
+	    
 	    this.stream.shutdownStream();
 	    logger.info("Stopping!");
 

@@ -106,8 +106,8 @@ public class ClickGUIPanel {
 	RenderUtil.fillRect(x, y, width, animationHeight, Management.instance.colorBlack);
 	if(drawCircle) {
 	    GL11.glEnable(GL11.GL_SCISSOR_TEST);
-	    final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
-	    final int scaleFactor = scale.getScaleFactor();
+	    //final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
+	    final int scaleFactor = 2;
 	    GL11.glScissor((x) * scaleFactor, (((y + 15) * scaleFactor) - Minecraft.getMinecraft().displayHeight) /-1, width * scaleFactor, 15 * scaleFactor);
 	    RenderUtil.drawCircle(x - circleX, y - circleY, circleAnimationDiameter, new Color(48, 48, 48), isLongPressed);
 	    GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -121,6 +121,9 @@ public class ClickGUIPanel {
 
     public int getAnimationheight() {
 	return animationHeight;
+    }
+    public boolean isExtended() {
+	return (animationHeight == yOffset);
     }
 
     public ClickGUIButton getButtonByPosition(final ClickGUIPanel p, final int x, final int y) {
@@ -276,6 +279,22 @@ public class ClickGUIPanel {
 
     public void setState(final int state) {
 	this.state = state;
+    }
+    public void setX(int x) {
+	this.x = x;
+    }
+    public void setY(int y) {
+	this.y = y;
+    }
+
+    public void setExtended(boolean extend) {
+	if (extend) {
+	    animationHeight = yOffset;
+	    state = 1;
+	    System.out.println("Extendet: " + pExtendet);
+	    //pExtendet.setState(2);
+	    //pExtendet.setAnimate(false);
+	}
     }
 
 }

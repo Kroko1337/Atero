@@ -340,12 +340,11 @@ public class EntityPlayerSP extends AbstractClientPlayer
      * Sends a chat message from the player. Args: chatMessage
      */
     public void sendChatMessage(String message) {
-    	if(message.startsWith(".")) {
-    		Management.instance.commandmgr.onCommand(message);
-    		Management.instance.fileManager.writeClientData();
-    	}else {
-    		this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
-    	}
+	if (message.startsWith(".")) {
+	    Management.instance.commandmgr.onCommand(message);
+	} else {
+	    this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+	}
     }
 
     /**

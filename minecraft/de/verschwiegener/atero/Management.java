@@ -1,10 +1,11 @@
 package de.verschwiegener.atero;
 
 import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.LCA_MODZ.FileManager;
 import de.verschwiegener.atero.configsystem.ConfigManager;
 import org.lwjgl.input.Keyboard;
 
@@ -18,11 +19,14 @@ import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
+import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.proxy.ProxyManager;
 import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
+import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.util.account.AccountManager;
+import de.verschwiegener.atero.util.files.FileManager;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;
@@ -38,6 +42,8 @@ public class Management {
     public Color colorBlue = new Color(0, 161, 249);
     public Color colorBlack = new Color(28, 28, 28);
     public Color colorGray = new Color(45, 45, 45);
+    
+    public File CLIENT_DIRECTORY = new File("Atero");
 
     public boolean modulechange;
 
@@ -89,11 +95,59 @@ public class Management {
 	fileManager = new FileManager();
 
 	clickgui = new ClickGUI();
-	fileManager.setupClientEnvironment();
-	fileManager.readClientData();
+	
+	//Load Modules
+	try {
+	    ArrayList<Object[]> modulevalues = fileManager.loadValues(new String[] {"Name", "Enable", "Key"}, CLIENT_DIRECTORY, "Modules");
+	    System.out.println("ModuleValue: " + modulevalues.size());
+	    for(Object[] object : modulevalues) {
+		Module m = modulemgr.getModuleByName((String) object[0]);
+		m.setEnabled((boolean) object[1]);
+		m.setKey((int) object[2]);
+	    }
+	}catch(Exception e) {
+	    e.printStackTrace();
+	}
+	//Load ClickGUI
+	try {
+	    ArrayList<Object[]> clickguivalues = fileManager.loadValues(new String[] { "Name", "XPOS", "YPos", "Extended" }, CLIENT_DIRECTORY, "ClickGUI");
+	    for(Object[] object : clickguivalues) {
+		System.out.println("Name: " + object[0]);
+		ClickGUIPanel panel = clickgui.getPanelButtonByName((String) object[0]);
+		panel.setX((int) object[1]);
+		panel.setY((int) object[2]);
+		panel.setExtended((boolean) object[3]);
+	    }
+	}catch(Exception e) {
+	    e.printStackTrace();
+	}
 
     }
 
+    public void stop() {
+	
+	//Safe Modules
+	try {
+	    ArrayList<Object[]> modulevalues = new ArrayList<>();
+	    for (Module m : modulemgr.modules) {
+		modulevalues.add(new Object[] { m.getName(), m.isEnabled(), m.getKey() });
+	    }
+	    fileManager.saveValues(new String[] { "Name", "Enable", "Key" }, modulevalues, CLIENT_DIRECTORY, "Modules");
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	//Safe ClickGUI
+	try {
+	    ArrayList<Object[]> clickguivalue = new ArrayList<>();
+	    for(ClickGUIPanel panel : clickgui.getPanels()) {
+		clickguivalue.add(new Object[] {panel.getName(), panel.getX(), panel.getY(), panel.isExtended()});
+	    }
+	    fileManager.saveValues(new String[] { "Name", "XPOS", "YPos", "Extended" }, clickguivalue, CLIENT_DIRECTORY, "ClickGUI");
+	}catch(Exception e) {
+	    
+	}
+    }
+    
     public String getTitle() {
 	return CLIENT_NAME + " Version:" + CLIENT_VERSION;
     }
@@ -103,5 +157,6 @@ public class Management {
 	    modulemgr.onKey(key);
 	}
     }
+    
 
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
@@ -15,6 +16,7 @@ import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class ClickGUI extends GuiScreen {
 
@@ -127,10 +129,17 @@ public class ClickGUI extends GuiScreen {
 		}   
 	}
     }
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+    }
 
     public ClickGUIPanel getPanelButtonByPosition(final int x, final int y) {
 	return panels.stream().filter(module -> x > module.getX() && x < module.getX() + module.getWidth()
 		&& y > module.getY() && y < module.getY() + module.getPanelYOffset()).findFirst().orElse(null);
+    }
+    public ClickGUIPanel getPanelButtonByName(String name) {
+	return panels.stream().filter(module -> module.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
     
     public Module getSettingByName(final String name) {
@@ -260,6 +269,9 @@ public class ClickGUI extends GuiScreen {
 	for (final ClickGUIPanel p : panels) {
 	    p.onMouseReleased(mouseX, mouseY, state);
 	}
+    }
+    public ArrayList<ClickGUIPanel> getPanels() {
+	return panels;
     }
 
 }

@@ -1394,11 +1394,16 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     });
                     crashreportcategory.addCrashSectionCallable("Screen size", new Callable()
                     {
-                        private static final String __OBFID = "CL_00000951";
-                        public String call() throws Exception
-                        {
-                            return String.format("Scaled: (%d, %d). Absolute: (%d, %d). Scale factor of %d", new Object[] {Integer.valueOf(scaledresolution.getScaledWidth()), Integer.valueOf(scaledresolution.getScaledHeight()), Integer.valueOf(EntityRenderer.this.mc.displayWidth), Integer.valueOf(EntityRenderer.this.mc.displayHeight), Integer.valueOf(scaledresolution.getScaleFactor())});
-                        }
+			private static final String __OBFID = "CL_00000951";
+
+			public String call() throws Exception {
+			    return String.format("Scaled: (%d, %d). Absolute: (%d, %d). Scale factor of %d",
+				    new Object[] { Integer.valueOf(scaledresolution.getScaledWidth()),
+					    Integer.valueOf(scaledresolution.getScaledHeight()),
+					    Integer.valueOf(EntityRenderer.this.mc.displayWidth),
+					    Integer.valueOf(EntityRenderer.this.mc.displayHeight),
+					    Integer.valueOf(scaledresolution.getScaleFactor()) });
+			}
                     });
                     throw new ReportedException(crashreport);
                 }

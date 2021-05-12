@@ -82,8 +82,7 @@ public class AudioPanel extends GuiScreen {
 
     @Override
     public void handleMouseInput() throws IOException {
-	final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
-	final int scaleFactor = scale.getScaleFactor();
+	final int scaleFactor = 2;
 	// Scrolling
 	int wheelD = (Mouse.getEventDWheel() / 10);
 	int mouseY = Mouse.getEventY() / scaleFactor - 30;
@@ -117,8 +116,7 @@ public class AudioPanel extends GuiScreen {
 
 	// Main Scissor
 	GL11.glEnable(GL11.GL_SCISSOR_TEST);
-	final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
-	final int scaleFactor = scale.getScaleFactor();
+	final int scaleFactor = 2;
 	GL11.glScissor(x * scaleFactor, y * scaleFactor + 1, width * scaleFactor, height * scaleFactor);
 
 	// Draw Main rect

@@ -68,7 +68,11 @@ public class ModuleManager {
     public void onUpdate() {
 	for (final Module m : modules) {
 	    if (m.isEnabled()) {
-		m.onUpdate();
+		try {
+		    m.onUpdate();
+		}catch(Exception e) {
+		    
+		}
 	    }
 	}
     }
