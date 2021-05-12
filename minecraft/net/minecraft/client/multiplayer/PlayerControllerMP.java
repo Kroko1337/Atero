@@ -1,5 +1,6 @@
 package net.minecraft.client.multiplayer;
 
+import de.verschwiegener.atero.Management;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -372,14 +373,14 @@ public class PlayerControllerMP
     /**
      * Syncs the current player item with the server
      */
-    private void syncCurrentPlayItem()
-    {
-        int i = this.mc.thePlayer.inventory.currentItem;
+    private void syncCurrentPlayItem() {
+        if (!Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
+            int i = this.mc.thePlayer.inventory.currentItem;
 
-        if (i != this.currentPlayerItem)
-        {
-            this.currentPlayerItem = i;
-            this.netClientHandler.addToSendQueue(new C09PacketHeldItemChange(this.currentPlayerItem));
+            if (i != this.currentPlayerItem) {
+                this.currentPlayerItem = i;
+                this.netClientHandler.addToSendQueue(new C09PacketHeldItemChange(this.currentPlayerItem));
+            }
         }
     }
 

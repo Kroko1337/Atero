@@ -60,7 +60,7 @@ public class CustomGUIIngame {
 		fontRenderer.drawString(mm.modules.get(i).getName(),
 			((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
 				- xoffset,
-			yoffset, Color.black.getRGB());
+			yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
 		yoffset += fontRenderer.getBaseStringHeight() * 2;
 
 	    }

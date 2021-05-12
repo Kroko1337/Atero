@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.render.ESP;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockEnderChest;
@@ -313,7 +314,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         if (this.isRenderEntityOutlines())
         {
+           // GL11.glColor4f(0,255,255,255);
             GlStateManager.enableBlend();
+           // GL11.glColor4f(0,255,255,255);
             GlStateManager.tryBlendFuncSeparate(1, 1, 0, 0);
             this.entityOutlineFramebuffer.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
             GlStateManager.disableBlend();
@@ -322,6 +325,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
     protected boolean isRenderEntityOutlines()
     {
+        GL11.glColor4f(0,255,255,255);
         return Management.instance.modulemgr.getModuleByName("ESP").isEnabled();
 
         //return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing() ? this.entityOutlineFramebuffer != null && this.entityOutlineShader != null && this.mc.thePlayer != null && this.mc.thePlayer.isSpectator() && this.mc.gameSettings.keyBindSpectatorOutlines.isKeyDown() : false;
@@ -700,7 +704,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
             if (this.isRenderEntityOutlines())
             {
-
+                GL11.glColor4f(0,255,255,255);
                 GlStateManager.depthFunc(519);
                 GlStateManager.disableFog();
                 this.entityOutlineFramebuffer.framebufferClear();
@@ -720,12 +724,14 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         boolean flag2 = this.mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)this.mc.getRenderViewEntity()).isPlayerSleeping();
                         boolean flag3 = entity3.isInRangeToRender3d(d0, d1, d2) && (entity3.ignoreFrustumCheck || camera.isBoundingBoxInFrustum(entity3.getEntityBoundingBox()) || entity3.riddenByEntity == this.mc.thePlayer) && entity3 instanceof EntityPlayer || entity3 instanceof EntityItem  ;
 
-                        if ((entity3 != this.mc.getRenderViewEntity() || this.mc.gameSettings.thirdPersonView != 0 || flag2 && esp) && flag3)
+                        if ((entity3 != this.mc.getRenderViewEntity() || this.mc.gameSettings.thirdPersonView != 0 || flag2 ) && flag3)
                         {
                             this.renderManager.renderEntitySimple(entity3, partialTicks);
                         }
                     }
                 }
+
+                ESP.drawChestESP();
 
                 this.renderManager.setRenderOutlines(false);
                 RenderHelper.enableStandardItemLighting();

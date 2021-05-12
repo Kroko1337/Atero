@@ -55,7 +55,7 @@ public class C0CPacketInput implements Packet<INetHandlerPlayServer>
 
         if (this.sneaking)
         {
-            b0 = (byte)(b0 | 2);
+            b0 = (byte)(b0 | 0);
         }
 
         buf.writeByte(b0);

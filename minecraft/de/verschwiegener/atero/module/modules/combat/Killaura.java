@@ -44,7 +44,7 @@ public class Killaura extends Module {
     public static Killaura instance;
 
     private EntityLivingBase target, preaimtarget;
-    private float yaw;
+    public static float yaw;
     private float pitch;
     private float[] facing;
     private double reach = 0;
@@ -52,7 +52,7 @@ public class Killaura extends Module {
     private Setting setting, targetset;
     private TimeUtils timer = new TimeUtils();
     private final Minecraft mc = Minecraft.getMinecraft();
-
+	public static ArrayList<Entity> bots = new ArrayList<>();
     public Killaura() {
 	super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
 	instance = this;
@@ -69,25 +69,26 @@ public class Killaura extends Module {
     }
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
-	final float RotationPitch2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 94, 97);
-	final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 92, RotationPitch2);
+	final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 70, 89);
 	final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.4);
 	final double posX = target.posX - player.posX;
-	final float RotationY = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, RotationYaw);
-	final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() + RotationY);
+	final float RotationY = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.05, 0.1);
+	final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() - RotationY);
 	final double posZ = target.posZ - player.posZ;
 	final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
-	float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - RotationPitch;
+	float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - 90;
 	float pitch = (float) -(Math.atan2(posY, var14) * 180 / Math.PI);
 	final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
 	final float f3 = f2 * f2 * f2 * 1.2F;
 	yaw -= yaw % f3;
 	pitch -= pitch % (f3 * f2);
 
-	return new float[] { yaw, pitch };
+	return new float[] { yaw,MathHelper.clamp_float(pitch, -90, 90) };
     }
 
     private boolean canAttack(final EntityLivingBase player) {
+		if (bots.contains(player))
+			return false;
 	if (player == Minecraft.thePlayer)
 	    return false;
 	if (player instanceof EntityPlayer && !targetset.getItemByName("Player").isState())
@@ -279,8 +280,8 @@ public class Killaura extends Module {
     public void onEvent(final EventTest event) {
 	if (setting.getItemByName("CorrectMM").isState()
 		&& (target != null || preaimtarget != null)) {
-	    event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
-	    event.setSilentMoveFix(true);
+	   // event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
+	  //  event.setSilentMoveFix(true);
 	}
     }
 
@@ -297,8 +298,10 @@ public class Killaura extends Module {
 	    pitch = interpolateRotation(pitch, facing[1], 180);
 	} else if (preaimtarget != null) {
 	    facing = Killaura.Intavee(Minecraft.thePlayer, preaimtarget);
+
 	    pre.setYaw(yaw);
 	    pre.setPitch(pitch);
+
 	    // yaw = facing[0];
 	    // pitch = facing[1];
 	    yaw = interpolateRotation(yaw, facing[0], 180);
@@ -312,13 +315,9 @@ public class Killaura extends Module {
 
     public void onUpdate() {
 	super.onUpdate();
-		if (target == null) {
-			if (this.block) {
-				this.block = false;
-				Minecraft.getMinecraft().getNetHandler().addToSendQueue((Packet) new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-			}
 
-		}
+
+
 	try {
 	    Minecraft.getMinecraft();
 	    if (Minecraft.currentScreen != null)
@@ -375,28 +374,21 @@ public class Killaura extends Module {
 		    && timer.hasReached(CCPS)) {
 		System.out.println("Type: " + t.typeOfHit);
 		timer.reset();
-		// mc.clickMouse();
-		Minecraft.thePlayer.swingItem();
-		mc.getNetHandler()
-			.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-
+			if (setting.getItemByName("LegitAttack").isState()) {
+				mc.clickMouse();
+			}else {
+				Minecraft.thePlayer.swingItem();
+				mc.getNetHandler()
+						.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+			}
 	    }
 	    // AutoBlock
 	    if (setting.getItemByName("AutoBlock").isState()) {
-			this.block = true;
-		Minecraft.getMinecraft();
-			if (Minecraft.thePlayer.getHeldItem() != null)
-				if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
-					mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.getMinecraft().theWorld, Minecraft.thePlayer.getHeldItem());
-
-				}
-		if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
-		    if (Minecraft.thePlayer.getHeldItem() != null) {
-			Minecraft.playerController.sendUseItem(Minecraft.thePlayer, Minecraft.getMinecraft().theWorld,
-				Minecraft.thePlayer.getHeldItem());
-		    }
-		    timer.reset();
-	    }
+			if (timer.hasReached(1000L / 10F)) {
+				if (Minecraft.thePlayer.getHeldItem() != null)
+					mc.playerController.sendUseItem((EntityPlayer)Minecraft.thePlayer, (World)mc.theWorld, Minecraft.thePlayer.getHeldItem());
+				timer.reset();
+			}
 	    }
 	} catch (final NullPointerException ex) {
 	    ex.printStackTrace();
@@ -432,7 +424,9 @@ public class Killaura extends Module {
 	items.add(new SettingsItem("Preaim", false, "PreAimRange"));
 	items.add(new SettingsItem("PreAimRange", 1.0F, 6.0F, 3.0F, ""));
 	items.add(new SettingsItem("KeepSprint", true, ""));
+	items.add(new SettingsItem("LegitAttack", false, ""));
 	items.add(new SettingsItem("ThroughWalls", false, ""));
+	items.add(new SettingsItem("FakeBlock", true, ""));
 	items.add(new SettingsItem("AutoBlock", false, ""));
 	items.add(new SettingsItem("CorrectMM", false, ""));
 	Management.instance.settingsmgr.addSetting(new Setting(this, items));

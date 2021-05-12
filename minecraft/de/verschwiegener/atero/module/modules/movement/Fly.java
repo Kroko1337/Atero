@@ -3,6 +3,8 @@ package de.verschwiegener.atero.module.modules.movement;
 
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -31,14 +33,18 @@ public class Fly extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-
-            Minecraft.thePlayer.cameraYaw = 0.1f;
+           // Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
+        //    Minecraft.thePlayer.cameraYaw = 0.1f;
             if (Minecraft.thePlayer.onGround) {
                 Minecraft.thePlayer.jump();
             }
             Minecraft.thePlayer.capabilities.isFlying = true;
 
         }
+        if(Minecraft.getMinecraft().gameSettings.keyBindSprint.pressed){
+            HighJump.setSpeed(5);
+        }
     }
+
 
 }

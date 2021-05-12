@@ -27,7 +27,7 @@ public class SettingsManager {
 			result.add(s.getModule());
 			break;
 		    }
-		    if (item.getCategory() == Category.Combobox) {
+		    if (item.getCategory() == Category.COMBO_BOX) {
 			for (String mode : item.getModes()) {
 			    if (mode.startsWith(search)) {
 				result.add(s.getModule());

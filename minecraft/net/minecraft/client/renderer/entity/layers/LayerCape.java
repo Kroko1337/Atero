@@ -3,6 +3,7 @@ package net.minecraft.client.renderer.entity.layers;
 import java.awt.image.BufferedImage;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.cape.GIF;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,7 +27,8 @@ public class LayerCape implements LayerRenderer {
 
 	if(Management.instance.friendmgr.isFriend(entitylivingbaseIn.getName()) || entitylivingbaseIn == mc.thePlayer){
 	    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-	    mc.getTextureManager().bindTexture(Management.instance.GIFmgr.getGIFByName("test").getNext().getLocation());
+		GIF gif =  Management.instance.GIFmgr.getGIFByName(Management.instance.settingsmgr.getSettingByName("CapeManager").getItemByName("Cape").getCurrent());
+	    mc.getTextureManager().bindTexture(gif.getNext().getLocation());
 	    GlStateManager.pushMatrix();
 	    GlStateManager.translate(0.0F, 0.0F, 0.125F);
 	    final double d0 = entitylivingbaseIn.prevChasingPosX
@@ -74,7 +76,7 @@ public class LayerCape implements LayerRenderer {
 	    GlStateManager.rotate(f3 / 2.0F, 0.0F, 0.0F, 1.0F);
 	    GlStateManager.rotate(-f3 / 2.0F, 0.0F, 1.0F, 0.0F);
 	    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-	    final BufferedImage image = Management.instance.GIFmgr.getGIFByName("test").getNext().getImage();
+	    final BufferedImage image = gif.getNext().getImage();
 	    final float width = image.getWidth() * (12.0F / image.getWidth());
 	    final float height = image.getHeight() * (18.0F / image.getHeight());
 	    playerRenderer.getMainModel().renderCustomCape(0.0625F, (int) width, (int) height);

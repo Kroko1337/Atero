@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.verschwiegener.atero.configsystem.ConfigManager;
+
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.audio.Stream;
@@ -50,7 +50,7 @@ public class Management {
     public FontManager fontmgr;
     public SettingsManager settingsmgr;
     public ModuleManager modulemgr;
-    public ConfigManager configManager;
+
     public CommandManager commandmgr;
     public ClickGUI clickgui;
     public Fontrenderer fontrenderer;
@@ -83,14 +83,17 @@ public class Management {
 	GIFLoader = new GifLoader();
 	GIFmgr = new GIFManager();
 	
-	//GIFmgr.addGif(new GIF("dad", "dad"));
-	GIFmgr.addGif(new GIF("test", "test"));
+	GIFmgr.addGif(new GIF("dad", "dad"));
+	GIFmgr.addGif(new GIF("Hentai", "test"));
+	//GIFmgr.addGif(new GIF("Hero", "hero"));
+	GIFmgr.addGif(new GIF("Fire", "tenor"));
+	GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
-	configManager = new ConfigManager();
+
 	accountmgr = new AccountManager();
 
 	fileManager = new FileManager();
@@ -122,6 +125,8 @@ public class Management {
 	}catch(Exception e) {
 	    e.printStackTrace();
 	}
+
+	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
 
     }
 

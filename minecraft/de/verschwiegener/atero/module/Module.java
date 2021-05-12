@@ -3,12 +3,14 @@ package de.verschwiegener.atero.module;
 import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.Management;
+import net.minecraft.client.Minecraft;
 
 public abstract class Module {
 
 	Category category;
 	boolean enabled;
 	int key;
+	public final Minecraft mc = Minecraft.getMinecraft();
 
 	String name, description;
 

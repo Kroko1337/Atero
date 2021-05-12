@@ -62,15 +62,15 @@ public class MovementInputFromOptions extends MovementInput {
 	
 	//System.out.println("MoveSTrafe1: " + moveStrafe + " Forward1: " + moveForward);
 	
-	if(useCorrectMovement() && (moveForward != 0 || moveStrafe != 0) && timer.hasReached(100)) {
-	    timer.reset();
-	    mc.thePlayer.setSprinting(false);
-	    boolean last = testlast(moveForward, moveStrafe);
-	    System.out.println("Last: " + last);
-	    if(!last) {
-		testfix(moveForward, moveStrafe);
-	    }
-	}
+	//if(useCorrectMovement() && (moveForward != 0 || moveStrafe != 0) && timer.hasReached(100)) {
+	    //timer.reset();
+	   // mc.thePlayer.setSprinting(false);
+	    //boolean last = testlast(moveForward, moveStrafe);
+	    //System.out.println("Last: " + last);
+	    //if(!last) {
+		//testfix(moveForward, moveStrafe);
+	    //}
+	//}
 	//System.out.println("MoveSTrafe2: " + moveStrafe + " Forward2: " + moveForward);
         
 	//if (updatePlayerMovementState.isSilentMoveFix() && (moveForward != 0 || moveStrafe != 0)) {
@@ -90,7 +90,7 @@ public class MovementInputFromOptions extends MovementInput {
     }
     
     private boolean useCorrectMovement() {
-	return(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.getSetting().getItemByName("CorrectMM").isState() && Killaura.instance.getTarget() != null) || (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled());
+	return(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.getSetting().getItemByName("CorrectMM").isState() && Killaura.instance.getTarget() != null);
     }
     
     private boolean testlast(float forward, float strafe) {

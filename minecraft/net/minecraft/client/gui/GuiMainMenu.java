@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen;
 import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen2;
+import de.verschwiegener.atero.util.ColorPicker;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
@@ -514,6 +515,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         tessellator.draw();
     }
 
+    final ColorPicker colorPicker = new ColorPicker(ColorPicker.Type.QUAD);
+
     /**
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
@@ -530,30 +533,30 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         //this.drawGradientRect(0, 0, this.width, this.height, -2130706433, 16777215);
         //this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
         //this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
-        
+
         GlStateManager.disableTexture2D();
         //GlStateManager.enableBlend();
         //GlStateManager.disableAlpha();
         //GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         //GlStateManager.shadeModel(7425);
-       // GlStateManager.shadeModel(7424);
+        // GlStateManager.shadeModel(7424);
         //GlStateManager.disableBlend();
         //GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
         //GlStateManager.pushMatrix();
-        
+
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         RenderUtil.drawBackround(width, height);
         //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.fontRenderer.drawString("ATERO", j * 2 + (fontRenderer.getStringWidth2("Atero") - 20), k * 2, Color.WHITE.getRGB());
 
-        
+
         //GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);
         //GlStateManager.popMatrix();
         //GlStateManager.pushMatrix();
         //GlStateManager.disableTexture2D();
-        
+
         String s = "Minecraft 1.8.8";
 
         if (this.mc.isDemo())
@@ -571,6 +574,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.drawString(this.fontRendererObj, this.openGLWarning1, this.field_92022_t, this.field_92021_u, -1);
             this.drawString(this.fontRendererObj, this.openGLWarning2, (this.width - this.field_92024_r) / 2, ((GuiButton)this.buttonList.get(0)).yPosition - 12, -1);
         }
+       // colorPicker.draw(5,5,50,50, mouseX, mouseY, colorPicker.getHoverColor());
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
