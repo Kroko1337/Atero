@@ -46,6 +46,8 @@ public class CustomGUIIngame {
 
 
 
+    private static Minecraft mc = Minecraft.getMinecraft();
+    public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
 
     public static void drawArrayList() {
 	Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
