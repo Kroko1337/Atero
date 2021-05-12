@@ -617,8 +617,16 @@ public abstract class Entity implements ICommandSender
 			double d4 = y;
 			double d5 = z;
 			boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
-			
-			//Safewalk: flag = true
+			if(Scaffold.instance.isEnabled() && Scaffold.instance.canSafewalk()) {
+			    if(this instanceof EntityPlayer) {
+				flag = true;
+			    }
+			}
+			if(Scaffold.instance.isEnabled() && Scaffold.instance.allowdown) {
+			    if(this instanceof EntityPlayer) {
+				flag = false;
+			    }
+			    }
 			if (flag) {
 				double d6;
 
@@ -1179,11 +1187,11 @@ public abstract class Entity implements ICommandSender
 		//AddScaffold
 		//MovFix Julius
 
-		if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.target != null) || Killaura.preaimtarget != null) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState()) {
-		    yaw = Killaura.getYaw();
-		}else {
+		//if(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.target != null) || Killaura.preaimtarget != null) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState()) {
+		    //yaw = Killaura.getYaw();
+		//}else {
 		    yaw = this.rotationYaw;
-		}
+		//}
 		
 		float f = strafe * strafe + forward * forward;
 

@@ -2,6 +2,8 @@ package de.verschwiegener.atero.ui.guiingame;
 
 import java.awt.Color;
 
+import javax.swing.text.html.parser.Entity;
+
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -109,9 +111,10 @@ public class CustomGUIIngame {
 
 	
 	Fontrenderer fontRenderer = Management.instance.fontrenderer;
+	EntityLivingBase target = Killaura.instance.getTarget();
 	
-        if (Killaura.target != null && Killaura.target instanceof EntityPlayer
-                || Killaura.target instanceof EntityAnimal) {
+        if (target != null && target instanceof EntityPlayer
+                || target instanceof EntityAnimal) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
             RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
@@ -120,22 +123,22 @@ public class CustomGUIIngame {
             RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
             RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-            fontRenderer.drawString(Killaura.target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
+            fontRenderer.drawString(target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
 
-            renderPlayer(25, 55, 23, Killaura.target);
+            renderPlayer(25, 55, 23, target);
 
-            float healthProcent = Killaura.target.getHealth() / Killaura.target.getMaxHealth();
+            float healthProcent = target.getHealth() / target.getMaxHealth();
             RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-            fontRenderer.drawString(String.valueOf(Math.round(Killaura.target.getHealth())), 175, 6F,
+            fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
                     Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
             double winChance = 0;
 
-            double TargetStrength = getWeaponStrength(Killaura.target.getHeldItem());
+            double TargetStrength = getWeaponStrength(target.getHeldItem());
             winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
-            winChance += getProtection(mc.thePlayer) - getProtection(Killaura.target);
-            winChance += mc.thePlayer.getHealth() - (Killaura.target).getHealth();
+            winChance += getProtection(mc.thePlayer) - getProtection(target);
+            winChance += mc.thePlayer.getHealth() - (target).getHealth();
 
             String message = winChance == 0 ? "You could win"
                     : winChance < 0 ? "You could lose" : "You are going to win";

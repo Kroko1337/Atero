@@ -51,6 +51,7 @@ public abstract class Module {
 		this.key = key;
 	}
 	public void setup() {}
+	public void onRender() {}
 
 	public void onDisable() {
 		EventManager.unregister(this);

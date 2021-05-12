@@ -4,6 +4,9 @@ import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.events.callables.EventPostRender;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
+
+import de.verschwiegener.atero.Management;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -1862,6 +1865,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.endStartSection("forge_render_last");
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, new Object[] {renderglobal, Float.valueOf(partialTicks)});
         }
+        
+        Management.instance.modulemgr.onRender();
 
         this.mc.mcProfiler.endStartSection("hand");
         boolean flag2 = ReflectorForge.renderFirstPersonHand(this.mc.renderGlobal, partialTicks, pass);

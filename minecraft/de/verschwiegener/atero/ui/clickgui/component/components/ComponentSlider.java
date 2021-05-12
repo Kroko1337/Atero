@@ -30,7 +30,6 @@ public class ComponentSlider extends Component {
     public ComponentSlider(String name, int y, PanelExtendet pe) {
 	super(name, y, pe);
 	this.fontRenderer = Management.instance.fontrenderer;
-	currentValue = df.format(getItem().getCurrentValue());
     }
 
     @Override
@@ -46,9 +45,10 @@ public class ComponentSlider extends Component {
 		    / (getItem().getMaxValue() - getItem().getMinValue());
 	    fontRenderer.drawString(getName(), (getComponentX() + 3) * 2,
 		    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
-	    int textX = (getComponentX() + getPanelExtendet().getWidth()) * 2 - 40;
+	    int textX = (getComponentX() + getPanelExtendet().getWidth()) * 2 - 50;
 	    if (textFieldSelected) {
 		try {
+		    currentValue = df.format(getItem().getCurrentValue());
 		    String split1 = currentValue.substring(0, textFieldEditPosition);
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
 		    
@@ -67,7 +67,7 @@ public class ComponentSlider extends Component {
 				    Color.WHITE.getRGB());
 		    }
 		    
-		    drawSelected((getComponentX() + getPanelExtendet().getWidth() - 20)
+		    drawSelected((getComponentX() + getPanelExtendet().getWidth() - 25)
 			    + fontRenderer.getStringWidth2(split1));
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -93,7 +93,8 @@ public class ComponentSlider extends Component {
 
     private void drawSelected(int x) {
 	count++;
-	if (count % 200 == 0) {
+	System.out.println("Count: " + count);
+	if (count % 30 == 0) {
 	    draw = !draw;
 	    count = 0;
 	}
@@ -216,8 +217,8 @@ public class ComponentSlider extends Component {
     }
 
     private boolean isSliderHoveredNoneY(int mouseX, int mouseY) {
-	return mouseX > (getPanelExtendet().getPanel().getX() + 1)
-		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2) + 1);
+	return mouseX > (getComponentX() + 1)
+		&& mouseX < (getComponentX() + (getPanelExtendet().getWidth() * 2) + 1);
     }
 
     private float getSliderValue(int mouseX, int mouseY) {
@@ -229,8 +230,8 @@ public class ComponentSlider extends Component {
     }
 
     private boolean isSliderHovered(int mouseX, int mouseY) {
-	return mouseX > (getPanelExtendet().getPanel().getX() + 1)
-		&& mouseX < (getPanelExtendet().getPanel().getX() + (getPanelExtendet().getWidth() * 2) + 1)
+	return mouseX > (getComponentX() + 1)
+		&& mouseX < (getComponentX() + (getPanelExtendet().getWidth() * 2) + 1)
 		&& mouseY > (getComponentY() + 4.5) && mouseY < (getComponentY() + 7);
     }
 

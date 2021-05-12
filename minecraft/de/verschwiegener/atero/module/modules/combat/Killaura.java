@@ -40,32 +40,32 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 
 public class Killaura extends Module {
-
-    public static EntityLivingBase target, preaimtarget;
-
-    public static float yaw;
-    public static float pitch;
-    public static float[] facing;
-
-    double reach = 0;
     
-    private boolean miss;
+    public static Killaura instance;
+
+    private EntityLivingBase target, preaimtarget;
+    private float yaw;
+    private float pitch;
+    private float[] facing;
+    private double reach = 0;
     private boolean block;
     private Setting setting, targetset;
-
-    private final TimeUtils timer = new TimeUtils();
-
+    private TimeUtils timer = new TimeUtils();
     private final Minecraft mc = Minecraft.getMinecraft();
 
     public Killaura() {
 	super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
-    }
-    public static float getYaw() {
-	return Killaura.yaw;
+	instance = this;
     }
 
-    public static boolean hasTarget() {
-	return Killaura.target != null || Killaura.preaimtarget != null;
+    
+    public EntityLivingBase getTarget() {
+        return (target == null) ? preaimtarget : target;
+    }
+
+
+    public boolean hasTarget() {
+	return target != null || preaimtarget != null;
     }
 
     public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
@@ -278,7 +278,7 @@ public class Killaura extends Module {
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onEvent(final EventTest event) {
 	if (setting.getItemByName("CorrectMM").isState()
-		&& (Killaura.target != null || Killaura.preaimtarget != null)) {
+		&& (target != null || preaimtarget != null)) {
 	    event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
 	    event.setSilentMoveFix(true);
 	}
@@ -287,22 +287,22 @@ public class Killaura extends Module {
     @EventTarget
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(final EventPreMotionUpdate pre) {
-	if ((Killaura.target != null)) {
-	    Killaura.facing = Killaura.Intavee(Minecraft.thePlayer, Killaura.target);
-	    pre.setYaw(Killaura.yaw);
-	    pre.setPitch(Killaura.pitch);
+	if ((target != null)) {
+	    facing = Killaura.Intavee(Minecraft.thePlayer, target);
+	    pre.setYaw(yaw);
+	    pre.setPitch(pitch);
 	    // yaw = facing[0];
 	    // pitch = facing[1];
-	    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
-	    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
+	    yaw = interpolateRotation(yaw, facing[0], 180);
+	    pitch = interpolateRotation(pitch, facing[1], 180);
 	} else if (preaimtarget != null) {
-	    Killaura.facing = Killaura.Intavee(Minecraft.thePlayer, Killaura.preaimtarget);
-	    pre.setYaw(Killaura.yaw);
-	    pre.setPitch(Killaura.pitch);
+	    facing = Killaura.Intavee(Minecraft.thePlayer, preaimtarget);
+	    pre.setYaw(yaw);
+	    pre.setPitch(pitch);
 	    // yaw = facing[0];
 	    // pitch = facing[1];
-	    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
-	    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
+	    yaw = interpolateRotation(yaw, facing[0], 180);
+	    pitch = interpolateRotation(pitch, facing[1], 180);
 	}
     }
 
@@ -327,23 +327,23 @@ public class Killaura extends Module {
 	    reach = setting.getItemByName("Range").getCurrentValue();
 	    final String mode = setting.getItemByName("TargetMode").getCurrent();
 	    if (mode == "Nearest") {
-		Killaura.target = getClosestPlayer(reach);
+		target = getClosestPlayer(reach);
 	    } else if (mode == "Lowest") {
-		Killaura.target = getLowestPlayer(reach);
+		target = getLowestPlayer(reach);
 	    } else if (mode == "Highest") {
-		Killaura.target = getHighestPlayer(reach);
+		target = getHighestPlayer(reach);
 	    }
 
 	    if (setting.getItemByName("PreAim").isState()) {
-		Killaura.preaimtarget = getClosestPlayer(setting.getItemByName("PreAimRange").getCurrentValue());
+		preaimtarget = getClosestPlayer(setting.getItemByName("PreAimRange").getCurrentValue());
 	    } else {
-		Killaura.preaimtarget = null;
+		preaimtarget = null;
 	    }
 
-	    if (Killaura.target == null) {
-		if (Killaura.facing != null) {
-		    Killaura.yaw = interpolateRotation(Killaura.yaw, Killaura.facing[0], 180);
-		    Killaura.pitch = interpolateRotation(Killaura.pitch, Killaura.facing[1], 180);
+	    if (target == null) {
+		if (facing != null) {
+		    yaw = interpolateRotation(yaw, facing[0], 180);
+		    pitch = interpolateRotation(pitch, facing[1], 180);
 		}
 		return;
 	    }
@@ -359,7 +359,7 @@ public class Killaura extends Module {
 	    // }
 
 	    // getWinkel(target);
-	    if (!canEntityBeSeen(Killaura.target) && !setting.getItemByName("ThroughWalls").isState())
+	    if (!canEntityBeSeen(target) && !setting.getItemByName("ThroughWalls").isState())
 		return;
 
 	    int maxCPS = (int) setting.getItemByName("MAXCPS").getCurrentValue();
@@ -370,13 +370,15 @@ public class Killaura extends Module {
 	    
 	    final float CCPS = 1000 / random(minCPS, maxCPS);
 	    final MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
+	    //System.out.println("Type: " + t.typeOfHit);
 	    if ((t != null && t.typeOfHit == MovingObjectType.ENTITY || setting.getItemByName("ThroughWalls").isState())
-		    && TimeUtils.hasReached(CCPS)) {
-		TimeUtils.reset();
+		    && timer.hasReached(CCPS)) {
+		System.out.println("Type: " + t.typeOfHit);
+		timer.reset();
 		// mc.clickMouse();
 		Minecraft.thePlayer.swingItem();
 		mc.getNetHandler()
-			.addToSendQueue(new C02PacketUseEntity(Killaura.target, C02PacketUseEntity.Action.ATTACK));
+			.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
 
 	    }
 	    // AutoBlock
@@ -389,20 +391,19 @@ public class Killaura extends Module {
 
 				}
 		if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
-		    Minecraft.getMinecraft();
 		    if (Minecraft.thePlayer.getHeldItem() != null) {
-			Minecraft.getMinecraft();
-			Minecraft.getMinecraft();
-			Minecraft.getMinecraft();
 			Minecraft.playerController.sendUseItem(Minecraft.thePlayer, Minecraft.getMinecraft().theWorld,
 				Minecraft.thePlayer.getHeldItem());
 		    }
-		    TimeUtils.reset();
+		    timer.reset();
 	    }
 	    }
 	} catch (final NullPointerException ex) {
 	    ex.printStackTrace();
 	}
+    }
+    public Setting getSetting() {
+	return setting;
     }
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)

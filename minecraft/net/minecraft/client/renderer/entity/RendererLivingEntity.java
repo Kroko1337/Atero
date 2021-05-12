@@ -156,7 +156,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 		if (entity instanceof EntityPlayerSP) {
 		    if (Objects.requireNonNull(Objects
 			    .requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled())) {
-			if(Killaura.hasTarget()) {
+			if(Killaura.instance.hasTarget()) {
 			    float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
 					EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
 				float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,

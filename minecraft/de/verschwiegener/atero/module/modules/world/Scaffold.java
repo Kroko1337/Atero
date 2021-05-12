@@ -1,6 +1,7 @@
 package de.verschwiegener.atero.module.modules.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.text.html.parser.Entity;
@@ -17,6 +18,8 @@ import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
+import de.verschwiegener.atero.util.TimeUtils;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -24,89 +27,220 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3i;
 
 public class Scaffold extends Module {
 
+    public static Scaffold instance;
     Minecraft mc = Minecraft.getMinecraft();
     private BlockData blockData;
+    private float[] lastrotation;
+    public static Setting setting;
+    private int[] forbiddenBlocks = {5};
+    public boolean allowdown;
+    private TimeUtils timer = new TimeUtils();
+    private long lastSneak;
+    private boolean downenabled;
+    private double sameY;
+    
 
     public Scaffold() {
 	super("Scaffold", "Scaffold", Keyboard.KEY_NONE, Category.World);
+	instance = this;
     }
-
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    public void setup() {
+	final ArrayList<SettingsItem> items = new ArrayList<>();
+	items.add(new SettingsItem("Delay", 0, 500, 0, ""));
+	items.add(new SettingsItem("Safewalk", false, ""));
+	items.add(new SettingsItem("Sprint", false, ""));
+	items.add(new SettingsItem("Sneak", false, ""));
+	items.add(new SettingsItem("Silent", true, ""));
+	items.add(new SettingsItem("Down", false, ""));
+	items.add(new SettingsItem("SameY", false, ""));
+	Management.instance.settingsmgr.addSetting(new Setting(this, items));
+    }
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     @Override
     public void onEnable() {
-	mc.thePlayer.setSprinting(false);
 	super.onEnable();
+	setting = Management.instance.settingsmgr.getSettingByName(getName());
+	allowdown = (setting.getItemByName("Down").isState()) && !mc.gameSettings.keyBindJump.isKeyDown() ? true : false;
+	lastSneak = 0;
+	sameY = mc.thePlayer.posY;
     }
-
     public void onDisable() {
 	super.onDisable();
     }
-
-    public void setup() {
-    }
-
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    public void onUpdate() {
-
-	blockData = find(new Vec3(0, 0, 0));
-
-	mc.thePlayer.setSprinting(false);
-    }
-
     @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    public void onPost(EventPostMotionUpdate post) {
-	BlockPos blockPos = new BlockPos(Minecraft.getMinecraft().thePlayer.posX,
-		Minecraft.getMinecraft().thePlayer.posY - 0.0D, Minecraft.getMinecraft().thePlayer.posZ);
-	Minecraft.getMinecraft().rightClickMouse();
-	if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
-
-	   // mc.gameSettings.keyBindSneak.pressed = true;
-
-	}
-	if (Minecraft.getMinecraft().theWorld.getBlockState(blockPos).getBlock() != Blocks.air) {
-	    //mc.gameSettings.keyBindSneak.pressed = false;
-	}
-    }
-
-    @EventTarget
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public void onPre(EventPreMotionUpdate pre) {
+	if (isEnabled()) {
+	    
+	    if (!setting.getItemByName("Sprint").isState()) {
+		mc.thePlayer.setSprinting(false);
+	    }
 
-	float ROTTS4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 150, 176);
-	float ROTS2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 82, 79);
+	    blockData = find(new Vec3(0, 0, 0));
+	    if (blockData != null || lastrotation != null) {
+		
+		if(setting.getItemByName("Down").isState()) {
+		    if(mc.gameSettings.keyBindSneak.isPressed()) {
+			    if(System.currentTimeMillis() - lastSneak < 250) {
+				downenabled = !downenabled;
+				ChatUtil.sendMessageWithPrefix("Down Scaffold is now " + ((downenabled) ? "enabled" : "disabled"));
+			    }
+			    lastSneak = System.currentTimeMillis();
+			}
+		}
+		
+		allowdown = (setting.getItemByName("Down").isState() && downenabled) && !mc.gameSettings.keyBindJump.isKeyDown() ? true : false;
+		
+		float[] rotation = (blockData == null) ? lastrotation : rotations(blockData);
+		pre.setYaw(rotation[0]);
+		pre.setPitch(rotation[1]);
+		//mc.thePlayer.motionX *= 0.9D;
+	        //mc.thePlayer.motionZ *= 0.9D;
+		lastrotation = rotation;
+	    }
+	}
+    }
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    @EventTarget
+    public void onPost(EventPostMotionUpdate post) {
+	if (isEnabled()) {
 
-	float ROTS = (float) MathHelper.getRandomDoubleInRange(new Random(), 166, 169);
+	    if (!setting.getItemByName("Sprint").isState()) {
+		mc.thePlayer.setSprinting(false);
+	    }
+	    
+	    MovingObjectPosition mvp = mc.thePlayer.rayTrace(3, mc.timer.elapsedPartialTicks);
+	    if (mvp.typeOfHit == MovingObjectType.BLOCK && timer.hasReached(setting.getItemByName("Delay").getCurrentValue())) {
+		timer.reset();
+		
+		
+		if(setting.getItemByName("Sneak").isState()) {
+		    BlockPos blockPos = new BlockPos(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY - 1.0D,
+	                    mc.thePlayer.posZ);
+	            mc.gameSettings.keyBindSneak.pressed = mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.air;
+		}
+		
+		float x = (float) (mvp.hitVec.xCoord - blockData.getPos().getX());
+		float y = (float) (mvp.hitVec.yCoord - blockData.getPos().getY());
+		float z = (float) (mvp.hitVec.zCoord - blockData.getPos().getZ());
 
-	float yaw = mc.thePlayer.rotationYaw + 180;
+		int currentslot = mc.thePlayer.inventory.currentItem;
+		if (setting.getItemByName("Silent").isState()) {
+		    int blockSlot = getBlockSlot();
+		    mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(blockSlot));
+		    mc.thePlayer.inventory.currentItem = blockSlot;
+		    mc.playerController.updateController();
+		}
+		
+		if (mc.thePlayer.inventory.getCurrentItem().getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(mc.thePlayer.inventory.getCurrentItem().getItem())) {
+		    if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld,
+	                        mc.thePlayer.getHeldItem(), blockData.getPos(), blockData.getFacing(), mvp.hitVec)) {
+	                    mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+		    }
+		}
+		
+		if(setting.getItemByName("Sneak").isState()) {
+			mc.gameSettings.keyBindSneak.pressed = false;
+		}
+		
+		if (setting.getItemByName("Silent").isState()) {
+		    mc.thePlayer.inventory.currentItem = currentslot;
+		    mc.playerController.updateController();
+		}
+	    }
+	}
+    }
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    public int getBlockSlot() {
+        for (int i = 0; i < 8; i++) {
+            ItemStack s = Minecraft.thePlayer.inventoryContainer.getSlot(36 + i).getStack();
+            if (s != null && s.getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(s.getItem().getBlockId()))
+                return i;
+        }
+        return 0;
+    }
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    public static boolean canSafewalk() {
+	if(!instance.allowdown && setting.getItemByName("Safewalk").isState() && instance.blockData != null && Minecraft.getMinecraft().thePlayer.onGround) {
+	    if (Minecraft.thePlayer.hurtTime > 0) {
+		return false;
+            }
+            return true;
+	}
+	return false;
+    }
+    
+    public void onRender() {
+	switch (blockData.facing) {
+	case DOWN:
 
-	float pitch = ROTS2;
+	    break;
 
+	case NORTH:
+
+	    break;
+	case EAST:
+
+	    break;
+	case SOUTH:
+
+	    break;
+	case UP:
+	    
+	    break;
+	case WEST:
+    
+    break;
+	}
+    }
+    
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    private float[] rotations(Scaffold.BlockData blockData) {
+	double x = blockData.getPos().getX() + 0.5D - mc.thePlayer.posX
+		+ blockData.getFacing().getFrontOffsetX() / 2.0D;
+	double z = blockData.getPos().getZ() + 0.5D - mc.thePlayer.posZ
+		+ blockData.getFacing().getFrontOffsetZ() / 2.0D;
+	double y = blockData.getPos().getY() - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight()) + 0.9;
+	double ymax = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - y;
+	double allmax = MathHelper.sqrt_double(x * x + z * z);
+	float ROTTS4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 180, 178);
+
+	float yaw = (float) (Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
+	float pitch = (float) (-Math.atan2(y, allmax) * ROTTS4 / Math.PI);
+	//if (yaw < 0.0F)
+	    //yaw += 360.0F;
 	float f2 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 	float f3 = f2 * f2 * f2 * 1.2F;
 	yaw -= yaw % f3;
 	pitch -= pitch % (f3 * f2);
-
-	pre.setYaw(aac3Rotations(blockData)[0]);
-	pre.setPitch(aac3Rotations(blockData)[1]);
-	//pre.setPitch(pitch);
+	return new float[] { yaw, pitch };
     }
 
+    
+
+    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     Scaffold.BlockData find(Vec3 offset3) {
 	try {
 	    double x = mc.thePlayer.posX;
-	    double y = mc.thePlayer.posY;
+	    double y = setting.getItemByName("SameY").isState() ? sameY : mc.thePlayer.posY + (allowdown ? -1 : 0);
 	    double z = mc.thePlayer.posZ;
-
 	    EnumFacing[] invert = new EnumFacing[] { EnumFacing.UP, EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.NORTH,
 		    EnumFacing.EAST, EnumFacing.WEST };
 	    BlockPos position = new BlockPos(new Vec3(x, y, z).add(offset3)).offset(EnumFacing.DOWN);
@@ -136,38 +270,6 @@ public class Scaffold extends Module {
 
 	}
 	return null;
-    }
-
-    @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-    float[] aac3Rotations(Scaffold.BlockData blockData) {
-	// EntitySnowball temp = new EntitySnowball(mc.theWorld);
-	double x = blockData.getPos().getX() + 0.5D - mc.thePlayer.posX
-		+ blockData.getFacing().getFrontOffsetX() / 2.0D;
-	double z = blockData.getPos().getZ() + 0.5D - mc.thePlayer.posZ
-		+ blockData.getFacing().getFrontOffsetZ() / 2.0D;
-	double y = blockData.getPos().getY() - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight()) + 0.9;
-	double ymax = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - y;
-	double allmax = MathHelper.sqrt_double(x * x + z * z);
-	float ROTTS2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 175, 180);
-	float ROTTS3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 26.75, 27.70);
-	float ROTTS33 = (float) MathHelper.getRandomDoubleInRange(new Random(), 180, 181);
-	float ROTTS333 = (float) MathHelper.getRandomDoubleInRange(new Random(), 179, 180);
-	float ROTTS4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 180, 178);
-
-	float yaw = (float) (Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
-	float pitch = (float) (-Math.atan2(y, allmax) * ROTTS4 / Math.PI);
-	System.out.println("Pitch1: " + pitch);
-	if (yaw < 0.0F)
-	    yaw += 360.0F;
-	float f2 = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-	float f3 = f2 * f2 * f2 * 1.2F;
-	yaw -= yaw % f3;
-	pitch -= pitch % (f3 * f2);
-	// if(pitch < 83) {
-	// pitch = 83;
-	// }
-	System.out.println("Pitch2: " + pitch);
-	return new float[] { yaw, pitch };
     }
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
