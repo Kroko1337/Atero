@@ -197,7 +197,7 @@ public class Scaffold extends Module {
     }
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public int getBlockSlot() {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             ItemStack s = Minecraft.thePlayer.inventoryContainer.getSlot(36 + i).getStack();
             if (s != null && s.getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(s.getItem().getBlockId()))
                 return i;

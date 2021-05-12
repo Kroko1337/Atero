@@ -37,6 +37,7 @@ public class SettingsManager {
 	    }
 	}
 	return result;
+	
     }
 
 	public ArrayList<Setting> getSettings() {
