@@ -10,6 +10,7 @@ public abstract class Module implements Wrapper{
 	Category category;
 	boolean enabled;
 	int key;
+	public final Minecraft mc = Minecraft.getMinecraft();
 
 	String name, description;
 

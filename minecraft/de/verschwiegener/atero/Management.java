@@ -135,6 +135,8 @@ public class Management {
 
 	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
 
+	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
+
     }
 
     public void stop() {
