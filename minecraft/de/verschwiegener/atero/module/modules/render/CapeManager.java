@@ -48,7 +48,7 @@ public class CapeManager extends Module {
         teest.add("Dad");
         teest.add("Hentai");
         teest.add("Fire");
-        teest.add("HAZE");
+       // teest.add("HAZE");
         items.add(new SettingsItem("Cape", teest, "Dad", "", ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }

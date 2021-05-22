@@ -92,7 +92,7 @@ public class Management {
 	GIFmgr.addGif(new GIF("Hentai", "test"));
 	//GIFmgr.addGif(new GIF("Hero", "hero"));
 	GIFmgr.addGif(new GIF("Fire", "tenor"));
-	GIFmgr.addGif(new GIF("HAZE", "HAZE"));
+	//GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);

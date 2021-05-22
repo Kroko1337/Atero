@@ -53,7 +53,7 @@ public class Cheststealer extends Module {
 		    ContainerChest container = (ContainerChest) Minecraft.thePlayer.openContainer;
 		    int i = 0;
 		    while (i < container.getLowerChestInventory().getSizeInventory()) {
-				final float MAAD = (float) MathHelper.getRandomDoubleInRange(new Random(), 250, 300);
+				final float MAAD = (float) MathHelper.getRandomDoubleInRange(new Random(), 300, 450);
 			if (container.getLowerChestInventory().getStackInSlot(i) != null
 
 				&& timer.hasReached((long) MAAD)) {

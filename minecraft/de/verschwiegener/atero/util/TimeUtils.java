@@ -33,7 +33,7 @@ public class TimeUtils {
 	return 1000 / d;
     }
 
-    public boolean hasReached(float f) {
+    public  boolean hasReached(float f) {
 	return (float) (getCurrentMS() - lastMS) >= f;
     }
 

@@ -1,7 +1,7 @@
 package net.minecraft.entity;
 
 import com.darkmagician6.eventapi.EventManager;
-import com.darkmagician6.eventapi.events.callables.EventMoveFly;
+
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import de.verschwiegener.atero.Management;
@@ -1082,8 +1082,8 @@ public abstract class Entity implements ICommandSender {
      * Used in both water and by flying objects
      */
     public void moveFlying(float strafe, float forward, float friction) {
-        EventMoveFly moveFly = new EventMoveFly(rotationYaw);
-        EventManager.call(moveFly);
+       // EventMoveFly moveFly = new EventMoveFly(rotationYaw);
+     //   EventManager.call(moveFly);
         if (this != Minecraft.thePlayer) return;
         float yaw = 0;
 
@@ -1093,7 +1093,7 @@ public abstract class Entity implements ICommandSender {
 
         else
 
-            yaw = moveFly.yaw;
+            yaw = this.rotationYaw;
 
 
         float f = strafe * strafe + forward * forward;

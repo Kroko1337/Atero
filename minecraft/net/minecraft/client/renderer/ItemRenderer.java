@@ -362,11 +362,9 @@ public class ItemRenderer
                         break;
 
                     case 4:
-                        this.transformFirstPersonItem(f, 0.0F);
-                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
-                        GlStateManager.translate(0,0.4,0);
-                        GlStateManager.rotate(-rot * 25F, (float) 0.08, 0, 0);
+                        this.transformFirstPersonItem(0.0f, f1 );
                         this.func_178103_d();
+                        GlStateManager.translate(-0.3f, 0.1f, -0.305f);
 
                         break;
 
@@ -377,11 +375,10 @@ public class ItemRenderer
             } else {
                 if (Killaura.instance.hasTarget()) {
                     if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
-                        this.transformFirstPersonItem(f, 0.0F);
-                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
-                        GlStateManager.translate(0, 0.4, 0);
-                        GlStateManager.rotate(-rot * 25F, (float) 0.08, 0, 0);
-                       this.func_178103_d();
+                        this.transformFirstPersonItem(0.0f, f1 );
+                        this.func_178103_d();
+                        GlStateManager.translate(-0.3f, 0.1f, -0.305f);
+
 
                     }else {
                         this.func_178105_d(f1);
