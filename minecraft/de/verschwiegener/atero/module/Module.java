@@ -4,12 +4,14 @@ import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.util.Wrapper;
+import net.minecraft.client.Minecraft;
 
 public abstract class Module implements Wrapper{
 
 	Category category;
 	boolean enabled;
 	int key;
+	public final Minecraft mc = Minecraft.getMinecraft();
 
 	String name, description;
 

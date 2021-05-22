@@ -13,7 +13,7 @@ public class TestFontRenderer {
     private void drawString(String text, int posX, int posY, Color color, TestFont font) {
 	if(text == null)
 	    return;
-	DynamicTexture texture = font.getFontTexture();
+	//ynamicTexture texture = font.getFontTexture();
 	GL11.glColor4d(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	GlStateManager.pushMatrix();
 	GlStateManager.enableBlend();

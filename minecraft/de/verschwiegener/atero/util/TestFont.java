@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 
 public class TestFont {
     
-    private final DynamicTexture fontTexture; 
+   // private final DynamicTexture fontTexture;
     //increase size for more glyphs
     private final GlyphMetrics[] fontGlyphMetrics = new GlyphMetrics[256];
     
@@ -43,8 +43,8 @@ public class TestFont {
 	}
 	return new DynamicTexture(bitmap);
     }
-    public DynamicTexture getFontTexture() {
-	return fontTexture;
-    }
+    //public DynamicTexture getFontTexture() {
+	//return fontTexture;
+   // }
 
 }
