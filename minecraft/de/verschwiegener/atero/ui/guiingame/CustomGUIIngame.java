@@ -60,11 +60,14 @@ public class CustomGUIIngame {
 	ScaledResolution sr = new ScaledResolution(mc);
 	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
 	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-		fontRenderer.drawString(mm.modules.get(i).getName(),
-			((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
-				- xoffset,
-			yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
-		yoffset += fontRenderer.getBaseStringHeight() * 2;
+		RenderUtil.fillRect(((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, xoffset + mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, new Color(128, 128, 128, 50));
+		RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, mc.fontRendererObj.FONT_HEIGHT + 4, Color.BLACK);
+		mc.fontRendererObj.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
+		//fontRenderer.drawString(mm.modules.get(i).getName(),
+			//((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
+				//- xoffset,
+			//yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
+		yoffset += mc.fontRendererObj.FONT_HEIGHT + 4;
 
 	    }
 	}

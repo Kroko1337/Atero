@@ -29,6 +29,12 @@ public class ConfigItem {
 	    }
 	}
     }
+    public String getMode() {
+	return args[0];
+    }
+    public String[] getArgs() {
+	return args;
+    }
 
     private boolean isInt(String str) {
 	try {
