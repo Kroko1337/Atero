@@ -8,6 +8,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MinecraftError;
@@ -59,30 +60,44 @@ public class HighJump extends Module {
             super.onUpdate();
             //   mc.thePlayer.posY = mc.thePlayer.prevPosY;
 
+            if (this.isEnabled()) {
+                super.onUpdate();
+                //   mc.thePlayer.posY = mc.thePlayer.prevPosY;
 
-                    if (Minecraft.thePlayer.onGround)
-                        Jump = true;
-                    if (Minecraft.thePlayer.onGround)
-                        mc.gameSettings.keyBindJump.pressed = true;
-                    if (Minecraft.thePlayer.onGround) {
-                        mc.timer.timerSpeed = 0.7F;
-                    } else if (Minecraft.thePlayer.hurtTime > 0) {
-                        mc.timer.timerSpeed = 0.6F;
-                    }
-                    if (Minecraft.thePlayer.hurtTime > 0)
-                        Dmg = true;
 
-                    if (Dmg)
-                        if (Minecraft.thePlayer.hurtTime > 0)
-                            Minecraft.thePlayer.motionY += 0.02;
-                    if (Dmg)
-                        if (Minecraft.thePlayer.hurtTime > 0) {
-                            mc.gameSettings.keyBindForward.pressed = true;
-                            setSpeed(0.4D);
-                        }
+                if (Minecraft.thePlayer.onGround)
+                    Jump = true;
+                if (Minecraft.thePlayer.onGround)
+                    mc.gameSettings.keyBindJump.pressed = true;
+                if (Minecraft.thePlayer.onGround) {
+                    mc.timer.timerSpeed = 0.2F;
+                } else if (Minecraft.thePlayer.hurtTime > 0) {
                 }
-            }
+                if(mc.thePlayer.ticksExisted % 4 == 0) {
+                    mc.timer.timerSpeed = 0.9F;
+                }else{
+                    mc.timer.timerSpeed = 0.5F;
+                }
 
+                if (Minecraft.thePlayer.hurtTime > 0)
+                    Dmg = true;
+
+                if (Dmg)
+                   if (Minecraft.thePlayer.hurtTime > 0) {
+
+                      //  Minecraft.thePlayer.motionY = 0;
+                       Minecraft.thePlayer.motionY += 0.0035;
+                   }
+                if (Dmg)
+                    if (Minecraft.thePlayer.hurtTime > 0) {
+                        mc.gameSettings.keyBindForward.pressed = true;
+                        setSpeed(0.4D);
+                    }
+            }
+        }
+        //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+       // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
+    }
 
 
 

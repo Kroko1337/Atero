@@ -1,5 +1,6 @@
 package de.verschwiegener.atero.module.modules.movement;
 
+import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -23,6 +24,7 @@ import java.util.Random;
 public class Speed extends Module {
 
 	private Setting setting;
+	private int stage = 1;
 
 	public Speed() {
 		super("Speed", "Speed", Keyboard.KEY_NONE, Category.Movement);
@@ -73,7 +75,7 @@ public class Speed extends Module {
 						if (mc.thePlayer.fallDistance > 0.08F) {
 							mc.timer.timerSpeed =1.0F;
 						}else{
-							mc.timer.timerSpeed =1.5F;
+							mc.timer.timerSpeed =1.4F;
 						}
 
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -131,12 +133,40 @@ public class Speed extends Module {
 						}
 					}
 					break;
+
+
+
 				case "Vanilla2":
-					if (Minecraft.thePlayer.onGround) {
-						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					}else{
-						HighJump.setSpeed(0.5);
-					}
+					float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.1);
+					float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
+					float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
+					float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.006);
+						double speed = 0;
+						mc.timer.timerSpeed = 1f;
+						stage++;
+						if (mc.thePlayer.isCollidedHorizontally) {
+							stage = 50;
+						}
+						if (mc.thePlayer.onGround && (mc.thePlayer.moveForward != 0.0f || mc.thePlayer.moveStrafing != 0.0f)) {
+							mc.gameSettings.keyBindJump.pressed = true;
+							stage = 0;
+							speed = 0;
+						}
+
+						if (!mc.thePlayer.onGround) {
+							if (mc.thePlayer.motionY > Y) {
+								mc.thePlayer.motionY += 0.002;
+							} else {
+								mc.thePlayer.motionY += 0.001;
+							}
+							double slowdown = slowdown1;
+							speed = 0.8 - (stage * slowdown);
+							if (speed < 0) speed = 0;
+						}
+						HighJump.setSpeed(0.8);
+
+
+
 					break;
 			}
 		}
@@ -157,9 +187,9 @@ public class Speed extends Module {
 				if (Minecraft.getMinecraft().thePlayer.onGround) {
 
 					if (Minecraft.thePlayer.ticksExisted % 4 == 0) {
-						Minecraft.getMinecraft().timer.timerSpeed = 10;
+						Minecraft.getMinecraft().timer.timerSpeed = 20;
 					} else {
-						Minecraft.getMinecraft().timer.timerSpeed = 2;
+						Minecraft.getMinecraft().timer.timerSpeed = 4;
 					}
 					if (Minecraft.thePlayer.ticksExisted % 10 == 0) {
 						Minecraft.getMinecraft().timer.timerSpeed = 1;
@@ -179,7 +209,7 @@ public class Speed extends Module {
 		Minecraft.thePlayer.motionX -= (MathHelper.sin((float) Math.toRadians(yaw)) * speed);
 		Minecraft.thePlayer.motionZ += (MathHelper.cos((float) Math.toRadians(yaw)) * speed);
 	}
-	public void setSpeed(double speed, float yaw) {
+	public void setSpeed(PlayerMoveEvent moveEvent, double moveSpeed, float rotationYaw, double speed, float yaw) {
 		Minecraft.thePlayer.motionX = -Math.sin(Math.toRadians(getDirection(yaw))) * speed;
 		Minecraft.thePlayer.motionZ = Math.cos(Math.toRadians(getDirection(yaw))) * speed;
 	}
@@ -218,4 +248,6 @@ public class Speed extends Module {
 		return var1;
 	}
 
+
 }
+

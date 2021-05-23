@@ -8,6 +8,7 @@ import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.combat.Target;
 import de.verschwiegener.atero.module.modules.combat.Velocity;
 import de.verschwiegener.atero.module.modules.movement.*;
+import de.verschwiegener.atero.module.modules.player.InventoryManager;
 import de.verschwiegener.atero.module.modules.render.CapeManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.render.ESP;
@@ -37,6 +38,7 @@ public class ModuleManager {
 	modules.add(new Nofall());
 	modules.add(new Disabler());
 	modules.add(new TEst());
+	modules.add(new InventoryManager());
     }
 
     public Module getModuleByName(final String name) {

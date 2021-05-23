@@ -55,19 +55,22 @@ public class CustomGUIIngame {
 		    Management.instance.fontmgr.getFontByName("ArrayListFont"));
 	}
 	int yoffset = 0;
-	int xoffset = 10;
+	int xoffset = 3;
 	ModuleManager mm = Management.instance.modulemgr;
 	ScaledResolution sr = new ScaledResolution(mc);
-	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
-	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-		fontRenderer.drawString(mm.modules.get(i).getName(),
-			((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
-				- xoffset,
-			yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
-		yoffset += fontRenderer.getBaseStringHeight() * 2;
+		for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
+			if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
+				RenderUtil.fillRect(((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, xoffset + mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, new Color(128, 128, 128, 155));
+				mc.fontRendererObj.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset +2, Color.cyan.getRGB());
+				RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, mc.fontRendererObj.FONT_HEIGHT + 4, Color.CYAN);
+				//fontRenderer.drawString(mm.modules.get(i).getName(),
+				//((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
+				//- xoffset,
+				//yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
+				yoffset += mc.fontRendererObj.FONT_HEIGHT +4;
 
-	    }
-	}
+			}
+		}
     }
     @EventTarget
     public static void renderShader(EventRenderShader event) {

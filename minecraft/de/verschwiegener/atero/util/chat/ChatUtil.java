@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.files.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -16,7 +17,7 @@ public class ChatUtil {
 
     public static void sendMessageWithPrefix(String message) {
 	Minecraft.getMinecraft().thePlayer
-		.addChatMessage(new ChatComponentText("§g" + Management.instance.CLIENT_NAME + ": §f" + message));
+		.addChatMessage(new ChatComponentText("§9" + Management.instance.CLIENT_NAME + ": §f" + message));
     }
 
     public static void sendMessage(String message) {
@@ -58,6 +59,17 @@ public class ChatUtil {
 		.setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "bind_del_" + module));
 	message.appendSibling(componentremove);
 
+	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
+    }
+    public static void addConfigMessage(Config config) {
+	IChatComponent message = new ChatComponentText("§r" + config.getName() + " | " + config.getDescription());
+	
+	IChatComponent componentload = new ChatComponentText("[Load]");
+	componentload.getChatStyle().setColor(EnumChatFormatting.DARK_BLUE);
+	componentload.getChatStyle()
+		.setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + config.getName()));
+	message.appendSibling(componentload);
+	
 	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
     }
 

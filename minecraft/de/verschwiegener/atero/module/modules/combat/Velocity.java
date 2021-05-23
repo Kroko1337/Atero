@@ -83,7 +83,7 @@ public class Velocity extends Module {
                     case "Cubecraft":
                         if (Minecraft.thePlayer.hurtTime != 0) {
                             if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
-                                setSpeed(0.3F);
+                                setSpeed(0.2F);
                             }
                         }
 

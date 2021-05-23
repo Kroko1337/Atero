@@ -1,13 +1,13 @@
 package de.verschwiegener.atero.module.modules.world;
 
 import com.darkmagician6.eventapi.EventTarget;
-import com.darkmagician6.eventapi.events.callables.EventMoveFly;
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventSendPacket;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
+import de.verschwiegener.atero.module.modules.movement.HighJump;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.RotationRecode2;
@@ -23,6 +23,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.*;
@@ -80,7 +81,9 @@ public class Scaffold extends Module {
 
         setting = Management.instance.settingsmgr.getSettingByName(getName());
         allowdown = (setting.getItemByName("Down").isState()) && !mc.gameSettings.keyBindJump.isKeyDown() ? true : false;
-      //  silentSlot = -1;
+        //  silentSlot = -1;
+        //mc.getCurrentServerData().serverIP.equalsIgnoreCase("Cubecraft.net")
+
     }
 
     public void onDisable() {
@@ -98,17 +101,20 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onUpdate() {
-if(mc.gameSettings.keyBindJump.pressed && !mc.gameSettings.keyBindForward.pressed){
-    if(mc.thePlayer.onGround){
-        mc.gameSettings.keyBindJump.pressed = true;
-        mc.timer.timerSpeed = 0.6F;
-    }else{
-        final float HYPXIEL = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
-        final float TOWER = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
-        mc.timer.timerSpeed = TOWER;
-    }
 
-}
+  //  mc.timer.timerSpeed = 25F;
+
+        if(mc.gameSettings.keyBindJump.pressed && !mc.gameSettings.keyBindForward.pressed){
+            if(mc.thePlayer.onGround){
+                mc.gameSettings.keyBindJump.pressed = true;
+                mc.timer.timerSpeed = 0.6F;
+            }else{
+                final float HYPXIEL = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
+                final float TOWER = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
+                mc.timer.timerSpeed = TOWER;
+            }
+
+        }
         if(!mc.gameSettings.keyBindJump.pressed){
             mc.timer.timerSpeed = 1F;
         }
@@ -140,41 +146,30 @@ if(mc.gameSettings.keyBindJump.pressed && !mc.gameSettings.keyBindForward.presse
                 }
             }
         }
-
-        //System.out.println(SpeedUtil.getSpeed());
         Minecraft.getMinecraft().thePlayer.setSprinting(false);
-        BlockPos blockPos = new BlockPos(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY - 0.0D, Minecraft.getMinecraft().thePlayer.posZ);
-            Minecraft.getMinecraft().thePlayer.setSprinting(false);
-            if (Minecraft.getMinecraft().thePlayer.ticksExisted % 1 == 0) {
+    }
 
-            }
-
-            //   Minecraft.getMinecraft().rightClickDelayTimer = (int) 0F;
-            Minecraft.getMinecraft().thePlayer.setSprinting(false);
-            Minecraft.getMinecraft().thePlayer.setSprinting(false);
-        }
-
-        @EventTarget
-        public void onPacketSend(EventSendPacket eventSendPacket) {
-            Packet<?> packet = eventSendPacket.getPacket();
-            if(packet instanceof C09PacketHeldItemChange) {
-                C09PacketHeldItemChange c09PacketHeldItemChange = (C09PacketHeldItemChange)packet;
-                if(getBlockSlot() == c09PacketHeldItemChange.getSlotId() && !switched) {
-                    switched = true;
-                }else {
-                    if(switched) {
-                        eventSendPacket.setCancelled(true);
-                    }
+    @EventTarget
+    public void onPacketSend(EventSendPacket eventSendPacket) {
+        Packet<?> packet = eventSendPacket.getPacket();
+        if(packet instanceof C09PacketHeldItemChange) {
+            C09PacketHeldItemChange c09PacketHeldItemChange = (C09PacketHeldItemChange)packet;
+            if(getBlockSlot() == c09PacketHeldItemChange.getSlotId() && !switched) {
+                switched = true;
+            }else {
+                if(switched) {
+                    eventSendPacket.setCancelled(true);
                 }
             }
         }
+    }
 
 
 
-@EventTarget
-public void onPost(EventPostMotionUpdate post) {
+    @EventTarget
+    public void onPost(EventPostMotionUpdate post) {
 
-}
+    }
 
     @EventTarget
     public void onPre(EventPreMotionUpdate pre) {

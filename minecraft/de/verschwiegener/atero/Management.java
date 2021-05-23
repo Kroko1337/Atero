@@ -2,6 +2,7 @@ package de.verschwiegener.atero;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
+import de.verschwiegener.atero.github.GitHubUtils;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.proxy.ProxyManager;
@@ -28,8 +30,12 @@ import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
+import de.verschwiegener.atero.util.TestFont;
 import de.verschwiegener.atero.util.account.AccountManager;
 import de.verschwiegener.atero.util.files.FileManager;
+import de.verschwiegener.atero.util.files.config.Config;
+import de.verschwiegener.atero.util.files.config.ConfigManager;
+import de.verschwiegener.atero.util.files.config.handler.XMLHelper;
 import de.verschwiegener.atero.util.inventory.InventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -69,6 +75,9 @@ public class Management {
     public FriendManager friendmgr;
     public FileManager fileManager;
     public AccountManager accountmgr;
+    public ConfigManager configmgr;
+    public GitHubUtils ghUtils;
+    public TestFont font;
     
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
@@ -100,7 +109,21 @@ public class Management {
 	proxymgr = new ProxyManager();
 
 	accountmgr = new AccountManager();
-
+	configmgr = new ConfigManager();
+	loadLocaleConfigs();
+	
+	
+	font = new TestFont();
+	
+	
+	ghUtils = new GitHubUtils();
+	try {
+	    ghUtils.auth();
+	    //ghUtils.createRequest(configmgr.configs.get(0));
+	} catch (IOException e1) {
+	    e1.printStackTrace();
+	}
+	
 	fileManager = new FileManager();
 
 	clickgui = new ClickGUI();
@@ -135,8 +158,6 @@ public class Management {
 
 	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
 
-	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
-
     }
 
     public void stop() {
@@ -161,6 +182,10 @@ public class Management {
 	}catch(Exception e) {
 	    
 	}
+	
+	for(Config config : configmgr.configs) {
+	    XMLHelper.write(config);
+	}
     }
     
     private void registerEvents() {
@@ -175,6 +200,14 @@ public class Management {
     public void onKey(int key) {
 	if (Keyboard.isKeyDown(key)) {
 	    modulemgr.onKey(key);
+	}
+    }
+    public void loadLocaleConfigs() {
+	String path = CLIENT_DIRECTORY.getAbsolutePath() + File.separator + "Configs";
+	if( new File(path).exists()) {
+	    for(final File file : new File(path).listFiles()) {
+		    XMLHelper.parse(file);
+		}
 	}
     }
     

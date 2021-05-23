@@ -18,7 +18,6 @@ import com.darkmagician6.eventapi.events.callables.EventRender2D;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import org.lwjgl.opengl.GL11;
-import sun.plugin2.util.ColorUtil;
 
 import java.awt.*;
 import java.util.List;
