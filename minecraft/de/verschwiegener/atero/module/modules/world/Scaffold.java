@@ -178,17 +178,12 @@ public class Scaffold extends Module {
                     pre.setPitch(rotation[1]);
                     lastPitch = (rotation[1]);
                     break;
-
-
                 case "AAC":
-
                     pre.setYaw((Minecraft.thePlayer.rotationYaw + 180));
                     lastYaw = rotation[0];
                     pre.setPitch(rotation[1]);
                     lastPitch = (rotation[1]);
                     break;
-
-
                 case "NCPStatic":
                     pre.setYaw(rotation[0]);
                     lastYaw = rotation[0];
