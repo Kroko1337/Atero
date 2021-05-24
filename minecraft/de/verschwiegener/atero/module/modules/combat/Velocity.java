@@ -54,12 +54,12 @@ public class Velocity extends Module {
                 String modes = setting.getItemByName("VelocityMode").getCurrent();
                 switch (modes) {
                     case "AAC":
-                        if (mc.thePlayer.isCollidedHorizontally) {
+                   //     if (mc.thePlayer.isCollidedHorizontally) {
                             if (Minecraft.thePlayer.hurtTime != 0) {
 
                                 if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
                                     final float SPEED = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, 0.2);
-                                    setSpeed(0.2);
+                                    setSpeed(0.3);
                                     // mc.thePlayer.motionX = 0F;
                                     //  mc.thePlayer.motionZ = 0F;
                                 }
@@ -67,6 +67,14 @@ public class Velocity extends Module {
                                     //Minecraft.thePlayer.motionY = 0.1F;
                                 }
                             }
+                    //    }
+                        break;
+                    case "WallReverse":
+                            if (mc.thePlayer.isCollidedHorizontally) {
+                        if (Minecraft.thePlayer.hurtTime != 0) {
+                                setSpeed(0.2);
+                            }
+
                         }
                         break;
                     case "NCP":
@@ -115,6 +123,7 @@ public class Velocity extends Module {
         modes.add("AAC");
         modes.add("NCP");
         modes.add("Cubecraft");
+        modes.add("WallReverse");
         items.add(new SettingsItem("VelocityMode", modes, "AAC", "", ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }

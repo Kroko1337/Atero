@@ -39,6 +39,7 @@ public class Speed extends Module {
 	public void onDisable() {
 		Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = false;
 		Minecraft.getMinecraft().timer.timerSpeed = 1F;
+
 		super.onDisable();
 	}
 
@@ -53,6 +54,7 @@ public class Speed extends Module {
 		modes.add("Cubecraft1vs1");
 		modes.add("Vanilla");
 		modes.add("Vanilla2");
+		modes.add("KrokosACFly");
 		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "", ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}
@@ -73,9 +75,9 @@ public class Speed extends Module {
 						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
 					} else {
 						if (mc.thePlayer.fallDistance > 0.08F) {
-							mc.timer.timerSpeed =1.0F;
-						}else{
-							mc.timer.timerSpeed =1.4F;
+							mc.timer.timerSpeed = 1.0F;
+						} else {
+							mc.timer.timerSpeed = 1.39F;
 						}
 
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -93,7 +95,7 @@ public class Speed extends Module {
 					if (mc.thePlayer.onGround) {
 
 						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					}else{
+					} else {
 						mc.timer.timerSpeed = 1F;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
 						double speed = boost2 ? 1 : 1D;
@@ -107,9 +109,32 @@ public class Speed extends Module {
 				case "Vanilla":
 					if (Minecraft.thePlayer.onGround) {
 						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					}else{
+					} else {
 						HighJump.setSpeed(1.0);
 					}
+
+					break;
+				case "KrokosACFly":
+					//	if (mc.thePlayer.ticksExisted % 2 == 1) {
+					//	mc.thePlayer.motionY = 0.069F;
+					//		}
+					mc.gameSettings.keyBindJump.pressed = true;
+					if (mc.thePlayer.onGround) {
+						mc.thePlayer.motionY = 0.42F;
+						if (mc.thePlayer.ticksExisted % 3 == 0) {
+						HighJump.setSpeed(0.3);
+						}
+					} else {
+						mc.thePlayer.motionY = -11F;
+					}
+
+
+					//Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
+
+					//HighJump.setSpeed(1);
+
+					//mc.timer.timerSpeed = 1.2F;
+
 					break;
 				case "Hypixel":
 					if (mc.thePlayer.onGround) {
@@ -157,13 +182,13 @@ public class Speed extends Module {
 							if (mc.thePlayer.motionY > Y) {
 								mc.thePlayer.motionY += 0.002;
 							} else {
-								mc.thePlayer.motionY += 0.001;
+								mc.thePlayer.motionY += 0.003;
 							}
 							double slowdown = slowdown1;
 							speed = 0.8 - (stage * slowdown);
 							if (speed < 0) speed = 0;
 						}
-						HighJump.setSpeed(0.8);
+						HighJump.setSpeed(1.2);
 
 
 
@@ -186,10 +211,10 @@ public class Speed extends Module {
 				float TIMMER1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 4.0, 1.0);
 				if (Minecraft.getMinecraft().thePlayer.onGround) {
 
-					if (Minecraft.thePlayer.ticksExisted % 4 == 0) {
+					if (Minecraft.thePlayer.ticksExisted % 2 == 0) {
 						Minecraft.getMinecraft().timer.timerSpeed = 20;
 					} else {
-						Minecraft.getMinecraft().timer.timerSpeed = 4;
+						Minecraft.getMinecraft().timer.timerSpeed = 1;
 					}
 					if (Minecraft.thePlayer.ticksExisted % 10 == 0) {
 						Minecraft.getMinecraft().timer.timerSpeed = 1;

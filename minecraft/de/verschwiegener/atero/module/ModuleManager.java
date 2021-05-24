@@ -3,10 +3,7 @@ package de.verschwiegener.atero.module;
 import java.util.ArrayList;
 
 import de.verschwiegener.atero.module.modules.Test;
-import de.verschwiegener.atero.module.modules.combat.Antibots;
-import de.verschwiegener.atero.module.modules.combat.Killaura;
-import de.verschwiegener.atero.module.modules.combat.Target;
-import de.verschwiegener.atero.module.modules.combat.Velocity;
+import de.verschwiegener.atero.module.modules.combat.*;
 import de.verschwiegener.atero.module.modules.movement.*;
 import de.verschwiegener.atero.module.modules.player.InventoryManager;
 import de.verschwiegener.atero.module.modules.render.CapeManager;
@@ -39,6 +36,7 @@ public class ModuleManager {
 	modules.add(new Disabler());
 	modules.add(new TEst());
 	modules.add(new InventoryManager());
+	modules.add(new AutoClicker());
     }
 
     public Module getModuleByName(final String name) {

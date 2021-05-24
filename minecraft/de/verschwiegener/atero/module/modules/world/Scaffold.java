@@ -61,11 +61,12 @@ public class Scaffold extends Module {
         items.add(new SettingsItem("Safewalk", false, ""));
         items.add(new SettingsItem("Sprint", false, ""));
         items.add(new SettingsItem("Sneak", false, ""));
-        items.add(new SettingsItem("Silent", true, "SilentModes"));
+        items.add(new SettingsItem("Silent", true, ""));
         ArrayList<String> modes = new ArrayList<>();
-        modes.add("Switch");
-        modes.add("Spoof");
-        items.add(new SettingsItem("SilentModes", modes, "Switch", "", ""));
+        modes.add("NCPStatic");
+        modes.add("AAC");
+        modes.add("NCP");
+        items.add(new SettingsItem("RotationModes", modes, "NCPStatic", "", ""));
         items.add(new SettingsItem("Down", false, ""));
         items.add(new SettingsItem("SameY", false, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
@@ -73,6 +74,8 @@ public class Scaffold extends Module {
 
     @Override
     public void onEnable() {
+
+
         currentItem = -1;
 
         switched = false;
@@ -80,16 +83,19 @@ public class Scaffold extends Module {
         super.onEnable();
 
         setting = Management.instance.settingsmgr.getSettingByName(getName());
-        allowdown = (setting.getItemByName("Down").isState()) && !mc.gameSettings.keyBindJump.isKeyDown() ? true : false;
+
         //  silentSlot = -1;
         //mc.getCurrentServerData().serverIP.equalsIgnoreCase("Cubecraft.net")
 
     }
 
     public void onDisable() {
+        mc.thePlayer.rotationYawHead = +170;
+        mc.thePlayer.prevRotationPitch = +22;
         switched = false;
-        if (mc.thePlayer.inventory.currentItem != currentItem)
+        if (mc.thePlayer.inventory.currentItem != currentItem) {
             mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+        }
 
         super.onDisable();
     }
@@ -104,24 +110,10 @@ public class Scaffold extends Module {
 
   //  mc.timer.timerSpeed = 25F;
 
-        if(mc.gameSettings.keyBindJump.pressed && !mc.gameSettings.keyBindForward.pressed){
-            if(mc.thePlayer.onGround){
-                mc.gameSettings.keyBindJump.pressed = true;
-                mc.timer.timerSpeed = 0.6F;
-            }else{
-                final float HYPXIEL = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
-                final float TOWER = (float) MathHelper.getRandomDoubleInRange(new Random(), 7, 10);
-                mc.timer.timerSpeed = TOWER;
-            }
 
-        }
-        if(!mc.gameSettings.keyBindJump.pressed){
-            mc.timer.timerSpeed = 1F;
-        }
 
         data = find(new Vec3(0, 0, 0));
         if (this.data != null && getBlockSlot() != -1) {
-            int lastSlot = Minecraft.thePlayer.inventory.currentItem;
             if(!switched) {
                 currentItem = getBlockSlot();
                 if(mc.thePlayer.inventory.currentItem != currentItem) {
@@ -174,21 +166,41 @@ public class Scaffold extends Module {
     @EventTarget
     public void onPre(EventPreMotionUpdate pre) {
         float[] rotation = data == null ? lastRot : RotationRecode2.rotationrecode7(this.data);
-        if(!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
-            pre.setYaw(rotation[0]);
-            lastYaw = rotation[0];
-            pre.setPitch(85.5F);
-        }else{
-            pre.setYaw(mc.thePlayer.rotationYawHead + 160);
-            pre.setPitch(80.5F);
+
+        if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
+            final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
+
+            String mode = setting.getItemByName("RotationModes").getCurrent();
+            switch (mode) {
+                case "NCP":
+                    pre.setYaw(rotation[0]);
+                    lastYaw = rotation[0];
+                    pre.setPitch(rotation[1]);
+                    lastPitch = (rotation[1]);
+                    break;
+
+
+                case "AAC":
+
+                    pre.setYaw((Minecraft.thePlayer.rotationYaw + 180));
+                    lastYaw = rotation[0];
+                    pre.setPitch(rotation[1]);
+                    lastPitch = (rotation[1]);
+                    break;
+
+
+                case "NCPStatic":
+                    pre.setYaw(rotation[0]);
+                    lastYaw = rotation[0];
+                    pre.setPitch(85);
+                    lastPitch = (rotation[1]);
+                    break;
+            }
         }
-        final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 85.2);
+
 
 
         //lastPitch = rotation[1];
-
-
-
 
     }
 

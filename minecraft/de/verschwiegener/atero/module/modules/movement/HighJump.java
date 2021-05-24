@@ -11,6 +11,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MinecraftError;
 import net.minecraft.util.Timer;
 import org.lwjgl.input.Keyboard;
@@ -22,6 +23,7 @@ import de.verschwiegener.atero.util.TimeUtils;
 import god.buddy.aot.BCompiler;
 
 import java.awt.*;
+import java.util.Random;
 
 public class HighJump extends Module {
     TimeUtils timeUtils;
@@ -73,14 +75,28 @@ public class HighJump extends Module {
                     mc.timer.timerSpeed = 0.2F;
                 } else if (Minecraft.thePlayer.hurtTime > 0) {
                 }
-                if(mc.thePlayer.ticksExisted % 4 == 0) {
-                    mc.timer.timerSpeed = 0.9F;
-                }else{
-                    mc.timer.timerSpeed = 0.5F;
+                if (mc.thePlayer.ticksExisted % 2 == 0) {
+                    mc.timer.timerSpeed = 1F;
+                } else {
+                    mc.timer.timerSpeed = 0.6F;
                 }
 
                 if (Minecraft.thePlayer.hurtTime > 0)
                     Dmg = true;
+
+                if (Dmg)
+                    if (Minecraft.thePlayer.hurtTime > 0) {
+
+                        //  Minecraft.thePlayer.motionY = 0;
+                        Minecraft.thePlayer.motionY += 0.0045;
+                    }
+                if (Dmg)
+                    if (Minecraft.thePlayer.hurtTime > 0) {
+                        mc.gameSettings.keyBindForward.pressed = true;
+                        setSpeed(0.4D);
+                    }
+            }
+        }
 
                 if (Dmg)
                    if (Minecraft.thePlayer.hurtTime > 0) {
@@ -95,6 +111,10 @@ public class HighJump extends Module {
                     }
             }
         }
+        //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
+       // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
+    }
+
         //mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
        // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
     }
