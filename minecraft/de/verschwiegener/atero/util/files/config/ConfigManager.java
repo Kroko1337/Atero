@@ -9,8 +9,8 @@ public class ConfigManager {
     public ArrayList<Config> configs = new ArrayList<>();
 
     
-    public Config getConfigByName(final String name) {
-	return configs.stream().filter(config -> config.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
+    public Config getConfigByName(final String name, ConfigType type) {
+	return configs.stream().filter(config -> config.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()) && (config.getType() == type))
 		.findFirst().orElse(null);
     }
 }

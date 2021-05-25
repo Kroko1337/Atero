@@ -4,8 +4,13 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Date;
 
+import org.kohsuke.github.GHBranch;
+import org.kohsuke.github.GHCommit;
+import org.kohsuke.github.GHCommitBuilder;
 import org.kohsuke.github.GHContent;
+import org.kohsuke.github.GHContentBuilder;
 import org.kohsuke.github.GHContentUpdateResponse;
+import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTree;
 import org.kohsuke.github.GHTreeBuilder;
@@ -22,14 +27,34 @@ public class GitHubUtils {
     
     public void auth() throws IOException {
 	String token = new String(Base64.getDecoder().decode("Z2hwX0lKUDI4U3VCNUtQVm1ZeENuNVpsQnU2WmtQZlF6ZjNQOXNBUQ=="));
-	System.out.println("Token: " + token);
+	//System.out.println("Token: " + token);
 	//github = new GitHubBuilder().withOAuthToken("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").build();
 	//github = new GitHubBuilder().withOAuthToken(token).build();
 	github = GitHub.connectUsingOAuth(token);
 	repo = github.getUser("Verschwiegener").getRepository("AteroConfigs");
     }
+    public void createCommit() {
+	try {
+	    
+	    //GHCommitBuilder commit = repo.createCommit();
+	    //commit.message("Message").create();
+	    
+	}catch(Exception e) {
+	    e.printStackTrace();
+	}
+    }
     
     public void createRequest(Config config) {
+	
+	String prTitle = "Adding new feature ABC";
+	String prDescriptionInMarkdown = " PR Description goes here";
+	try {
+	    GHPullRequest pullRequest = repo.createPullRequest(prTitle, "branch-to-merge", "main", prDescriptionInMarkdown);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	
+	
 	//updateFile(config);
 	//try {
 	//try {

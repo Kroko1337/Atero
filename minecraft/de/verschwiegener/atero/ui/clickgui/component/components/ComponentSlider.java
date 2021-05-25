@@ -42,6 +42,9 @@ public class ComponentSlider extends Component {
 	    }
 	}
 	if (!isParentextendet()) {
+	    if(!textFieldSelected) {
+		 currentValue = df.format(getItem().getCurrentValue());
+	    }
 	    double percent = (getItem().getCurrentValue() - getItem().getMinValue())
 		    / (getItem().getMaxValue() - getItem().getMinValue());
 	    fontRenderer.drawString(getName(), (getComponentX() + 3) * 2,

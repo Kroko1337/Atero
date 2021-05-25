@@ -13,6 +13,7 @@ public class Config {
     private String name;
     private String description;
     private String recommendedServerIP;
+    private ConfigType type;
 
     ArrayList<ConfigItem> items = new ArrayList<>();
 
@@ -23,11 +24,12 @@ public class Config {
      * @param recommendedServerIP
      * @param items
      */
-    public Config(String name, String description, String recommendedServerIP, ArrayList<ConfigItem> items) {
+    public Config(String name, String description, String recommendedServerIP, ArrayList<ConfigItem> items, ConfigType type) {
 	this.name = name;
 	this.description = description;
 	this.recommendedServerIP = recommendedServerIP;
 	this.items = items;
+	this.type = type;
     }
     /**
      * Used for condig command
@@ -35,20 +37,22 @@ public class Config {
      * @param description
      * @param recommendedServerIP
      */
-    public Config(String name, String description, String recommendedServerIP) {
+    public Config(String name, String description, String recommendedServerIP, ConfigType type) {
 	this.name = name;
 	this.description = description;
 	this.recommendedServerIP = recommendedServerIP;
+	this.type = type;
 	createItems();
     }
     /**
      * Used for config command
      * @param name
      */
-    public Config(String name) {
+    public Config(String name, ConfigType type) {
 	this.name = name;
 	this.description = "";
 	this.recommendedServerIP = "";
+	this.type = type;
 	createItems();
     }
 
@@ -87,6 +91,7 @@ public class Config {
     }
     
     public void loadConfig() {
+	System.out.println("Items: " + items);
 	for(ConfigItem item : items) {
 	    item.execute();
 	}
@@ -122,6 +127,9 @@ public class Config {
 
     public void setItems(ArrayList<ConfigItem> items) {
 	this.items = items;
+    }
+    public ConfigType getType() {
+	return type;
     }
 
 }

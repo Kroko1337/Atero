@@ -14,6 +14,8 @@ public class GlyphMetrics {
 	this.owidth = owidth;
 	this.oheight = oheight;
     }
+    public GlyphMetrics() {
+    }
 
     public double getWidth() {
 	return width;

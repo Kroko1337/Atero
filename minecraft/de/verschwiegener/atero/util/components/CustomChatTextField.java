@@ -9,8 +9,8 @@ import com.google.common.base.Predicates;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
-import de.verschwiegener.atero.util.TestFontRenderer;
 import de.verschwiegener.atero.util.chat.AutoComplete;
+import de.verschwiegener.atero.util.chat.TestFontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
