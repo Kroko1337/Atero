@@ -122,8 +122,42 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             try
             {
-                float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
-                float f1 = this.interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
+        	
+        	float prevYawOffset = entity.prevRenderYawOffset;
+        	float renderYawOffset = entity.renderYawOffset;
+        	float prevRotationYawHead = entity.prevRotationYawHead;
+        	float rotationYawHead = entity.rotationYawHead;
+        	
+        	if (entity instanceof EntityPlayerSP) {
+		    if (Objects.requireNonNull(Objects
+			    .requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled())) {
+			if(Killaura.instance.hasTarget()) {
+			    prevRotationYawHead = EventPreMotionUpdate.getInstance.lastYaw;
+			    rotationYawHead = EventPreMotionUpdate.getInstance.getYaw();
+			    /*float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
+					EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
+				float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,
+					EventPreMotionUpdate.getInstance.getPitch(), partialTicks);*/
+			}
+		    }
+		    if (Objects.requireNonNull(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Scaffold")).isEnabled())) {
+			
+			prevRotationYawHead = EventPreMotionUpdate.getInstance.lastYaw;
+			rotationYawHead = EventPreMotionUpdate.getInstance.getYaw();
+			
+			//prevYawOffset = EventPreMotionUpdate.getInstance.lastYaw;
+			//renderYawOffset = EventPreMotionUpdate.getInstance.getYaw();
+			
+			/*float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
+				EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
+			float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,
+				EventPreMotionUpdate.getInstance.getPitch(), partialTicks);*/
+
+		    }
+		}
+        	
+                float f = this.interpolateRotation(prevYawOffset, renderYawOffset, partialTicks);
+                float f1 = this.interpolateRotation(prevRotationYawHead, rotationYawHead, partialTicks);
                 float f2 = f1 - f;
 
                 if (this.mainModel.isRiding && entity.ridingEntity instanceof EntityLivingBase)
@@ -181,7 +215,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
                 
                 this.renderLivingAt(entity, x, y, z);
-                float f7 = this.handleRotationFloat(entity, partialTicks);
+                //float f7 = this.handleRotationFloat(entity, partialTicks);
+                float f7 = 0;
+                //System.out.println("F: " + f);
                 this.rotateCorpse(entity, f7, f, partialTicks);
                 GlStateManager.enableRescaleNormal();
                 GlStateManager.scale(-1.0F, -1.0F, 1.0F);

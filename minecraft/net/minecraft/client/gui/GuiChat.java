@@ -95,7 +95,7 @@ public class GuiChat extends GuiScreen
 
         if (keyCode == 15)
         {
-            this.autocompletePlayerNames();
+            //this.autocompletePlayerNames();
         }
         else
         {

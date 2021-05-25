@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ClickGui extends Module {
 
     public ClickGui() {
-	super("ClickGui", "ClickGui", Keyboard.KEY_RSHIFT, Category.Combat);
+	super("ClickGui", "ClickGui", Keyboard.KEY_RSHIFT, Category.Render);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.verschwiegener.atero.util;
+package de.verschwiegener.atero.util.chat;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -18,19 +18,23 @@ import javax.imageio.ImageIO;
 
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.GlyphMetrics;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.MathHelper;
 
-public class TestFont {
+public class ChatFont {
     
     private DynamicTexture fontTexture;
     //increase size for more glyphs
-    Map<Character, GlyphMetrics> glyphMap = new HashMap<>();
+    //HashMap<Character, GlyphMetrics> glyphMap = new HashMap<>();
+    GlyphMetrics[] glyphMap;
+    Double[] heightMap;
+    double BASE_HEIGHT;
     
-    public TestFont() {
+    public ChatFont() {
 	try {
 	    Font f = getFontByName("Inter-ExtraLight");
-	    generateMap(f, 32, 255, 25F, 1F, false, false);
+	    generateMap(f, 32, 255, 24F, 1F, false, false);
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -38,7 +42,8 @@ public class TestFont {
     }
     
     private void generateMap(Font font, int startChar, int stopChar, float size, float AA, boolean bold, boolean italic) throws IOException {
-	
+	glyphMap = new GlyphMetrics[stopChar];
+	heightMap = new Double[stopChar];
 	Map attributes = font.getAttributes();
 	attributes.put(TextAttribute.SIZE, new Float(size * AA));
 	attributes.put(TextAttribute.WEIGHT, bold ? TextAttribute.WEIGHT_BOLD : TextAttribute.WEIGHT_REGULAR);
@@ -66,7 +71,7 @@ public class TestFont {
 	    double width = rect.getWidth() + 8.0D;
 	    double height = rect.getHeight() + 4.0D;
 	    
-	    System.out.println("Char: " + (char) i);
+	    //System.out.println("Char: " + (char) i);
 	    
 	    BufferedImage fontImage = new BufferedImage(MathHelper.ceiling_double_int(width), MathHelper.ceiling_double_int(height), BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D fontGraphic = fontImage.createGraphics();
@@ -83,14 +88,18 @@ public class TestFont {
 	    fontGraphic.dispose();
 	    
 	    DynamicTexture fontTexture = new DynamicTexture(fontImage);
-	    System.out.println("OWidth: " + recto.getWidth() + " OHeight: " + recto.getHeight() + " Width: " + rect.getWidth() + " Height: " + rect.getHeight());
-	    glyphMap.putIfAbsent(glyph, new GlyphMetrics(width, height, fontTexture.getGlTextureId(), recto.getWidth() + 8.0D, recto.getHeight() + 4.0D));
-	    File outputfile = new File(Management.instance.CLIENT_DIRECTORY, String.valueOf(i) + ".jpg");
-	    ImageIO.write(fontImage, "jpg", outputfile);
+	    //glyphMap.putIfAbsent(glyph, new GlyphMetrics(width, height, fontTexture.getGlTextureId(), recto.getWidth() + 8.0D, recto.getHeight() + 4.0D));
+	    glyphMap[i] = new GlyphMetrics(width, height, fontTexture.getGlTextureId());
+	    heightMap[i] = height;
+	    BASE_HEIGHT += height;
 	}
+	BASE_HEIGHT = BASE_HEIGHT / (stopChar - startChar);
     }
     public DynamicTexture getFontTexture() {
 	return fontTexture;
+    }
+    public double getBASE_HEIGHT() {
+	return BASE_HEIGHT;
     }
 
     public static Font getFontByName(final String name) {

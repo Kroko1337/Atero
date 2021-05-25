@@ -19,6 +19,7 @@ import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.ui.audio.AudioPanel;
 import de.verschwiegener.atero.util.Util;
+import de.verschwiegener.atero.util.chat.ChatFontRenderer;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import de.verschwiegener.atero.util.render.ShaderRenderer;
 import net.minecraft.client.Minecraft;
@@ -35,7 +36,9 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -55,22 +58,35 @@ public class CustomGUIIngame {
 		    Management.instance.fontmgr.getFontByName("ArrayListFont"));
 	}
 	int yoffset = 0;
-	int xoffset = 3;
+	int xoffset = 10;
 	ModuleManager mm = Management.instance.modulemgr;
 	ScaledResolution sr = new ScaledResolution(mc);
-		for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
-			if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-				RenderUtil.fillRect(((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, xoffset + mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, new Color(128, 128, 128, 155));
-				mc.fontRendererObj.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset +2, Color.cyan.getRGB());
-				RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, mc.fontRendererObj.FONT_HEIGHT + 4, Color.CYAN);
-				//fontRenderer.drawString(mm.modules.get(i).getName(),
-				//((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
-				//- xoffset,
-				//yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
-				yoffset += mc.fontRendererObj.FONT_HEIGHT +4;
+	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
+	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
+		
+		//RenderUtil.fillRect(xoffset, yoffset, i, i, Management.instance.colorGray);
+		
+		//RenderUtil.fillRect((sr.getScaledWidth() - (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2)) + xoffset, yoffset, (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2), ChatFontRenderer.font.getBASE_HEIGHT() / 2, Management.instance.colorGray);
+		
+		//RenderUtil.fillRect(((sr.getScaledWidth()) - ChatFontRenderer.getStringWidth(mm.modules.get(i).getName())) - xoffset,
+			//yoffset, xoffset + ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, Management.instance.colorGray);
+		//ChatFontRenderer.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2))
+			//+ xoffset, yoffset, Color.WHITE);
+		
+		//RenderUtil.fillRect(
+			//((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset,
+			//yoffset, xoffset + ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()),
+			//ChatFontRenderer.font.getBASE_HEIGHT() + 5, Management.instance.colorGray);
+		
+		
+		//ChatFontRenderer.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, Color.WHITE);
+		
+		
+		
+		yoffset += mc.fontRendererObj.FONT_HEIGHT + 5;
 
-			}
-		}
+	    }
+	}
     }
     @EventTarget
     public static void renderShader(EventRenderShader event) {
@@ -119,17 +135,19 @@ public class CustomGUIIngame {
 	Fontrenderer fontRenderer = Management.instance.fontrenderer;
 	EntityLivingBase target = Killaura.instance.getTarget();
 
-	if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal) {
+	if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob) {
 	    GlStateManager.pushMatrix();
-	    GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F,
-		    0);
-	    RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
-	    RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
-	    RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
-	    RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
-	    RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
+	    GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
+	    
+	    RenderUtil.fillRect(0, 0, 150, 60, Management.instance.colorGray);
+	    RenderUtil.fillRect(0, 59, 150, 1, Management.instance.colorBlue);
+	    //RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
+	    //RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
+	    //RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
+	    //RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
+	    //RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-	    fontRenderer.drawString(target.getName(), 20, 3F, Util.getColor(255, 255, 255, 255));
+	    fontRenderer.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
 
 	    renderPlayer(25, 55, 23, target);
 
@@ -148,8 +166,7 @@ public class CustomGUIIngame {
 
 	    String message = winChance == 0 ? "You could win"
 		    : winChance < 0 ? "You could lose" : "You are going to win";
-	    fontRenderer.drawString(message,
-		    97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
+	    fontRenderer.drawString(message, 97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
 		    Util.getColor(255, 240, 0, 255));
 	    GlStateManager.popMatrix();
 	}

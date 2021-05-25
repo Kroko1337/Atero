@@ -62,13 +62,16 @@ public class MovementInputFromOptions extends MovementInput {
 	
 	//System.out.println("MoveSTrafe1: " + moveStrafe + " Forward1: " + moveForward);
 	
-	//if(useCorrectMovement() && (moveForward != 0 || moveStrafe != 0) && timer.hasReached(100)) {
+	//if(useCorrectMovement() && (moveForward != 0 || moveStrafe != 0)) {
 	    //timer.reset();
-	   // mc.thePlayer.setSprinting(false);
-	    //boolean last = testlast(moveForward, moveStrafe);
-	    //System.out.println("Last: " + last);
+	    //mc.thePlayer.setSprinting(false);
+	  // boolean last = testlast(moveForward, moveStrafe);
+	   // System.out.println("Last: " + last);
 	    //if(!last) {
 		//testfix(moveForward, moveStrafe);
+	    //}else {
+		//moveForward = lastForward;
+		//moveStrafe = lastStrafe;
 	    //}
 	//}
 	//System.out.println("MoveSTrafe2: " + moveStrafe + " Forward2: " + moveForward);
@@ -90,7 +93,7 @@ public class MovementInputFromOptions extends MovementInput {
     }
     
     private boolean useCorrectMovement() {
-	return(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.getSetting().getItemByName("CorrectMM").isState() && Killaura.instance.getTarget() != null);
+	return(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.hasTarget());
     }
     
     private boolean testlast(float forward, float strafe) {
@@ -155,7 +158,7 @@ public class MovementInputFromOptions extends MovementInput {
 	
 	System.out.println("Distance: " + distance);
 	
-	if(distance < 0.19) {
+	if(distance < 0.10) {
 	    moveForward = lastForward;
 	    moveStrafe = lastStrafe;
 	    return true;
@@ -190,15 +193,15 @@ public class MovementInputFromOptions extends MovementInput {
 	float clientStrafe = strafe * f;
 	float clientForward = forward * f;
 	float clientRotationSin = MathHelper.sin(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F) - 90;
-	float clientRotationCos = MathHelper.cos(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F);
+	float clientRotationCos = MathHelper.cos(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F) - 90;
 	float clientMotionX = (clientStrafe * clientRotationCos - clientForward * clientRotationSin);
 	float clientMotionZ = (clientForward * clientRotationCos + clientStrafe * clientRotationSin);
 	
 	//System.out.println("MotionXDif: " + (clientMotionX - mc.thePlayer.motionX));
 	//System.out.println("MotionZDif: " + (clientMotionZ - mc.thePlayer.motionZ));
 	
-	float serverRotationSin = MathHelper.sin(EventPreMotionUpdate.getInstance.getYaw() * (float) Math.PI / 180.0F) - 90;
-	float serverRotationCos = MathHelper.cos(EventPreMotionUpdate.getInstance.getYaw() * (float) Math.PI / 180.0F);
+	float serverRotationSin = MathHelper.sin(EventPreMotionUpdate.getYaw() * (float) Math.PI / 180.0F) - 90;
+	float serverRotationCos = MathHelper.cos(EventPreMotionUpdate.getYaw() * (float) Math.PI / 180.0F) - 90;
 	
 	float smalestDistance = Float.NaN;
 	float posibleForward = 0;

@@ -22,13 +22,13 @@ public class ComponentColorPicker extends Component {
 
     @Override
     public void drawComponent(int x, int y) {
-		super.drawComponent(x, y);
-		colorPicker.draw(getComponentX() + 5,getComponentY(),50,50, x,y, getItem().getColor());
-	    if(x > getComponentX() + 5 && x < getComponentX() + 55 && y > getComponentY() && y < getComponentY() + 50) {
-	        if(Mouse.isButtonDown(0)) {
-	            getItem().setColor(colorPicker.getHoverColor());
-            }
-        }
+	super.drawComponent(x, y);
+	colorPicker.draw(getComponentX() + 5, getComponentY(), 70, 50, x, y, getItem().getColor());
+	if (x > getComponentX() + 5 && x < getComponentX() + 75 && y > getComponentY() && y < getComponentY() + 70) {
+	    if (Mouse.isButtonDown(0)) {
+		getItem().setColor(colorPicker.getHoverColor());
+	    }
+	}
     }
 
 }

@@ -55,27 +55,28 @@ public class ClickGUI extends GuiScreen {
 	    hasSearched = false;
 	}
     }
+
     private void drawPressed(final boolean longPressed, final ClickGUIPanel p2) {
 	boolean isAnimate = true;
 	final TimeUtils animationTimer = new TimeUtils();
 	final int delay = longPressed ? 19 : 5;
-	if(!p2.isDrawCircle()) {
+	if (!p2.isDrawCircle()) {
 	    p2.setDrawCircle(true);
 	    p2.setLongPressed(longPressed);
 	    Management.instance.ANIMATION_EXECUTOR.submit(() -> {
-		    int circlesize = 0;
-		    while(p2.isDrawCircle()) {
-			if(animationTimer.isDelayComplete(delay)) {
-			    animationTimer.reset();
-			    circlesize++;
-			    p2.setCircleAnimationDiameter(circlesize);
-			    if(circlesize >= 50) {
-				p2.setDrawCircle(false);
-				p2.setCircleAnimationDiameter(0);
-			    }
+		int circlesize = 0;
+		while (p2.isDrawCircle()) {
+		    if (animationTimer.isDelayComplete(delay)) {
+			animationTimer.reset();
+			circlesize++;
+			p2.setCircleAnimationDiameter(circlesize);
+			if (circlesize >= 50) {
+			    p2.setDrawCircle(false);
+			    p2.setCircleAnimationDiameter(0);
 			}
 		    }
-		});
+		}
+	    });
 	}
     }
 

@@ -14,7 +14,6 @@ public class InventoryUtil {
     static Minecraft mc = Minecraft.getMinecraft();
     //public static ArrayList<Integer> trashInventory = new ArrayList<>();
     private static ArrayList<Group> groups = new ArrayList<>();
-    public static Queue<Move> queue = new LinkedList<Move>();
     public static int count;
     public static int count2;
     
@@ -28,42 +27,6 @@ public class InventoryUtil {
 	groups.add(new Group("GApple", 0, 9, 0, new Integer[] {322, 317}));
 	
     }
-    
-    public static void updateInventory() {
-	queue.clear();
-	groups.forEach(group -> group.reset());
-	
-	for (int i = 0; i < mc.thePlayer.inventoryContainer.inventorySlots.size(); i++) {
-	    int id = 0;
-	    ItemStack item = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-	    if (item != null) {
-		id = Item.getIdFromItem(mc.thePlayer.inventoryContainer.getSlot(i).getStack().getItem());
-		boolean trash = true;
-		for (Group g : groups) {
-		    if (g.getItemIDs().contains(id)) {
-			g.getInventoryIDs().add(i);
-			trash = false;
-		    }
-		}
-		if (trash) {
-		    queue.add(new Move(i, 1));
-		}
-	    }
-	}
-    }
-    public static void pollQueue() {
-	if(!queue.isEmpty()) {
-	    Move move = queue.poll();
-	    System.out.println("Move: " + move.getCurrentInvID() + " target: " + move.getTargetInvID());
-	    mc.playerController.windowClick(0, move.getCurrentInvID(), 1, 4, mc.thePlayer);
-	    if(move.getTargetInvID() != 0) {
-		mc.playerController.windowClick(0, move.getTargetInvID(), 0, 1, mc.thePlayer);
-	    }
-	}
-    }
-    public static void getBestofGroup() {
-	groups.forEach(group -> group.getBest());
-    }
 
     public static ArrayList<Integer> getGarbageItems(boolean onlyhotbar) {
 	groups.forEach(group -> group.reset());
@@ -74,7 +37,6 @@ public class InventoryUtil {
 	    int id = 0;
 	    ItemStack item = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 	    if (item != null) {
-		//System.out.println("Item: " + item.getItem().getUnlocalizedName());
 		id = Item.getIdFromItem(mc.thePlayer.inventoryContainer.getSlot(i).getStack().getItem());
 		boolean trash = true;
 		for (Group g : groups) {

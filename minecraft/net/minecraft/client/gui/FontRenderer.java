@@ -460,7 +460,7 @@ public class FontRenderer implements IResourceManagerReloadListener
                     }
 
                     int j1 = this.colorCode[i1];
-
+                    
                     if (Config.isCustomColors())
                     {
                         j1 = CustomColors.getTextColor(i1, j1);

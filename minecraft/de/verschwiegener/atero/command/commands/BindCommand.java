@@ -9,7 +9,7 @@ import de.verschwiegener.atero.util.chat.ChatUtil;
 public class BindCommand extends Command {
 
 	public BindCommand() {
-		super("Bind", "Binds a module to a key", new String[] {"<module> <key>"});
+		super("Bind", "Binds a module to a key", new String[] {"<module>", "<key>"});
 	}
 	
 	@Override

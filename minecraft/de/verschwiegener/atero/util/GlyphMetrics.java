@@ -5,14 +5,13 @@ public class GlyphMetrics {
     private double width;
     private double height;
     private int GLTextureID;
-    private double owidth, oheight;
 
-    public GlyphMetrics(double width, double height, int GLTextureID, double owidth, double oheight) {
+    public GlyphMetrics(double width, double height, int GLTextureID) {
 	this.width = width;
 	this.height = height;
 	this.GLTextureID = GLTextureID;
-	this.owidth = owidth;
-	this.oheight = oheight;
+    }
+    public GlyphMetrics() {
     }
 
     public double getWidth() {
@@ -37,12 +36,6 @@ public class GlyphMetrics {
 
     public void setGLTextureID(int gLTextureID) {
 	GLTextureID = gLTextureID;
-    }
-    public double getOheight() {
-	return oheight;
-    }
-    public double getOwidth() {
-	return owidth;
     }
 
 }

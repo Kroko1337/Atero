@@ -74,7 +74,7 @@ public class ScreenshotSaverAsync implements Runnable{
 	    ImageIO.write(image, "png", ssFile);
 	    IChatComponent ichatcomponent = new ChatComponentText(ssFile.getName());
             ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, ssFile.getAbsolutePath()));
-            //ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+            ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
             
             ChatUtil.addIChatComponent(new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent}));
 	} catch (IOException e) {

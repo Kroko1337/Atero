@@ -41,12 +41,12 @@ public class ClickGUIPanel {
 	yOffset = 15;
 	animationHeight = yOffset;
 	// Sets the base Width
-	width = 100;
+	width = 120;
 	for (final Module m : Management.instance.modulemgr.modules) {
 	    if (m.getCategory().toString().equalsIgnoreCase(name)) {
 		// passt die Panel Width an die Module Name Width an
-		if (fontRenderer.getStringWidth(m.getName()) + 10 > width) {
-		    width = fontRenderer.getStringWidth(m.getName());
+		if (fontRenderer.getStringWidth(m.getName()) > width) {
+		    //width = fontRenderer.getStringWidth(m.getName());
 		}
 		modules.add(new ClickGUIButton(m.getName(), yOffset, this));
 		ePanels.add(new PanelExtendet(m.getName(), yOffset, this));

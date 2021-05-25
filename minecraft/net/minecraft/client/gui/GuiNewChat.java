@@ -92,11 +92,12 @@ public class GuiNewChat extends Gui
                                 GlStateManager.enableBlend();
                                 String s = chatline.getChatComponent().getUnformattedText();
                                 
-                                this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
-//                                cr.drawChat(s, i2, (j2 * 2 ) - 22);
-//                                System.out.println("I2: " + i2);
-//                                System.out.println("J2: " + j2);
-//                                cr.drawchat2(s, i2, (j2 * 2 ) - 22);
+                                //this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
+                                cr.drawChat(s, i2, j2 - 12);
+				// cr.drawChat(s, i2, (j2 * 2 ) - 22);
+				// System.out.println("I2: " + i2);
+				// System.out.println("J2: " + j2);
+				// cr.drawchat2(s, i2, (j2 * 2 ) - 22);
 
                                 GlStateManager.disableAlpha();
                                 GlStateManager.disableBlend();

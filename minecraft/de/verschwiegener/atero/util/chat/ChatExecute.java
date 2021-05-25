@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.files.config.ConfigType;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.IChatComponent;
@@ -47,7 +48,7 @@ public class ChatExecute {
 		case "config":
 			switch (args[1]) {
 			case "load":
-				System.out.println("Config load: " + args[2]);
+			    Management.instance.configmgr.getConfigByName(args[2]).loadConfig();
 				break;
 			}
 			break;

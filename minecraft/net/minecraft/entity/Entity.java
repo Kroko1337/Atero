@@ -574,12 +574,12 @@ public abstract class Entity implements ICommandSender {
           //  if (Scaffold.instance.isEnabled() && Scaffold.instance.canSafewalk()) {
                 if (this instanceof EntityPlayer) {
                     if(Minecraft.getMinecraft().gameSettings.keyBindSneak.pressed && !Minecraft.getMinecraft().gameSettings.keyBindJump.pressed)
-                    flag = false;
+                   flag = false;
                 }
           //  }
             if (Scaffold.instance.isEnabled() && Scaffold.instance.allowdown) {
                 if (this instanceof EntityPlayer) {
-                    flag = false;
+                    //flag = false;
                 }
             }
             if (flag) {
