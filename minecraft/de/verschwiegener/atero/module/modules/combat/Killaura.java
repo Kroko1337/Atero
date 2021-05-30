@@ -325,11 +325,11 @@ public class Killaura extends Module {
 
 	    reach = setting.getItemByName("Range").getCurrentValue();
 	    final String mode = setting.getItemByName("TargetMode").getCurrent();
-	    if (mode == "Nearest") {
+	    if (mode.equalsIgnoreCase("Nearest")) {
 		target = getClosestPlayer(reach);
-	    } else if (mode == "Lowest") {
+	    } else if (mode.equalsIgnoreCase("Lowest")) {
 		target = getLowestPlayer(reach);
-	    } else if (mode == "Highest") {
+	    } else if (mode.equalsIgnoreCase("Highest")) {
 		target = getHighestPlayer(reach);
 	    }
 

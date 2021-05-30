@@ -33,7 +33,8 @@ public class ComponentCombobox extends Component {
 		for (String str : getItem().getModes()) {
 		    texty += 12;
 		    // frText.drawString(str, (textx + 2) * 2, texty * 2, Color.WHITE.getRGB());
-		    if (str == getItem().getCurrent()) {
+		    System.out.println("Current: " + getItem().getCurrent());
+		    if (str.equals(getItem().getCurrent())) {
 			// RenderUtil.fillRect((ccb.getPanelExtendet().getPanel().getX() +
 			// ccb.getPanelExtendet().getWidth() + 2), (ccb.getY() +
 			// ccb.getPanelExtendet().getPanel().getY() + ccb.getPanelExtendet().getY()) +

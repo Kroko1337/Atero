@@ -36,8 +36,9 @@ public class ConfigItem {
 		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).setColor(color);
 		    break;
 		} else {
-		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2])
-			    .setCurrent(args[3]);
+		    System.out.println("SetCurrent: " + args[3] + " ItemName: " + args[2] + " Module: " + args[1]);
+		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).setCurrent(args[3]);
+		    System.out.println("Set: " + Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).getCurrent());
 		    break;
 		}
 	    }

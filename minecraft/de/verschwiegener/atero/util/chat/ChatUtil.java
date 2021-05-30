@@ -29,19 +29,16 @@ public class ChatUtil {
     }
 
     public static void addLoadChat2() {
-	ArrayList<IChatComponent> components = new ArrayList<>();
 	IChatComponent ichatcomponent = new ChatComponentText("Test ");
 	ichatcomponent.getChatStyle().setColor(EnumChatFormatting.GREEN);
 	ichatcomponent.getChatStyle()
 		.setChatHoverEvent(new HoverEvent(HoverEvent.Action.CLIENT, new ChatComponentText("test_test2_test3")));
 	ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "bind_del_test"));
-	components.add(ichatcomponent);
 
 	IChatComponent ichatcomponent2 = new ChatComponentText("Test2");
 	ichatcomponent2.getChatStyle().setColor(EnumChatFormatting.GREEN);
 	ichatcomponent2.getChatStyle()
 		.setChatHoverEvent(new HoverEvent(HoverEvent.Action.CLIENT, new ChatComponentText("test_test2_test4")));
-	components.add(ichatcomponent2);
 
 	IChatComponent test = new ChatComponentText("Test ");
 	test.appendSibling(ichatcomponent);
@@ -71,6 +68,21 @@ public class ChatUtil {
 	message.appendSibling(componentload);
 	
 	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
+    }
+
+    public static void sendConfigJoinMessage() {
+	IChatComponent joinmessage = new ChatComponentText("Available Configs: ");
+	for (Config c : Management.instance.configmgr.configs) {
+	    System.out.println("Config: " + c.getName() + " IP: " + c.getRecommendedServerIP() + " ServerIP: " + Minecraft.getMinecraft().getCurrentServerData().serverIP);
+	    if (c.getRecommendedServerIP().equalsIgnoreCase(Minecraft.getMinecraft().getCurrentServerData().serverIP)) {
+		//System.out.println("Config: " + c.getName());
+		IChatComponent ichatcomponent2 = new ChatComponentText(c.getName() + " ,");
+		ichatcomponent2.getChatStyle().setColor(EnumChatFormatting.GREEN);
+		ichatcomponent2.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + c.getName()));
+		joinmessage.appendSibling(ichatcomponent2);
+	    }
+	}
+	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(joinmessage);
     }
 
 }
