@@ -210,7 +210,7 @@ public class GuiIngame extends Gui
             this.mc.mcProfiler.endSection();
         }
 
-        CustomGUIIngame.drawWatermark();
+        CustomGUIIngame.drawWatermark(scaledresolution);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         int i2 = i / 2 - 91;
 

@@ -37,6 +37,7 @@ public class ModuleManager {
 	modules.add(new TEst());
 	modules.add(new InventoryManager());
 	modules.add(new AutoClicker());
+	modules.add(new AutoEagle());
     }
 
     public Module getModuleByName(final String name) {

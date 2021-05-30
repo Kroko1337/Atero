@@ -70,11 +70,11 @@ public class Killaura extends Module {
 	@BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
     public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
 	final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 90, 92);
-	final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 90, 94);
+	final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationPitch, 94);
 	final double posX = target.posX - player.posX;
-	final float RotationY2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, 0.2);
-	final float RotationY = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationY2, 0.3);
-	final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getEyeHeight() + RotationY);
+	final float RotationY2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0, 0.2);
+	final float RotationY = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationY2, 0.4);
+	final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getAge() + 0.5 + player.getEyeHeight() + 0.1);
 	final double posZ = target.posZ - player.posZ;
 	final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
 	float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / Math.PI) - RotationYaw;

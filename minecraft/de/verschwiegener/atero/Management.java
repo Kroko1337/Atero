@@ -8,6 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+import de.liquiddev.ircclient.api.IrcClient;
+import de.liquiddev.ircclient.client.ClientType;
+import de.liquiddev.ircclient.client.IrcClientFactory;
+import de.verschwiegener.slinky.IRC.IrcChatListener;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventManager;
@@ -131,6 +135,10 @@ public class Management {
 	    e1.printStackTrace();
 	}
 	
+	font = new ChatFont();
+	
+	
+
 	fileManager = new FileManager();
 
 	clickgui = new ClickGUI();

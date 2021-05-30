@@ -20,7 +20,7 @@ public class ConfigCommand extends Command {
 	    switch (args[2]) {
 	    
 	    case "list":
-		ChatUtil.sendMessage("§6------§fConfigs §6------");
+		ChatUtil.sendMessage("ï¿½6------ï¿½fConfigs ï¿½6------");
 		for (final Config config : Management.instance.configmgr.configs) {
 		    if(config.getType() == ConfigType.locale) {
 			ChatUtil.addConfigMessage(config);
@@ -55,7 +55,7 @@ public class ConfigCommand extends Command {
 	case "online":
 	    switch (args[2]) {
 	    case "list":
-		ChatUtil.sendMessage("§6------§fConfigs §6------");
+		ChatUtil.sendMessage("ï¿½6------ï¿½fConfigs ï¿½6------");
 		for (final Config config : Management.instance.configmgr.configs) {
 		    if(config.getType() == ConfigType.online) {
 			ChatUtil.addConfigMessage(config);

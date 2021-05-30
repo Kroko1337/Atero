@@ -13,6 +13,8 @@ public class GlyphMetrics {
     }
     public GlyphMetrics() {
     }
+    public GlyphMetrics() {
+    }
 
     public double getWidth() {
 	return width;

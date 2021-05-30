@@ -201,7 +201,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 				f8 = pitch;   
 			}
 		    }
-		    if (Objects.requireNonNull(Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Scaffold")).isEnabled())) {
+		    if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Scaffold")).isEnabled() || Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("AutoEagle")).isEnabled()) {
 			float yaw = this.interpolateRotation(EventPreMotionUpdate.lastYaw,
 				EventPreMotionUpdate.getInstance.getYaw(), partialTicks);
 			float pitch = this.interpolateRotation(EventPreMotionUpdate.lastPitch,

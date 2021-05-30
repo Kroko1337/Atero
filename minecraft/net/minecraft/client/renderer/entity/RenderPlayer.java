@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer.entity;
 
+import de.verschwiegener.atero.Management;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelPlayer;
@@ -90,7 +91,9 @@ public class RenderPlayer extends RendererLivingEntity<AbstractClientPlayer>
             modelplayer.bipedRightArmwear.showModel = clientPlayer.isWearing(EnumPlayerModelParts.RIGHT_SLEEVE);
             modelplayer.heldItemLeft = 0;
             modelplayer.aimedBow = false;
-            modelplayer.isSneak = clientPlayer.isSneaking();
+            if(!Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) {
+                 modelplayer.isSneak = clientPlayer.isSneaking();
+            }
 
             if (itemstack == null)
             {

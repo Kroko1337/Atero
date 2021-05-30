@@ -1,6 +1,7 @@
 package de.verschwiegener.atero.ui.guiingame;
 
 import java.awt.Color;
+import java.time.LocalDateTime;
 
 import javax.swing.text.html.parser.Entity;
 
@@ -47,216 +48,250 @@ import net.minecraft.item.ItemTool;
 
 public class CustomGUIIngame {
 
-    private static Minecraft mc = Minecraft.getMinecraft();
-    public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
+	private static Minecraft mc = Minecraft.getMinecraft();
+	public static ShaderRenderer shader = new ShaderRenderer("tabGuiBlur.frag");
 
-    public static void drawArrayList() {
-	Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
-	if (Management.instance.modulechange) {
-	    Management.instance.modulechange = false;
-	    Util.sortModuleList(Management.instance.modulemgr.modules,
-		    Management.instance.fontmgr.getFontByName("ArrayListFont"));
+	public static void drawArrayList() {
+		Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
+		if (Management.instance.modulechange) {
+			Management.instance.modulechange = false;
+			Util.sortModuleList(Management.instance.modulemgr.modules,
+					Management.instance.fontmgr.getFontByName("ArrayListFont"));
+		}
+		int yoffset = 0;
+		int xoffset = 3;
+		ModuleManager mm = Management.instance.modulemgr;
+		ScaledResolution sr = new ScaledResolution(mc);
+		for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
+			if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
+				RenderUtil.fillRect(((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset - 2, yoffset, xoffset + mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, new Color(0, 0, 0, 120));
+				mc.fontRendererObj.drawStringWithShadow(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset +2, Management.instance.colorBlue.getRGB());
+				RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, mc.fontRendererObj.FONT_HEIGHT + 4, Management.instance.colorBlue);
+				//fontRenderer.drawString(mm.modules.get(i).getName(),
+				//((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
+				//- xoffset,
+				//yoffset, Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
+				yoffset += mc.fontRendererObj.FONT_HEIGHT +4;
+
+			}
+		}
 	}
-	int yoffset = 0;
-	int xoffset = 10;
-	ModuleManager mm = Management.instance.modulemgr;
-	ScaledResolution sr = new ScaledResolution(mc);
-	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
-	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-		
-		//RenderUtil.fillRect(xoffset, yoffset, i, i, Management.instance.colorGray);
-		
-		//RenderUtil.fillRect((sr.getScaledWidth() - (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2)) + xoffset, yoffset, (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2), ChatFontRenderer.font.getBASE_HEIGHT() / 2, Management.instance.colorGray);
-		
-		//RenderUtil.fillRect(((sr.getScaledWidth()) - ChatFontRenderer.getStringWidth(mm.modules.get(i).getName())) - xoffset,
-			//yoffset, xoffset + ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()), mc.fontRendererObj.FONT_HEIGHT + 4, Management.instance.colorGray);
-		//ChatFontRenderer.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - (ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()) / 2))
-			//+ xoffset, yoffset, Color.WHITE);
-		
-		//RenderUtil.fillRect(
-			//((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset,
-			//yoffset, xoffset + ChatFontRenderer.getStringWidth(mm.modules.get(i).getName()),
-			//ChatFontRenderer.font.getBASE_HEIGHT() + 5, Management.instance.colorGray);
-		
-		
-		//ChatFontRenderer.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - mc.fontRendererObj.getStringWidth(mm.modules.get(i).getName())) - xoffset, yoffset, Color.WHITE);
-		
-		
-		
-		yoffset += mc.fontRendererObj.FONT_HEIGHT + 5;
-
-	    }
+	@EventTarget
+	public static void renderShader(EventRenderShader event) {
+		if (mc.currentScreen == null) {
+			// Render Tabgui Blur shader
+			try {
+				//ScaledResolution sr = new ScaledResolution(mc);
+				//shader.prepareRender();
+				//ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
+				//shader.renderShader(sr);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-    }
-    @EventTarget
-    public static void renderShader(EventRenderShader event) {
-	if (mc.currentScreen == null) {
-	    // Render Tabgui Blur shader
-	    try {
-		//ScaledResolution sr = new ScaledResolution(mc);
-		//shader.prepareRender();
-		//ARBShaderObjects.glUniform2fARB(shader.getUniformLocation("u_size"), 200.0F, 200.0F);
-		//shader.renderShader(sr);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+
+	public static void drawMusikTab() {
+		Stream stream = Management.instance.currentStream;
+		if (stream != null) {
+			ScaledResolution sr = new ScaledResolution(mc);
+			final int scaleFactor = sr.getScaleFactor();
+			Fontrenderer fontRenderer = Management.instance.fontrendererBold;
+			drawImage(sr.getScaledWidth() - 54, sr.getScaledHeight() - 54, 50, 50, stream);
+			fontRenderer.drawString(stream.getFulltitle(),
+					(sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getFulltitle())) - 5,
+					(sr.getScaledHeight() - 54) * 2, Color.BLACK.getRGB());
+			fontRenderer.drawString(stream.getArtist(),
+					(sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getArtist())) - 5,
+					(sr.getScaledHeight() - 54) * 2 + (fontRenderer.getBaseStringHeight() * 2), Color.BLACK.getRGB());
+		}
 	}
-    }
 
-    public static void drawMusikTab() {
-	Stream stream = Management.instance.currentStream;
-	if (stream != null) {
-	    ScaledResolution sr = new ScaledResolution(mc);
-	    final int scaleFactor = sr.getScaleFactor();
-	    Fontrenderer fontRenderer = Management.instance.fontrendererBold;
-	    drawImage(sr.getScaledWidth() - 54, sr.getScaledHeight() - 54, 50, 50, stream);
-	    fontRenderer.drawString(stream.getFulltitle(),
-		    (sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getFulltitle())) - 5,
-		    (sr.getScaledHeight() - 54) * 2, Color.BLACK.getRGB());
-	    fontRenderer.drawString(stream.getArtist(),
-		    (sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getArtist())) - 5,
-		    (sr.getScaledHeight() - 54) * 2 + (fontRenderer.getBaseStringHeight() * 2), Color.BLACK.getRGB());
-	}
-    }
-
-    private static void drawImage(final int xPos, final int yPos, final int width, final int height, Stream stream) {
-	mc.getTextureManager().deleteTexture(stream.getLocation());
-	stream.setTexture(new DynamicTexture(stream.getImage()));
-	stream.setLocation(
-		mc.getTextureManager().getDynamicTextureLocation(stream.getChannelName(), stream.getTexture()));
-	stream.getTexture().updateDynamicTexture();
-	mc.getTextureManager().bindTexture(stream.getLocation());
-	GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0.0F, 0.0F, width, height, width, height);
-    }
-
-    public static void renderTargetHud(ScaledResolution scaledResolution) {
-
-	Fontrenderer fontRenderer = Management.instance.fontrenderer;
-	EntityLivingBase target = Killaura.instance.getTarget();
-
-	if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob) {
-	    GlStateManager.pushMatrix();
-	    GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
-	    
-	    RenderUtil.fillRect(0, 0, 150, 60, Management.instance.colorGray);
-	    RenderUtil.fillRect(0, 59, 150, 1, Management.instance.colorBlue);
-	    //RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
-	    //RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
-	    //RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
-	    //RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
-	    //RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
-
-	    fontRenderer.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
-
-	    renderPlayer(25, 55, 23, target);
-
-	    float healthProcent = target.getHealth() / target.getMaxHealth();
-	    RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
-		    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-	    fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
-		    Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-
-	    double winChance = 0;
-
-	    double TargetStrength = getWeaponStrength(target.getHeldItem());
-	    winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
-	    winChance += getProtection(mc.thePlayer) - getProtection(target);
-	    winChance += mc.thePlayer.getHealth() - (target).getHealth();
-
-	    String message = winChance == 0 ? "You could win"
-		    : winChance < 0 ? "You could lose" : "You are going to win";
-	    fontRenderer.drawString(message, 97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
-		    Util.getColor(255, 240, 0, 255));
-	    GlStateManager.popMatrix();
+	private static void drawImage(final int xPos, final int yPos, final int width, final int height, Stream stream) {
+		mc.getTextureManager().deleteTexture(stream.getLocation());
+		stream.setTexture(new DynamicTexture(stream.getImage()));
+		stream.setLocation(
+				mc.getTextureManager().getDynamicTextureLocation(stream.getChannelName(), stream.getTexture()));
+		stream.getTexture().updateDynamicTexture();
+		mc.getTextureManager().bindTexture(stream.getLocation());
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0.0F, 0.0F, width, height, width, height);
 	}
     }
 
     private static double getProtection(EntityLivingBase target) {
 	double protection = 0;
+	public static void renderTargetHud(ScaledResolution scaledResolution) {
 
 	for (int i = 0; i <= 3; i++) {
 	    ItemStack stack = target.getCurrentArmor(i);
+		Fontrenderer fontRenderer = Management.instance.fontrenderer;
+		EntityLivingBase target = Killaura.instance.getTarget();
 
 	    if (stack != null) {
 		if (stack.getItem() instanceof ItemArmor) {
 		    ItemArmor armor = (ItemArmor) stack.getItem();
 		    protection += armor.damageReduceAmount;
 		}
+		if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
 
 		protection += EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack) * 0.25;
 	    }
 	}
+			RenderUtil.fillRect(0, 0, 150, 60, Management.instance.colorGray);
+			RenderUtil.fillRect(0, 59, 150, 1, Management.instance.colorBlue);
+			//RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
+			//RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
+			//RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
+			//RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
+			//RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
 	return protection;
     }
+			fontRenderer.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
 
     // schon mal an nen event daf�r gedacht - wo renderst du das was rendern?
     // die aary?
+			renderPlayer(25, 55, 23, target);
 
     private static double getWeaponStrength(ItemStack stack) {
 	double damage = 0;
+			float healthProcent = target.getHealth() / target.getMaxHealth();
+			RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
+					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
+			fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
+					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
 	if (stack != null) {
 	    if (stack.getItem() instanceof ItemSword) {
 		ItemSword sword = (ItemSword) stack.getItem();
 		damage += sword.getDamageVsEntity();
 	    }
+			double winChance = 0;
 
 	    if (stack.getItem() instanceof ItemTool) {
 		ItemTool tool = (ItemTool) stack.getItem();
 		damage += tool.getToolMaterial().getDamageVsEntity();
 	    }
+			double TargetStrength = getWeaponStrength(target.getHeldItem());
+			winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
+			winChance += getProtection(mc.thePlayer) - getProtection(target);
+			winChance += mc.thePlayer.getHealth() - (target).getHealth();
 
 	    damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25;
+			String message = winChance == 0 ? "You could win"
+					: winChance < 0 ? "You could lose" : "You are going to win";
+			fontRenderer.drawString(message, 97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
+					Util.getColor(255, 240, 0, 255));
+			GlStateManager.popMatrix();
+		}
 	}
 
-	return damage;
-    }
+	private static double getProtection(EntityLivingBase target) {
+		double protection = 0;
 
-    private static void renderPlayer(int posX, int posY, int scale, EntityLivingBase player) {
-	GlStateManager.enableColorMaterial();
-	GlStateManager.pushMatrix();
-	GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	GlStateManager.translate((float) posX, (float) posY, 50.0F);
-	GlStateManager.scale((float) (-scale), (float) scale, (float) scale);
-	GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-	RenderHelper.enableStandardItemLighting();
-	player.rotationYawHead = player.rotationYaw;
-	player.prevRotationYawHead = player.rotationYaw;
-	GlStateManager.translate(0.0F, 0.0F, 0.0F);
-	RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
-	rendermanager.setPlayerViewY(180.0F);
-	rendermanager.setRenderShadow(false);
-	rendermanager.renderEntityWithPosYaw(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-	rendermanager.setRenderShadow(true);
-	player.renderYawOffset = player.rotationYaw;
-	player.prevRotationYawHead = player.rotationYaw;
-	player.rotationYawHead = player.rotationYaw;
-	GlStateManager.popMatrix();
-	RenderHelper.disableStandardItemLighting();
-	GlStateManager.disableRescaleNormal();
-	GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-	GlStateManager.disableTexture2D();
-	GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-    }
+		for (int i = 0; i <= 3; i++) {
+			ItemStack stack = target.getCurrentArmor(i);
 
-    public static void drawWatermark() {
-	final Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("WaterMarkFont").getFontrenderer();
-	int xP = 10;
-	int yP = 5;
-	int widthP = (int) ((int) fontRenderer.getStringWidth("atero"));
-	int heightP = (int) fontRenderer.getStringHeight("atero") / 2;
-	fontRenderer.drawString("atero", xP, yP, 0x292929);
-	drawImage((int) (xP), (int) (yP + fontRenderer.getStringHeight("atero")), widthP - 80, heightP,
-		new ResourceLocation("atero/assets/arrow.png"));
-    }
+			if (stack != null) {
+				if (stack.getItem() instanceof ItemArmor) {
+					ItemArmor armor = (ItemArmor) stack.getItem();
+					protection += armor.damageReduceAmount;
+				}
 
-    private static void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
-	mc.getTextureManager().bindTexture(resourceLocation);
-	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
-	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-    }
+				protection += EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack) * 0.25;
+			}
+		}
 
+		return protection;
+	}
+
+	// schon mal an nen event daf�r gedacht - wo renderst du das was rendern?
+	// die aary?
+
+	private static double getWeaponStrength(ItemStack stack) {
+		double damage = 0;
+
+		if (stack != null) {
+			if (stack.getItem() instanceof ItemSword) {
+				ItemSword sword = (ItemSword) stack.getItem();
+				damage += sword.getDamageVsEntity();
+			}
+
+			if (stack.getItem() instanceof ItemTool) {
+				ItemTool tool = (ItemTool) stack.getItem();
+				damage += tool.getToolMaterial().getDamageVsEntity();
+			}
+
+			damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25;
+		}
+
+		return damage;
+	}
+
+	private static void renderPlayer(int posX, int posY, int scale, EntityLivingBase player) {
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.translate((float) posX, (float) posY, 50.0F);
+		GlStateManager.scale((float) (-scale), (float) scale, (float) scale);
+		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+		RenderHelper.enableStandardItemLighting();
+		player.rotationYawHead = player.rotationYaw;
+		player.prevRotationYawHead = player.rotationYaw;
+		GlStateManager.translate(0.0F, 0.0F, 0.0F);
+		RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+		rendermanager.setPlayerViewY(180.0F);
+		rendermanager.setRenderShadow(false);
+		rendermanager.renderEntityWithPosYaw(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		rendermanager.setRenderShadow(true);
+		player.renderYawOffset = player.rotationYaw;
+		player.prevRotationYawHead = player.rotationYaw;
+		player.rotationYawHead = player.rotationYaw;
+		GlStateManager.popMatrix();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	}
+
+	public static void drawWatermark(ScaledResolution sr) {
+		final Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("WaterMarkFont").getFontrenderer();
+		int xP = 15;
+		int yP = 5;
+		int widthP = (int) ((int) fontRenderer.getStringWidth("atero"));
+		int heightP = (int) fontRenderer.getStringHeight("atero") / 2;
+		LocalDateTime now = LocalDateTime.now();
+
+		double seconds = now.getSecond();
+		double minutes = now.getMinute();
+		double hours = now.getHour();
+
+		int width = sr.getScaledWidth() / 10;
+		int height = sr.getScaledHeight() /45 ;
+
+		int clockW = 30;
+		int clockH = 30;
+
+		fontRenderer.drawString("Atero", xP, yP, Management.instance.colorBlue.getRGB());
+		mc.fontRendererObj.drawStringWithShadow("[" + now.getHour() + ":" + insertNulls(now.getMinute(), 2) + ":" +insertNulls(now.getSecond()   , 2) +"]",
+				width , height  , Management.instance.colorBlue.getRGB());
+//	drawImage((int) (xP), (int) (yP + fontRenderer.getStringHeight("atero")), widthP - 80, heightP,
+		//	new ResourceLocation("atero/assets/arrow.png"));
+	}
+
+	private static void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
+		mc.getTextureManager().bindTexture(resourceLocation);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	}
+	public static String insertNulls(int val, int min_digits) {
+		String s = String.valueOf(val);
+		while(s.length() < min_digits) s = "0" + s;
+		return s;
+	}
 }
