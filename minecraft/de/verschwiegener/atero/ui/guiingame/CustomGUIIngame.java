@@ -116,16 +116,29 @@ public class CustomGUIIngame {
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0.0F, 0.0F, width, height, width, height);
 	}
+    }
 
+    private static double getProtection(EntityLivingBase target) {
+	double protection = 0;
 	public static void renderTargetHud(ScaledResolution scaledResolution) {
 
+	for (int i = 0; i <= 3; i++) {
+	    ItemStack stack = target.getCurrentArmor(i);
 		Fontrenderer fontRenderer = Management.instance.fontrenderer;
 		EntityLivingBase target = Killaura.instance.getTarget();
 
+	    if (stack != null) {
+		if (stack.getItem() instanceof ItemArmor) {
+		    ItemArmor armor = (ItemArmor) stack.getItem();
+		    protection += armor.damageReduceAmount;
+		}
 		if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
 
+		protection += EnchantmentHelper.getEnchantmentLevel(Enchantment.protection.effectId, stack) * 0.25;
+	    }
+	}
 			RenderUtil.fillRect(0, 0, 150, 60, Management.instance.colorGray);
 			RenderUtil.fillRect(0, 59, 150, 1, Management.instance.colorBlue);
 			//RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
@@ -134,23 +147,39 @@ public class CustomGUIIngame {
 			//RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
 			//RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
+	return protection;
+    }
 			fontRenderer.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
 
+    // schon mal an nen event daf�r gedacht - wo renderst du das was rendern?
+    // die aary?
 			renderPlayer(25, 55, 23, target);
 
+    private static double getWeaponStrength(ItemStack stack) {
+	double damage = 0;
 			float healthProcent = target.getHealth() / target.getMaxHealth();
 			RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
 					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 			fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
 					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
+	if (stack != null) {
+	    if (stack.getItem() instanceof ItemSword) {
+		ItemSword sword = (ItemSword) stack.getItem();
+		damage += sword.getDamageVsEntity();
+	    }
 			double winChance = 0;
 
+	    if (stack.getItem() instanceof ItemTool) {
+		ItemTool tool = (ItemTool) stack.getItem();
+		damage += tool.getToolMaterial().getDamageVsEntity();
+	    }
 			double TargetStrength = getWeaponStrength(target.getHeldItem());
 			winChance = getWeaponStrength(mc.thePlayer.getHeldItem()) - TargetStrength;
 			winChance += getProtection(mc.thePlayer) - getProtection(target);
 			winChance += mc.thePlayer.getHealth() - (target).getHealth();
 
+	    damage += EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25;
 			String message = winChance == 0 ? "You could win"
 					: winChance < 0 ? "You could lose" : "You are going to win";
 			fontRenderer.drawString(message, 97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
