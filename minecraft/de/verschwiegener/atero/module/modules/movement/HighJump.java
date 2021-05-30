@@ -90,7 +90,7 @@ public class HighJump extends Module {
 		    if (Minecraft.thePlayer.hurtTime > 0) {
 
 			// Minecraft.thePlayer.motionY = 0;
-			Minecraft.thePlayer.motionY += 0.0045;
+			Minecraft.thePlayer.motionY += 0.0099;
 		    }
 		if (Dmg)
 		    if (Minecraft.thePlayer.hurtTime > 0) {

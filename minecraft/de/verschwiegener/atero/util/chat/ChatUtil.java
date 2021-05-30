@@ -17,7 +17,7 @@ public class ChatUtil {
 
     public static void sendMessageWithPrefix(String message) {
 	Minecraft.getMinecraft().thePlayer
-		.addChatMessage(new ChatComponentText("§9" + Management.instance.CLIENT_NAME + ": §f" + message));
+		.addChatMessage(new ChatComponentText("Â§9" + Management.instance.CLIENT_NAME + ": Â§f" + message));
     }
 
     public static void sendMessage(String message) {
@@ -51,7 +51,7 @@ public class ChatUtil {
     }
 
     public static void addBindsMessage(String module) {
-	IChatComponent message = new ChatComponentText("§r" + module + ": ");
+	IChatComponent message = new ChatComponentText("Â§r" + module + ": ");
 
 	IChatComponent componentremove = new ChatComponentText("Remove");
 	componentremove.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -62,7 +62,7 @@ public class ChatUtil {
 	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
     }
     public static void addConfigMessage(Config config) {
-	IChatComponent message = new ChatComponentText("§r" + config.getName() + " | " + config.getDescription());
+	IChatComponent message = new ChatComponentText("Â§r" + config.getName() + " | " + config.getDescription());
 	
 	IChatComponent componentload = new ChatComponentText("[Load]");
 	componentload.getChatStyle().setColor(EnumChatFormatting.DARK_BLUE);

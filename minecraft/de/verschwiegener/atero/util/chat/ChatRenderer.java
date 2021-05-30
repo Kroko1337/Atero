@@ -79,9 +79,9 @@ public class ChatRenderer {
 	messagecolor = Color.WHITE;
 	for (String str : args) {
 	    messagecolor = Color.white;
-	    for (String str2 : str.replace("ง", "#ง").split("#")) {
+	    for (String str2 : str.replace("ยง", "#ยง").split("#")) {
 		if (str2.length() > 0) {
-		    if (str2.startsWith("ง")) {
+		    if (str2.startsWith("ยง")) {
 			messagecolor = getColorCode(str2.substring(1, 2));
 			str2 = str2.substring(2);
 		    }
@@ -163,7 +163,7 @@ public class ChatRenderer {
     
 
     public void drawchat2(String line, int x, int y) {
-	String[] args = line.replace("ง", "#ง").split("#");
+	String[] args = line.replace("ยง", "#ยง").split("#");
 	int xoffset = 0;
 	messagecolor = Color.white;
 	boldStyle = false;
@@ -214,7 +214,7 @@ public class ChatRenderer {
 		}
 		if (effekt) {
 		    if (boldStyle) {
-			if (str.startsWith("ง")) {
+			if (str.startsWith("ยง")) {
 			    fontRendererBold.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 			    xoffset += fontRendererBold.getStringWidth(str.substring(2));
 			} else {
@@ -222,7 +222,7 @@ public class ChatRenderer {
 			    xoffset += fontRendererBold.getStringWidth(str);
 			}
 		    } else if (italicStyle) {
-			if (str.startsWith("ง")) {
+			if (str.startsWith("ยง")) {
 			    fontRendererItalic.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
 			    xoffset += fontRendererItalic.getStringWidth(str.substring(2));
 			} else {
@@ -244,7 +244,7 @@ public class ChatRenderer {
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		} else {
-		    if (str.startsWith("ง")) {
+		    if (str.startsWith("ยง")) {
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 			xoffset += fontRenderer.getStringWidth(str.substring(2));
 		    } else {

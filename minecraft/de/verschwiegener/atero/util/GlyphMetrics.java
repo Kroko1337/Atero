@@ -11,8 +11,6 @@ public class GlyphMetrics {
 	this.height = height;
 	this.GLTextureID = GLTextureID;
     }
-    public GlyphMetrics() {
-    }
 
     public double getWidth() {
 	return width;

@@ -6,6 +6,8 @@ import com.mojang.authlib.GameProfile;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import de.verschwiegener.atero.Management;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -2331,10 +2333,12 @@ public abstract class EntityPlayer extends EntityLivingBase
         {
             f = 0.2F;
         }
-
+//Todo Event
         if (this.isSneaking())
         {
-            f -= 0.08F;
+            if(!Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) {
+                  f -= 0.08F;
+            }
         }
 
         return f;

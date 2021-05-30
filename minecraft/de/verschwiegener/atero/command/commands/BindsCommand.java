@@ -21,7 +21,7 @@ public class BindsCommand extends Command{
 	
 	@Override
 	public void onCommand(String[] args) {
-		ChatUtil.sendMessage("§6------§fBinds §6------");
+		ChatUtil.sendMessage("Â§6------Â§fBinds Â§6------");
 		for(Module m : Management.instance.modulemgr.getModules()) {
 			if(m.getKey() != 0) {
 				ChatUtil.addBindsMessage(m.getName());
