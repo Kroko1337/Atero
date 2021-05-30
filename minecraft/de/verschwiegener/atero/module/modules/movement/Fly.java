@@ -26,6 +26,7 @@ public class Fly extends Module {
     }
 
     public void onDisable() {
+        HighJump.setSpeed(0);
         Minecraft.thePlayer.capabilities.isFlying = false;
         super.onDisable();
     }
@@ -33,17 +34,33 @@ public class Fly extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
+
            // Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
         //    Minecraft.thePlayer.cameraYaw = 0.1f;
             if (Minecraft.thePlayer.onGround) {
                 Minecraft.thePlayer.jump();
             }
-            Minecraft.thePlayer.capabilities.isFlying = true;
+            HighJump.setSpeed(1.5);
+         //   Minecraft.thePlayer.capabilities.isFlying = true;
 
         }
-        if(Minecraft.getMinecraft().gameSettings.keyBindSprint.pressed){
-            HighJump.setSpeed(5);
+
+
+        if(mc.thePlayer.ticksExisted % 2 == 0) {
+            if(Minecraft.getMinecraft().gameSettings.keyBindSneak.pressed) {
+                mc.thePlayer.motionY = -1.2F;
+            }else {
+                mc.thePlayer.motionY = -0.1F;
+            }
+        }else{
+            if(Minecraft.getMinecraft().gameSettings.keyBindJump.pressed) {
+                mc.thePlayer.motionY = 1.2F;
+            }else {
+                mc.thePlayer.motionY = 0.1F;
+            }
         }
+
+       // }
     }
 
 

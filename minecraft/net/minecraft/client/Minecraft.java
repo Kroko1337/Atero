@@ -346,6 +346,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private long field_175615_aJ = 0L;
     private final Thread mcThread = Thread.currentThread();
     private ModelManager modelManager;
+    
+    public boolean switchServer;
 
     /**
      * The BlockRenderDispatcher instance that will be used based off gamesettings
@@ -2746,6 +2748,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Set the current ServerData instance.
      */
     public void setServerData(ServerData serverDataIn) {
+	switchServer = true;
 	this.currentServerData = serverDataIn;
     }
 

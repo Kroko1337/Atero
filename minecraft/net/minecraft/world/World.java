@@ -3,6 +3,11 @@ package net.minecraft.world;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.util.chat.ChatUtil;
+import de.verschwiegener.atero.util.files.config.Config;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,6 +24,7 @@ import net.minecraft.block.BlockSnow;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
@@ -162,6 +168,11 @@ public abstract class World implements IBlockAccess
         this.provider = providerIn;
         this.isRemote = client;
         this.worldBorder = providerIn.getWorldBorder();
+        if(Minecraft.getMinecraft().switchServer) {
+            Minecraft.getMinecraft().switchServer = false;
+            ChatUtil.sendConfigJoinMessage();
+            System.out.println("Connectet World");
+        }
     }
 
     public World init()

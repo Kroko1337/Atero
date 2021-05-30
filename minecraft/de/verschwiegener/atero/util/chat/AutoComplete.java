@@ -43,7 +43,8 @@ public class AutoComplete {
 			String currentCommandArgs = args[args.length - 1];
 			for (String suggestion : suggestionArgs) {
 			    if (suggestion.startsWith("<")) {
-				return searchModes(suggestion, (currentCommandArgs == args[position])? "" : currentCommandArgs, args);
+				return StringUtils.removeEnd(text.substring(1), currentCommandArgs) + searchModes(suggestion, (currentCommandArgs == args[position])? "" : currentCommandArgs, args);
+				
 			    } else if (suggestion.startsWith(currentCommandArgs)) {
 				hasSuggestion = true;
 				currentSuggestion = suggestion;
@@ -80,8 +81,11 @@ public class AutoComplete {
 		return currentCommandArgs;
 	    }
 	case "<config>":
-	    final Config config = Management.instance.configmgr.getConfigByStartsWith(currentCommandArgs,
-		    ConfigType.valueOf(args[1].toLowerCase()));
+	     Config config = Management.instance.configmgr.getConfigByName(currentCommandArgs, ConfigType.valueOf(args[1].toLowerCase()));
+	     if(config == null) {
+		 config = Management.instance.configmgr.getConfigByStartsWith(currentCommandArgs,
+			    ConfigType.valueOf(args[1].toLowerCase()));
+	     }
 	    if (config != null) {
 		hasSuggestion = true;
 		currentSuggestion = config.getName();

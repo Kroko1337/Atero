@@ -5,6 +5,7 @@ package de.verschwiegener.atero.module.modules.combat;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventCancellable;
 import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
+import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.Util;
@@ -90,23 +91,20 @@ public class Velocity extends Module {
 
                     case "Cubecraft":
                         if (Minecraft.thePlayer.hurtTime != 0) {
-                            if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
-                                setSpeed(0.2F);
+                            boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
+                            if (mc.thePlayer.onGround) {
+                            //    mc.timer.timerSpeed = 2F;
+                                //	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
+                            } else {
+                                mc.timer.timerSpeed = 1F;
+                                double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
+                                double speed = boost2 ? 1 : 1D;
+                                double direction = Speed.getDirection();
+                                mc.thePlayer.motionX = -Math.sin(direction) * speed * currentSpeed;
+                                mc.thePlayer.motionZ = Math.cos(direction) * speed * currentSpeed;
+
                             }
                         }
-
-                        if (p instanceof S12PacketEntityVelocity) {
-                            S12PacketEntityVelocity packet = (S12PacketEntityVelocity) p;
-                            //   if (mc.thePlayer.ticksExisted % 2 == 1) {
-                            if (packet.getEntityID() == Minecraft.thePlayer.getEntityId())
-
-                            if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
-                                ppe.setCancelled(true);
-                                //  }
-                            }
-                        }
-                        if (p instanceof net.minecraft.network.play.server.S27PacketExplosion)
-                            ppe.setCancelled(true);
                         break;
 
                 }
