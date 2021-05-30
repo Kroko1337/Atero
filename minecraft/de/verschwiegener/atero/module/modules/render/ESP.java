@@ -24,9 +24,11 @@ import java.util.List;
 
 public class ESP extends Module {
     private float oldBrightness;
+    public static ESP instance;
 
     public ESP() {
 	super("ESP", "ESP", Keyboard.KEY_NONE, Category.Render);
+	instance = this;
     }
 
     public void onUpdate() {
@@ -43,19 +45,21 @@ public class ESP extends Module {
 
     }
 
-    public static void drawChestESP() {
-	List<TileEntity> loadedTileEntityList = Minecraft.getMinecraft().theWorld.loadedTileEntityList;
-	for (int i = 0, loadedTileEntityListSize = loadedTileEntityList.size(); i < loadedTileEntityListSize; i++) {
-	    TileEntity tileEntity = loadedTileEntityList.get(i);
-	    if (tileEntity instanceof TileEntityChest) {
+    public void drawChestESP() {
+	if (isEnabled()) {
+	    List<TileEntity> loadedTileEntityList = Minecraft.getMinecraft().theWorld.loadedTileEntityList;
+	    for (int i = 0, loadedTileEntityListSize = loadedTileEntityList.size(); i < loadedTileEntityListSize; i++) {
+		TileEntity tileEntity = loadedTileEntityList.get(i);
+		if (tileEntity instanceof TileEntityChest) {
 
-		GlStateManager.disableTexture2D();
-		GL11.glColor4f(0, 255, 255, 255);
-		TileEntityRendererDispatcher.instance.renderTileEntity(tileEntity,
-			Minecraft.getMinecraft().timer.renderPartialTicks, 1);
+		    GlStateManager.disableTexture2D();
+		    GL11.glColor4f(0, 255, 255, 255);
+		    TileEntityRendererDispatcher.instance.renderTileEntity(tileEntity,
+			    Minecraft.getMinecraft().timer.renderPartialTicks, 1);
 
-		GlStateManager.enableTexture2D();
+		    GlStateManager.enableTexture2D();
 
+		}
 	    }
 	}
 

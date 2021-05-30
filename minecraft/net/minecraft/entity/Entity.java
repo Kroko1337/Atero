@@ -1299,7 +1299,7 @@ public abstract class Entity implements ICommandSender {
     public Vec3 getLook(float partialTicks) {
         //TODO Scaffold adden
         //Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled() &&
-        if (!(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled()) && !(Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled())) {
+        if (!(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled()) && !(Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled())&& !(Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) ) {
             if (partialTicks == 1.0F) {
                 return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
             } else {

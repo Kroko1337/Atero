@@ -1,5 +1,6 @@
 package net.minecraft.client.model;
 
+import de.verschwiegener.atero.Management;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -106,7 +107,10 @@ public class ModelBiped extends ModelBase
         {
             if (entityIn.isSneaking())
             {
-                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                //Todo Event
+                if(!Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) {
+                    GlStateManager.translate(0.0F, 0.2F, 0.0F);
+                }
             }
 
             this.bipedHead.render(scale);

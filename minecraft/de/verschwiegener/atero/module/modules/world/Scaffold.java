@@ -66,7 +66,7 @@ public class Scaffold extends Module {
         modes.add("NCPStatic");
         modes.add("AAC");
         modes.add("NCP");
-        items.add(new SettingsItem("RotationModes", modes, "NCPStatic", "", ""));
+        items.add(new SettingsItem("RotationModes", modes, "NCP", "", ""));
         items.add(new SettingsItem("Down", false, ""));
         items.add(new SettingsItem("SameY", false, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
@@ -108,6 +108,8 @@ public class Scaffold extends Module {
     @EventTarget
     public void onUpdate() {
 
+//System.out.println(getSpeed());
+
   //  mc.timer.timerSpeed = 25F;
 
 
@@ -129,13 +131,15 @@ public class Scaffold extends Module {
                     return;
                 }
             }
+            //mc.thePlayer.inventory.getStackInSlot(currentItem)
             mc.playerController.updateController();
             Vec3 hitVec = (new Vec3(BlockData.getPos())).addVector(0.5D, 0.5D, 0.5D)
                     .add((new Vec3(BlockData.getFacing().getDirectionVec())).multi(0.5D));
             if(currentItem != -1 && switched) {
+             //   mc.rightClickMouse();
                 if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld, mc.thePlayer.inventory.getStackInSlot(currentItem), BlockData.getPos(), BlockData.getFacing(), hitVec)) {
-                    mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
-                }
+                   mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+               }
             }
         }
         Minecraft.getMinecraft().thePlayer.setSprinting(false);
@@ -160,7 +164,12 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onPost(EventPostMotionUpdate post) {
-
+        BlockPos blockPos = new BlockPos(Minecraft.getMinecraft().thePlayer.posX, Minecraft.getMinecraft().thePlayer.posY - 1 , Minecraft.getMinecraft().thePlayer.posZ);
+        if (mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
+          //  mc.gameSettings.keyBindSneak.pressed = true;
+        }else{
+          //  mc.gameSettings.keyBindSneak.pressed = false;
+        }
     }
 
     @EventTarget
@@ -178,12 +187,17 @@ public class Scaffold extends Module {
                     pre.setPitch(rotation[1]);
                     lastPitch = (rotation[1]);
                     break;
+
+
                 case "AAC":
-                    pre.setYaw((Minecraft.thePlayer.rotationYaw + 180));
+
+                    pre.setYaw((Minecraft.thePlayer.rotationYaw + 180F));
                     lastYaw = rotation[0];
                     pre.setPitch(rotation[1]);
                     lastPitch = (rotation[1]);
                     break;
+
+
                 case "NCPStatic":
                     pre.setYaw(rotation[0]);
                     lastYaw = rotation[0];
@@ -284,5 +298,9 @@ public class Scaffold extends Module {
                 return i;
         }
         return -1;
+    }
+
+    public static double getSpeed() {
+        return Math.sqrt(Minecraft.getMinecraft().thePlayer.motionX * Minecraft.getMinecraft().thePlayer.motionX + Minecraft.getMinecraft().thePlayer.motionZ * Minecraft.getMinecraft().thePlayer.motionZ);
     }
 }

@@ -53,7 +53,7 @@ public class Velocity extends Module {
                 Packet p = ppe.getPacket();
                 String modes = setting.getItemByName("VelocityMode").getCurrent();
                 switch (modes) {
-                    case "AAC3":
+                    case "AAC":
                    //     if (mc.thePlayer.isCollidedHorizontally) {
                             if (Minecraft.thePlayer.hurtTime != 0) {
 
@@ -120,7 +120,7 @@ public class Velocity extends Module {
     public void setup() {
         final ArrayList<SettingsItem> items = new ArrayList<>();
         ArrayList<String> modes = new ArrayList<>();
-        modes.add("AAC3");
+        modes.add("AAC");
         modes.add("NCP");
         modes.add("Cubecraft");
         modes.add("WallReverse");

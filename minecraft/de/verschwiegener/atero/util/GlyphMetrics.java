@@ -2,48 +2,49 @@ package de.verschwiegener.atero.util;
 
 public class GlyphMetrics {
 
-    private int xPos;
-    private int yPos;
-    private int width;
-    private int height;
-    
-    public GlyphMetrics(int xPos, int yPos, int width, int height) {
-	this.xPos = xPos;
-	this.yPos = yPos;
+    private double width;
+    private double height;
+    private int GLTextureID;
+    private double owidth, oheight;
+
+    public GlyphMetrics(double width, double height, int GLTextureID, double owidth, double oheight) {
 	this.width = width;
 	this.height = height;
+	this.GLTextureID = GLTextureID;
+	this.owidth = owidth;
+	this.oheight = oheight;
+    }
+    public GlyphMetrics() {
     }
 
-    public int getxPos() {
-	return xPos;
-    }
-
-    public void setxPos(int xPos) {
-	this.xPos = xPos;
-    }
-
-    public int getyPos() {
-	return yPos;
-    }
-
-    public void setyPos(int yPos) {
-	this.yPos = yPos;
-    }
-
-    public int getWidth() {
+    public double getWidth() {
 	return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(double width) {
 	this.width = width;
     }
 
-    public int getHeight() {
+    public double getHeight() {
 	return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(double height) {
 	this.height = height;
+    }
+
+    public int getGLTextureID() {
+	return GLTextureID;
+    }
+
+    public void setGLTextureID(int gLTextureID) {
+	GLTextureID = gLTextureID;
+    }
+    public double getOheight() {
+	return oheight;
+    }
+    public double getOwidth() {
+	return owidth;
     }
 
 }

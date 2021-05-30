@@ -233,7 +233,7 @@ public class PlayerProfileCache
             this.usernameToProfileEntryMap.clear();
             this.uuidToProfileEntryMap.clear();
             this.gameProfiles.clear();
-
+            System.out.println("List: " + list);
             for (PlayerProfileCache.ProfileEntry playerprofilecache$profileentry : Lists.reverse(list))
             {
                 if (playerprofilecache$profileentry != null)

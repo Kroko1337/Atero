@@ -43,7 +43,12 @@ public class AutoComplete {
 				    ex.printStackTrace();
 				}
 			    case "<key>":
+				break;
+			    case "<config>":
+				break;
 
+			    default:
+				break;
 			    }
 			}
 		}

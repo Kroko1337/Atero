@@ -33,7 +33,7 @@ public class Sprint extends Module {
     public void onUpdate() {
 	if (this.isEnabled()) {
 	    super.onUpdate();
-	    if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
+	    if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled() || Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled() ) {
 		Minecraft.getMinecraft().thePlayer.setSprinting(false);
 	    } else {
 		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown()) {

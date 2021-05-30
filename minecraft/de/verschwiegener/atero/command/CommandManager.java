@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 import de.verschwiegener.atero.command.commands.BindCommand;
 import de.verschwiegener.atero.command.commands.BindsCommand;
-
+import de.verschwiegener.atero.command.commands.ConfigCommand;
 import de.verschwiegener.atero.command.commands.TestCommand;
 
 import de.verschwiegener.atero.module.modules.Test;
@@ -19,7 +19,7 @@ public class CommandManager {
 		commands.add(new TestCommand());
 		commands.add(new BindCommand());
 		commands.add(new BindsCommand());
-	//	commands.add(new ConfigCommand());
+		commands.add(new ConfigCommand());
 	}
 	
 	

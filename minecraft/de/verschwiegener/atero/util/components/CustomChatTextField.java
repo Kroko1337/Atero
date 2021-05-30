@@ -1,5 +1,7 @@
 package de.verschwiegener.atero.util.components;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.base.Predicate;
@@ -8,6 +10,7 @@ import com.google.common.base.Predicates;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.chat.AutoComplete;
+import de.verschwiegener.atero.util.chat.TestFontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -491,10 +494,10 @@ public class CustomChatTextField extends GuiTextField {
                 case 15:
                 	//Tab AutoComplete
                 	if(AutoComplete.hasAutoComplete) {
-                		String[] args = AutoComplete.onAutoComplete(getText()).split(" ");
-                		if(args[0] != "") {
-                			setText(getText() + args[0]);
-                		}
+                		//String[] args = AutoComplete.onAutoComplete(getText()).split(" ");
+                		//if(args[0] != "") {
+                			//setText(getText() + args[0]);
+                		//}
                 	}
                 	return true;
 
@@ -593,26 +596,30 @@ public class CustomChatTextField extends GuiTextField {
 
 	    Fontrenderer fr = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
 
-	    if (s.length() > 0)
-            {
-                String s1 = flag ? s.substring(0, j) : s;
-               // j1 = this.fontRendererInstance.drawStringWithShadow(s1, (float)l, (float)i1, i);
-                fr.drawString(s1, l + 27, i1 * 2 - 5, i);
-                j1 = fr.getStringWidth2(s1) + 2;
-                
-                int widthoffset = 0;
-                String text = "";
-		if(getText().endsWith(" ")) {
+	    if (s.length() > 0) {
+		String s1 = flag ? s.substring(0, j) : s;
+		// j1 = this.fontRendererInstance.drawStringWithShadow(s1, (float)l, (float)i1,
+		// i);
+		TestFontRenderer.drawString(s1, l + 27, i1 * 2 - 5, new Color(i), Management.instance.font);
+		//fr.drawString(s1, l + 27, i1 * 2 - 5, i);
+		j1 = fr.getStringWidth2(s1) + 2;
+
+		int widthoffset = 0;
+		String text = "";
+		if (getText().endsWith(" ")) {
 		    text = replaceLast(getText(), " ", "");
-		    widthoffset = fr.getStringWidth(text);
-		}else {
+		    //widthoffset = fr.getStringWidth(text);
+		    widthoffset = TestFontRenderer.getStringWidthClean(text, Management.instance.font);
+		} else {
 		    text = getText();
-		    widthoffset = fr.getStringWidth(getText());
+		    //widthoffset = fr.getStringWidth(getText());
+		    widthoffset = TestFontRenderer.getStringWidthClean(getText(), Management.instance.font);
 		}
-		System.out.println("Text: " + getText() + " Custom: " + text);
-		fr.drawString(AutoComplete.onAutoComplete(text), l + 27 + widthoffset, (i1 * 2) - 5, i);
-                
-            }
+		//System.out.println("Text: " + getText() + " Custom: " + text);
+		// fr.drawString(AutoComplete.onAutoComplete(text), l + 27 + widthoffset, (i1 *
+		// 2) - 5, i);
+
+	    }
 
             boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
             int k1 = j1;

@@ -325,7 +325,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
     protected boolean isRenderEntityOutlines()
     {
-       // GL11.glColor4f(0,255,255,255);
+        //GL11.glColor4f(0,255,255,255);
         return Management.instance.modulemgr.getModuleByName("ESP").isEnabled();
 
         //return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing() ? this.entityOutlineFramebuffer != null && this.entityOutlineShader != null && this.mc.thePlayer != null && this.mc.thePlayer.isSpectator() && this.mc.gameSettings.keyBindSpectatorOutlines.isKeyDown() : false;
@@ -730,9 +730,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         }
                     }
                 }
-
-                ESP.drawChestESP();
-
+                ESP.instance.drawChestESP();
+                
+                GL11.glColor4f(0,0,0,0);
+                
                 this.renderManager.setRenderOutlines(false);
                 RenderHelper.enableStandardItemLighting();
                 GlStateManager.depthMask(false);

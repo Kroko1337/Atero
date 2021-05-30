@@ -42,7 +42,7 @@ public class Speed extends Module {
 
 		super.onDisable();
 	}
-
+	private double boostCC = 0;
 	@Override
 	public void setup() {
 		super.setup();
@@ -54,8 +54,9 @@ public class Speed extends Module {
 		modes.add("Cubecraft1vs1");
 		modes.add("Vanilla");
 		modes.add("Vanilla2");
-		modes.add("KrokosACFly");
+		modes.add("VerusYPort");
 		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "", ""));
+		items.add(new SettingsItem("CCBoost", 1.2F, 4F, 1.2F, ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}
 
@@ -70,6 +71,7 @@ public class Speed extends Module {
 					break;
 
 				case "Cubecraft":
+					boostCC = setting.getItemByName("CCBoost").getCurrentValue();
 					boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if (mc.thePlayer.onGround) {
 						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
@@ -77,7 +79,7 @@ public class Speed extends Module {
 						if (mc.thePlayer.fallDistance > 0.08F) {
 							mc.timer.timerSpeed = 1.0F;
 						} else {
-							mc.timer.timerSpeed = 1.39F;
+							mc.timer.timerSpeed = (float) boostCC;
 						}
 
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -114,7 +116,7 @@ public class Speed extends Module {
 					}
 
 					break;
-				case "KrokosACFly":
+				case "VerusYPort":
 					//	if (mc.thePlayer.ticksExisted % 2 == 1) {
 					//	mc.thePlayer.motionY = 0.069F;
 					//		}
@@ -138,14 +140,14 @@ public class Speed extends Module {
 					break;
 				case "Hypixel":
 					if (mc.thePlayer.onGround) {
-						mc.timer.timerSpeed =3F;
+						mc.timer.timerSpeed =1F;
 						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
 						if (Killaura.instance.getTarget() != null) {
 							mc.timer.timerSpeed = 1F;
 						}
 					}else{
-						if (mc.thePlayer.fallDistance > 0.05F) {
-							mc.timer.timerSpeed =1.0F;
+						if (mc.thePlayer.fallDistance > 0.09F) {
+							mc.timer.timerSpeed =2F;
 						}else{
 
 						}

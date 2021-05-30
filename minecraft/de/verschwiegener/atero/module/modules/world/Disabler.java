@@ -5,10 +5,8 @@ import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C00PacketKeepAlive;
-import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
-import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 import org.lwjgl.input.Keyboard;
 
@@ -52,6 +50,12 @@ public class Disabler extends Module {
             }
         }
         mc.thePlayer.capabilities.isFlying = false;
+       // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
+      // mc.thePlayer.sendQueue.addToSendQueue(new C0FPacketConfirmTransaction());
+        if(p instanceof  C0BPacketEntityAction) {
 
+                ppe.setCancelled(true);
+
+        }
         }
 }

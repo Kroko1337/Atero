@@ -8,6 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+import de.liquiddev.ircclient.api.IrcClient;
+import de.liquiddev.ircclient.client.ClientType;
+import de.liquiddev.ircclient.client.IrcClientFactory;
+import de.verschwiegener.slinky.IRC.IrcChatListener;
 import org.lwjgl.input.Keyboard;
 
 import com.darkmagician6.eventapi.EventManager;
@@ -22,7 +26,8 @@ import de.verschwiegener.atero.command.CommandManager;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
-import de.verschwiegener.atero.github.GitHubUtils;
+
+import de.verschwiegener.atero.github.OnlineConfigHandler;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.proxy.ProxyManager;
@@ -31,9 +36,11 @@ import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.account.AccountManager;
+import de.verschwiegener.atero.util.chat.ChatFont;
 import de.verschwiegener.atero.util.files.FileManager;
 import de.verschwiegener.atero.util.files.config.Config;
 import de.verschwiegener.atero.util.files.config.ConfigManager;
+import de.verschwiegener.atero.util.files.config.ConfigType;
 import de.verschwiegener.atero.util.files.config.handler.XMLHelper;
 import de.verschwiegener.atero.util.inventory.InventoryUtil;
 import net.minecraft.client.Minecraft;
@@ -75,7 +82,8 @@ public class Management {
     public FileManager fileManager;
     public AccountManager accountmgr;
     public ConfigManager configmgr;
-    public GitHubUtils ghUtils;
+	private IrcClient ircClient;
+    public ChatFont font;
     
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
@@ -100,7 +108,12 @@ public class Management {
 	//GIFmgr.addGif(new GIF("Hero", "hero"));
 	GIFmgr.addGif(new GIF("Fire", "tenor"));
 	//GIFmgr.addGif(new GIF("HAZE", "HAZE"));
-	
+		//skidIRc
+		String ign = Minecraft.getMinecraft().session.getUsername();
+		System.out.println("IRC");
+		this.ircClient = IrcClientFactory.getDefault().createIrcClient(ClientType.ATERO, "UFXaV2gqvMhGZDNX", ign, "B1.3");
+		this.ircClient.getApiManager().registerApi(new IrcChatListener());
+		//
 	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
 	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
 	streamer = new Streamer();
@@ -108,18 +121,17 @@ public class Management {
 
 	accountmgr = new AccountManager();
 	configmgr = new ConfigManager();
-	XMLHelper.write(configmgr.configs.get(0));
 	loadLocaleConfigs();
-	
-	
-	ghUtils = new GitHubUtils();
 	try {
-	    ghUtils.auth();
-	    ghUtils.createRequest(configmgr.configs.get(0));
-	} catch (IOException e1) {
-	    e1.printStackTrace();
+	    OnlineConfigHandler.loadOnlineConfigs();
+	} catch (IOException e2) {
+	    e2.printStackTrace();
 	}
 	
+	font = new ChatFont();
+	
+	
+
 	fileManager = new FileManager();
 
 	clickgui = new ClickGUI();
@@ -154,8 +166,6 @@ public class Management {
 
 	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
 
-	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
-
     }
 
     public void stop() {
@@ -180,6 +190,12 @@ public class Management {
 	}catch(Exception e) {
 	    
 	}
+	
+	for(Config config : configmgr.configs) {
+	    if(config.getType() == ConfigType.Locale) {
+		XMLHelper.write(config);
+	    }
+	}
     }
     
     private void registerEvents() {
@@ -200,7 +216,7 @@ public class Management {
 	String path = CLIENT_DIRECTORY.getAbsolutePath() + File.separator + "Configs";
 	if( new File(path).exists()) {
 	    for(final File file : new File(path).listFiles()) {
-		    XMLHelper.parse(file);
+		    XMLHelper.parse(file, ConfigType.Locale);
 		}
 	}
     }
