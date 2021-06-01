@@ -13,20 +13,21 @@ public class Component {
 	
 	SettingsItem item, child;
 	boolean parentextendet, parentvalid, valid;
-	private boolean change;
+	private boolean parentChanged;
 	
 	public Component(String name, int y, PanelExtendet pe) {
 		this.name = name;
 		this.y = y;
 		this.pe = pe;
 		item = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(name);
-		if(item.getChild() != null) {
-		    child = Management.instance.settingsmgr.getSettingByName(pe.getName()).getItemByName(item.getChild());
-			valid = true;
-			if((child != null)) {
-				parentvalid = true;
-				change = true;
-			}
+		if (item.getChild() != null) {
+		    child = Management.instance.settingsmgr.getSettingByName(pe.getName())
+			    .getItemByName(item.getChild());
+		    valid = true;
+		    if ((child != null)) {
+			parentvalid = true;
+			parentChanged = true;
+		    }
 		}
 	}
 	
@@ -57,39 +58,62 @@ public class Component {
 		return child;
 	}
 	
+	
 	public void drawComponent(int x, int y) {
-	    if (parentvalid && isChange()) {
-		setChange(false);
-		if (item.isState()) {
-		    Component c = pe.getComponentByName(child.getName());
-		    if (c.parentextendet) {
-			c.parentextendet = false;
-			pe.extendPanelByItemName(child.getName());
-			c.setValid(true);
+	    if (parentvalid && isParentChange()) {
+		setParentChange(false);
+		switch (item.getCategory()) {
+		case CHECKBOX:
+		    if(!item.isState()) {
+			disableChild();
+			return;
 		    }
-		} else {
-		    Component c = pe.getComponentByName(child.getName());
-		    if (!c.parentextendet) {
-			c.parentextendet = true;
-			pe.collapsePanelByItemName(c.getName());
-			c.setValid(false);
-			if(c instanceof ComponentCombobox) {
-			    ComponentCombobox combobox = (ComponentCombobox) c;
-			    combobox.collapse();
-			}
+		    break;
+		case COMBO_BOX:
+		    if(!item.getCurrent().equalsIgnoreCase(item.getChildselect())) {
+			disableChild();
+			return;
 		    }
+		    break;
+		default:
+		    break;
+		}
+		//Valids the Child
+		setChildValid();
+	    }
+	}
+	
+	private void setChildValid() {
+	    Component c = pe.getComponentByName(child.getName());
+	    if (c.parentextendet) {
+		c.parentextendet = false;
+		pe.extendPanelByItemName(child.getName());
+		c.setValid(true);
+	    }
+	}
+
+	private void disableChild() {
+	    Component c = pe.getComponentByName(child.getName());
+	    if (!c.parentextendet) {
+		c.parentextendet = true;
+		pe.collapsePanelByItemName(c.getName());
+		c.setValid(false);
+		if (c instanceof ComponentCombobox) {
+		    ComponentCombobox combobox = (ComponentCombobox) c;
+		    combobox.collapse();
 		}
 	    }
 	}
+	
 	public void onMouseClicked(int x, int y, int button) {}
 	public void onMouseReleased(int mouseX, int mouseY, int state) {}
 	public void onKeyTyped(char typedChar, int keyCode) {}
-	public boolean isChange() {
-		return change;
+	public boolean isParentChange() {
+		return parentChanged;
 	}
 
-	public void setChange(boolean change) {
-		this.change = change;
+	public void setParentChange(boolean change) {
+		this.parentChanged = change;
 	}
 	public boolean isParentextendet() {
 		return parentextendet;

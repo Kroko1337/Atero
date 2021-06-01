@@ -101,6 +101,9 @@ public class SettingsItem {
 	public void setCurrent(String current) {
 		this.current = current;
 	}
+	public String getChildselect() {
+	    return childselect;
+	}
 	
 	public enum Category{
 

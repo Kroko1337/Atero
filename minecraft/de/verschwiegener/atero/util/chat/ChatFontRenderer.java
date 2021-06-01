@@ -2,11 +2,13 @@ package de.verschwiegener.atero.util.chat;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.util.GlyphMetrics;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.StringUtils;
@@ -14,6 +16,7 @@ import net.minecraft.util.StringUtils;
 public class ChatFontRenderer {
 
     public static ChatFont font = Management.instance.font;
+    public static Minecraft mc = Minecraft.getMinecraft();
     
     
     public static int drawString(String text, int posX, int posY, Color color) {
@@ -34,20 +37,15 @@ public class ChatFontRenderer {
 	
 	char[] characters = text.toCharArray();
 	
-	//for(int i = 0; i < text.length();i++) {
 	for(char glyph : characters) {
-	    //char glyph = text.charAt(i);
-	    //char glyph = c;
-	    //startTime = System.currentTimeMillis();
-	    //if (font.glyphMap.containsKey(glyph)) {
 	    if(font.glyphMap.length > glyph) {
-		//GlyphMetrics metric = font.glyphMap.get(glyph);
 		GlyphMetrics metric = font.glyphMap[glyph];
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, metric.getGLTextureID());
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, 10240, 9729);
 		GL11.glTexParameteri(3553, 10240, 9729);
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		// Draw texture, see ShaderRenderer
+		System.out.println("X2: " + x + " Char: " + Character.toString(glyph));
 		double height = metric.getHeight();
 		double width = metric.getWidth();
 		GL11.glBegin(7);
@@ -62,7 +60,10 @@ public class ChatFontRenderer {
 		GL11.glEnd();
 		x += width - 8;
 	    } else {
-		// draw with mc fontRenderer
+		GL11.glScaled(2.0D, 2.0D, 2.0D);
+		mc.fontRendererObj.drawString(Character.toString(glyph), (int) (x / 2 + 2), posY + 4, color.getRGB());
+		GL11.glScaled(0.5D, 0.5D, 0.5D);
+		x += (mc.fontRendererObj.getStringWidth(Character.toString(glyph)) * 2);
 	    }
 	}
 	

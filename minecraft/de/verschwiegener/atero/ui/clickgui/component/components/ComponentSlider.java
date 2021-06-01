@@ -88,6 +88,7 @@ public class ComponentSlider extends Component {
 	}
 	if (sliderSelected) {
 	    if (isSliderHoveredNoneY(x, y)) {
+		setParentChange(true);
 		getItem().setCurrentValue(getSliderValue(x, y));
 		currentValue = df.format(getItem().getCurrentValue());
 	    }

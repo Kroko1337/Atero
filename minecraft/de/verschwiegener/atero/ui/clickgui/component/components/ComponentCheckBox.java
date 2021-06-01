@@ -39,7 +39,7 @@ public class ComponentCheckBox extends Component {
 	if (isValid()) {
 	    if (button == 0) {
 		if (isCheckboxHovered(x, y)) {
-		    setChange(true);
+		    setParentChange(true);
 		    Management.instance.settingsmgr.getSettingByName(getPanelExtendet().getName())
 			    .getItemByName(getName()).toggleState();
 		}

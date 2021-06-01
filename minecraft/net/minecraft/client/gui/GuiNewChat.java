@@ -93,6 +93,7 @@ public class GuiNewChat extends Gui
                                 String s = chatline.getChatComponent().getUnformattedText();
                                 
                                 //this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
+                                //System.out.println("Line: " + s);
                                 cr.drawChat(s, i2, j2 - 12);
 				// cr.drawChat(s, i2, (j2 * 2 ) - 22);
 				// System.out.println("I2: " + i2);

@@ -55,7 +55,9 @@ public class Speed extends Module {
 		modes.add("Vanilla");
 		modes.add("Vanilla2");
 		modes.add("VerusYPort");
-		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "", ""));
+		//TODO Child Mode setting fixen im Speed
+		//So das wenn man Cubecraft auswählt, der CCBoost slider kommt
+		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "CCBoost", "Cubecraft"));
 		items.add(new SettingsItem("CCBoost", 1.2F, 4F, 1.2F, ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}

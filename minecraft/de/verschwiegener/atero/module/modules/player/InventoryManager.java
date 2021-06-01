@@ -104,10 +104,10 @@ public class InventoryManager extends Module {
 		mc.playerController.windowClick(0, garbageIDs.get(0), 1, 4, mc.thePlayer);
 
 	    } else {
-
 		if (autoarmor) {
 		    InventoryUtil.putArmor(hotbar);
 		}
+		
 		if(sort) {
 		    InventoryUtil.putInBestSlot(hotbar);
 		}

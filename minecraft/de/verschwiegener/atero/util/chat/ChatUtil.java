@@ -29,7 +29,7 @@ public class ChatUtil {
     }
 
     public static void addLoadChat2() {
-	IChatComponent ichatcomponent = new ChatComponentText("Test ");
+	IChatComponent ichatcomponent = new ChatComponentText("§c❤❤❤❤❤❥§f❤❤❤❤");
 	ichatcomponent.getChatStyle().setColor(EnumChatFormatting.GREEN);
 	ichatcomponent.getChatStyle()
 		.setChatHoverEvent(new HoverEvent(HoverEvent.Action.CLIENT, new ChatComponentText("test_test2_test3")));
