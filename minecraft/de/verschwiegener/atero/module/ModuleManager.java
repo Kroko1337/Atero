@@ -38,6 +38,7 @@ public class ModuleManager {
 	modules.add(new InventoryManager());
 	modules.add(new AutoClicker());
 	modules.add(new AutoEagle());
+	modules.add(new Fucker());
     }
 
     public Module getModuleByName(final String name) {

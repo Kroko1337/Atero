@@ -63,6 +63,7 @@ public class AutoEagle extends Module {
     @EventTarget
     public void onPre(EventPreMotionUpdate pre) {
         mc.thePlayer.setSprinting(false);
+
         if(mc.gameSettings.keyBindLeft.pressed) {
             pre.setYaw((mc.thePlayer.rotationYaw + 100F));
         }
@@ -74,7 +75,7 @@ public class AutoEagle extends Module {
             if (setting.getItemByName("180").isState()) {
                 pre.setYaw((mc.thePlayer.rotationYaw + 180));
             }else {
-                pre.setYaw((mc.thePlayer.rotationYaw + 165));
+                pre.setYaw((mc.thePlayer.rotationYaw + 175));
             }
         }
        pre.setPitch(82);
@@ -101,6 +102,8 @@ public class AutoEagle extends Module {
             }
             }
         }
+
+
     }
 
 

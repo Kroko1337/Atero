@@ -97,8 +97,8 @@ public class Speed extends Module {
 				case "Cubecraft1vs1":
 					boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if (mc.thePlayer.onGround) {
-
-						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
+						mc.timer.timerSpeed = 2F;
+					//	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
 					} else {
 						mc.timer.timerSpeed = 1F;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -112,9 +112,9 @@ public class Speed extends Module {
 					break;
 				case "Vanilla":
 					if (Minecraft.thePlayer.onGround) {
-						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					} else {
-						HighJump.setSpeed(1.0);
+						//Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
+					//} else {
+						HighJump.setSpeed(0.7);
 					}
 
 					break;
