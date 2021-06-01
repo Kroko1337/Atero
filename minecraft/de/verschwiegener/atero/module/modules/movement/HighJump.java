@@ -18,6 +18,7 @@ import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.util.TimeUtils;
+import de.verschwiegener.atero.util.Util;
 import god.buddy.aot.BCompiler;
 
 import java.awt.*;
@@ -95,7 +96,7 @@ public class HighJump extends Module {
 		if (Dmg)
 		    if (Minecraft.thePlayer.hurtTime > 0) {
 			mc.gameSettings.keyBindForward.pressed = true;
-			setSpeed(0.4D);
+			Util.setSpeed(0.4D);
 		    }
 	    }
 	}
@@ -109,7 +110,7 @@ public class HighJump extends Module {
 	if (Dmg)
 	    if (Minecraft.thePlayer.hurtTime > 0) {
 		mc.gameSettings.keyBindForward.pressed = true;
-		setSpeed(0.4D);
+		Util.setSpeed(0.4D);
 	    }
     }
     // }
@@ -120,40 +121,4 @@ public class HighJump extends Module {
     // mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
     // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
     // }
-
-    public static void setSpeed(double speed) {
-	EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-	double yaw = (double) player.rotationYaw;
-	boolean isMoving = player.moveForward != 0.0F || player.moveStrafing != 0.0F;
-	boolean isMovingForward = player.moveForward > 0.0F;
-	boolean isMovingBackward = player.moveForward < 0.0F;
-	boolean isMovingRight = player.moveStrafing > 0.0F;
-	boolean isMovingLeft = player.moveStrafing < 0.0F;
-	boolean isMovingSideways = isMovingLeft || isMovingRight;
-	boolean isMovingStraight = isMovingForward || isMovingBackward;
-	if (isMoving) {
-	    if (isMovingForward && !isMovingSideways) {
-		yaw += 0.0D;
-	    } else if (isMovingBackward && !isMovingSideways) {
-		yaw += 180.0D;
-	    } else if (isMovingForward && isMovingLeft) {
-		yaw += 45.0D;
-	    } else if (isMovingForward) {
-		yaw -= 45.0D;
-	    } else if (!isMovingStraight && isMovingLeft) {
-		yaw += 90.0D;
-	    } else if (!isMovingStraight && isMovingRight) {
-		yaw -= 90.0D;
-	    } else if (isMovingBackward && isMovingLeft) {
-		yaw += 135.0D;
-	    } else if (isMovingBackward) {
-		yaw -= 135.0D;
-	    }
-
-	    yaw = Math.toRadians(yaw);
-	    player.motionX = -Math.sin(yaw) * speed;
-	    player.motionZ = Math.cos(yaw) * speed;
-	}
-
-    }
 }

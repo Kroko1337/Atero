@@ -18,6 +18,7 @@ import com.mojang.authlib.GameProfile;
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.module.Module;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.MathHelper;
@@ -105,6 +106,42 @@ public class Util {
     public static ResourceLocation getSkin(String name) {
 	NetworkPlayerInfo networkinfo = new NetworkPlayerInfo(getGameProfileFromName(name));
 	return networkinfo.getLocationSkin();
+    }
+
+    public static void setSpeed(double speed) {
+	EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+	double yaw = (double) player.rotationYaw;
+	boolean isMoving = player.moveForward != 0.0F || player.moveStrafing != 0.0F;
+	boolean isMovingForward = player.moveForward > 0.0F;
+	boolean isMovingBackward = player.moveForward < 0.0F;
+	boolean isMovingRight = player.moveStrafing > 0.0F;
+	boolean isMovingLeft = player.moveStrafing < 0.0F;
+	boolean isMovingSideways = isMovingLeft || isMovingRight;
+	boolean isMovingStraight = isMovingForward || isMovingBackward;
+	if (isMoving) {
+	    if (isMovingForward && !isMovingSideways) {
+		yaw += 0.0D;
+	    } else if (isMovingBackward && !isMovingSideways) {
+		yaw += 180.0D;
+	    } else if (isMovingForward && isMovingLeft) {
+		yaw += 45.0D;
+	    } else if (isMovingForward) {
+		yaw -= 45.0D;
+	    } else if (!isMovingStraight && isMovingLeft) {
+		yaw += 90.0D;
+	    } else if (!isMovingStraight && isMovingRight) {
+		yaw -= 90.0D;
+	    } else if (isMovingBackward && isMovingLeft) {
+		yaw += 135.0D;
+	    } else if (isMovingBackward) {
+		yaw -= 135.0D;
+	    }
+
+	    yaw = Math.toRadians(yaw);
+	    player.motionX = -Math.sin(yaw) * speed;
+	    player.motionZ = Math.cos(yaw) * speed;
+	}
+
     }
 
 }

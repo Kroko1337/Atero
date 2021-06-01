@@ -122,7 +122,7 @@ public class CustomGUIIngame {
 		Fontrenderer fontRenderer = Management.instance.fontrenderer;
 		EntityLivingBase target = Killaura.instance.getTarget();
 
-		if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob) {
+		if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob && Management.instance.modulemgr.getModuleByName("Killaura").isEnabled()) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(scaledResolution.getScaledWidth() / 2F, scaledResolution.getScaledHeight() / 1.8F, 0);
 
