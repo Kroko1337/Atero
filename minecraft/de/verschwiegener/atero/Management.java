@@ -23,6 +23,7 @@ import de.verschwiegener.atero.cape.GIF;
 import de.verschwiegener.atero.cape.GIFManager;
 import de.verschwiegener.atero.cape.GifLoader;
 import de.verschwiegener.atero.command.CommandManager;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.FontManager;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
@@ -35,6 +36,7 @@ import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
+import de.verschwiegener.atero.util.Util;
 import de.verschwiegener.atero.util.account.AccountManager;
 import de.verschwiegener.atero.util.chat.ChatFont;
 import de.verschwiegener.atero.util.files.FileManager;
@@ -70,8 +72,8 @@ public class Management {
 
     public CommandManager commandmgr;
     public ClickGUI clickgui;
-    public Fontrenderer fontrenderer;
-    public Fontrenderer fontrendererBold;
+    public Font font;
+    public Font fontBold;
     public StreamManager streamManager;
     public Stream currentStream;
     public Streamer streamer;
@@ -83,7 +85,7 @@ public class Management {
     public AccountManager accountmgr;
     public ConfigManager configmgr;
     public GitHubUtils ghUtils;
-    public ChatFont font;
+    public ChatFont chatfont;
     
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
@@ -109,8 +111,8 @@ public class Management {
 	GIFmgr.addGif(new GIF("Fire", "tenor"));
 	//GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
-	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
-	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
+	font = fontmgr.getFontByName("Inter");
+	fontBold = new Font("FontBold", Util.getFontByName("Inter-ExtraLight"), 4F, true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
 
@@ -123,8 +125,6 @@ public class Management {
 	    e2.printStackTrace();
 	}
 	
-	font = new ChatFont();
-	
 	
 	ghUtils = new GitHubUtils();
 	try {
@@ -135,7 +135,7 @@ public class Management {
 	    e1.printStackTrace();
 	}
 	
-	font = new ChatFont();
+	chatfont = new ChatFont();
 	
 	
 
@@ -168,6 +168,8 @@ public class Management {
 	}catch(Exception e) {
 	    e.printStackTrace();
 	}
+	
+	accountmgr.loadAccounts();
 	
 	InventoryUtil.addGroups();
 
@@ -203,6 +205,7 @@ public class Management {
 		XMLHelper.write(config);
 	    }
 	}
+	accountmgr.saveAccounts();
     }
     
     private void registerEvents() {

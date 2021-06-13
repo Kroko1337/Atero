@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
+import com.sun.jna.platform.win32.Sspi.TimeStamp;
+
 import de.verschwiegener.atero.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -21,23 +23,30 @@ public class Account {
     private boolean lastLoginSuccess;
     private String[] bannedServer;
     private ResourceLocation location;
+    private long timeStamp;
 
-    public Account(String email, String password, String username, String UUID, boolean lastLoginSuccess, String[] bannedServer) {
+    public Account(String email, String password, String username, String UUID, boolean lastLoginSuccess, String[] bannedServer, String timestamp) {
 	this.email = email;
 	this.password = password;
 	this.username = username;
 	this.UUID = UUID;
 	this.lastLoginSuccess = lastLoginSuccess;
-	this.bannedServer = bannedServer;
-	location = Util.getSkin(username);
-	/*if(this.UUID != null && !this.UUID.isEmpty()) {
+	if(bannedServer.length != 1) {
+	    this.bannedServer = bannedServer;
+	}else {
+	    this.bannedServer = new String[] {};
+	}
+	timeStamp = 0;
+	this.timeStamp = Long.valueOf(timestamp).longValue();
+	//location = Util.getSkin(username);
+	if(this.UUID != null && !this.UUID.isEmpty()) {
 	    try {
-		image = ImageIO.read(new URL("https://crafatar.com/avatars/" + this.UUID).openStream());
+		BufferedImage image = ImageIO.read(new URL("https://crafatar.com/avatars/" + this.UUID).openStream());
 		location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(username, new DynamicTexture(image));
 	    } catch (IOException e) {
 		e.printStackTrace();
 	    }
-	}*/
+	}
     }
 
     public Account(String email, String password) {
@@ -46,6 +55,7 @@ public class Account {
 	this.username = "";
 	this.UUID = "";
 	this.lastLoginSuccess = false;
+	timeStamp = 0;
 	this.bannedServer = new String[] {};
     }
 
@@ -71,6 +81,7 @@ public class Account {
 
     public void setUsername(String username) {
 	this.username = username;
+	//location = Util.getSkin(username);
     }
 
     public boolean isLastLoginSuccess() {
@@ -79,6 +90,7 @@ public class Account {
 
     public void setLastLoginSuccess(boolean lastLoginSuccess) {
 	this.lastLoginSuccess = lastLoginSuccess;
+	timeStamp = System.currentTimeMillis();
     }
 
     public String[] getBannedServer() {
@@ -92,11 +104,26 @@ public class Account {
 	bannedServer = Arrays.copyOf(bannedServer, bannedServer.length + 1);
 	bannedServer[bannedServer.length - 1] = ServerIP;
     }
+    public void setUUID(String uUID) {
+	UUID = uUID;
+	if(this.UUID != null && !this.UUID.isEmpty()) {
+	    try {
+		BufferedImage image = ImageIO.read(new URL("https://crafatar.com/avatars/" + this.UUID).openStream());
+		location = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(username, new DynamicTexture(image));
+		System.out.println("Location: " + location);
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
+    }
     public String getUUID() {
 	return UUID;
     }
     public ResourceLocation getLocation() {
 	return location;
+    }
+    public long getTimeStamp() {
+	return timeStamp;
     }
 
 }

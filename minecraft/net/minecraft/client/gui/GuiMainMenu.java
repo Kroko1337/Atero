@@ -2,10 +2,12 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen;
-import de.verschwiegener.atero.ui.mainmenu.AccountManagerScreen2;
+import de.verschwiegener.atero.ui.mainmenu.account.AccountManagerScreen2;
 import de.verschwiegener.atero.util.ColorPicker;
+import de.verschwiegener.atero.util.Util;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
@@ -92,12 +94,10 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     /** Minecraft Realms button. */
     private GuiButton realmsButton;
-    private Fontrenderer fontRenderer;
+    private Font fontRenderer;
 
     public GuiMainMenu() {
-	fontRenderer = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 10F, 10F,
-		"", true,
-		false);
+	fontRenderer = new Font("Headder", Util.getFontByName("Inter-ExtraLight"), 20F, true,false);
         this.openGLWarning2 = field_96138_a;
         this.splashText = "missingno";
         BufferedReader bufferedreader = null;
@@ -319,7 +319,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             }
         }
         if(button.id == 500) {
-            this.mc.displayGuiScreen(new AccountManagerScreen(this)); 
+            this.mc.displayGuiScreen(new AccountManagerScreen2(this)); 
         }
     }
 
@@ -534,7 +534,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         //this.drawGradientRect(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
         //this.mc.getTextureManager().bindTexture(minecraftTitleTextures);
 
-        GlStateManager.disableTexture2D();
+        //GlStateManager.disableTexture2D();
         //GlStateManager.enableBlend();
         //GlStateManager.disableAlpha();
         //GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -542,14 +542,14 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         // GlStateManager.shadeModel(7424);
         //GlStateManager.disableBlend();
         //GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
+       // GlStateManager.enableTexture2D();
         //GlStateManager.pushMatrix();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         RenderUtil.drawBackround(width, height);
         //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        this.fontRenderer.drawString("ATERO", j * 2 + (fontRenderer.getStringWidth2("Atero") - 20), k * 2, Color.WHITE.getRGB());
+        this.fontRenderer.drawString("ATERO", j + (fontRenderer.getStringWidth2("Atero") - 20), k, Color.WHITE.getRGB());
 
 
         //GlStateManager.translate((float)(this.width / 2 + 90), 70.0F, 0.0F);
@@ -563,7 +563,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             s = s + " Demo";
         }
-
+        GlStateManager.enableTexture2D();
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, -1);
         String s1 = "Copyright Mojang AB. Do not distribute!";
         this.drawString(this.fontRendererObj, s1, this.width - this.fontRendererObj.getStringWidth(s1) - 2, this.height - 10, -1);
@@ -574,7 +574,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
             this.drawString(this.fontRendererObj, this.openGLWarning1, this.field_92022_t, this.field_92021_u, -1);
             this.drawString(this.fontRendererObj, this.openGLWarning2, (this.width - this.field_92024_r) / 2, ((GuiButton)this.buttonList.get(0)).yPosition - 12, -1);
         }
-       // colorPicker.draw(5,5,50,50, mouseX, mouseY, colorPicker.getHoverColor());
+        GlStateManager.disableTexture2D();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

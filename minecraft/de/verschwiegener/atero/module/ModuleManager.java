@@ -2,13 +2,14 @@ package de.verschwiegener.atero.module;
 
 import java.util.ArrayList;
 
-import de.verschwiegener.atero.module.modules.Test;
 import de.verschwiegener.atero.module.modules.combat.*;
+import de.verschwiegener.atero.module.modules.misc.MusikPlayer;
 import de.verschwiegener.atero.module.modules.movement.*;
 import de.verschwiegener.atero.module.modules.player.InventoryManager;
 import de.verschwiegener.atero.module.modules.render.CapeManager;
 import de.verschwiegener.atero.module.modules.render.ClickGui;
 import de.verschwiegener.atero.module.modules.render.ESP;
+import de.verschwiegener.atero.module.modules.render.Trajectories;
 import de.verschwiegener.atero.module.modules.world.*;
 import net.minecraft.client.Minecraft;
 
@@ -17,7 +18,7 @@ public class ModuleManager {
     public ArrayList<Module> modules = new ArrayList();
 
     public ModuleManager() {
-	modules.add(new Test());
+	modules.add(new MusikPlayer());
 	modules.add(new Antibots());
 	modules.add(new ClickGui());
 	modules.add(new Killaura());
@@ -39,6 +40,7 @@ public class ModuleManager {
 	modules.add(new AutoClicker());
 	modules.add(new AutoEagle());
 	modules.add(new Fucker());
+	modules.add(new Trajectories());
     }
 
     public Module getModuleByName(final String name) {
@@ -79,7 +81,7 @@ public class ModuleManager {
 		try {
 		    m.onUpdate();
 		}catch(Exception e) {
-		    e.printStackTrace();
+		    //e.printStackTrace();
 		}
 	    }
 	}

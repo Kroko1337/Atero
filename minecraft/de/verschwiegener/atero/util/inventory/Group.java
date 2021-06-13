@@ -53,15 +53,16 @@ public class Group implements Wrapper{
 		    Collections.sort(inventoryIDs, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
-			    ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o1)
-				    .getStack();
-			    ItemStack beststack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o2)
-				    .getStack();
-			    if (itemStack.stackSize > beststack.stackSize) {
-				return -1;
-			    } else {
-				return 1;
+			    ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o1).getStack();
+			    ItemStack beststack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o2).getStack();
+			    if (itemStack.stackSize != beststack.stackSize) {
+				if (itemStack.stackSize >= beststack.stackSize) {
+				    return -1;
+				} else {
+				    return 0;
+				}
 			    }
+			    return 0;
 			}
 		    });
 		    break;
@@ -101,6 +102,29 @@ public class Group implements Wrapper{
 	    }
 	}
 	return trashIds;
+    }
+    
+    public boolean compareBestItems(ItemStack item1) {
+	if (!inventoryIDs.isEmpty() && inventoryIDs.size() > 0) {
+	    System.out.println("Algo: " + algorithm);
+	    ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(inventoryIDs.get(0)).getStack();
+	    switch (algorithm) {
+	    case 0:
+		if (maxCellAmount == 0 || inventoryIDs.size() < maxCellAmount) {
+		    return true;
+		}
+		break;
+	    case 1:
+		return compareDamage(item1, item2);
+	    case 2:
+		return compareArmor(item1, item2);
+	    default:
+		return false;
+	    }
+	    return false;
+	} else {
+	    return true;
+	}
     }
     
     public void putArmor(boolean hotbar) {
@@ -148,7 +172,10 @@ public class Group implements Wrapper{
     private boolean compareDamage(int id, int id2) {
 	ItemStack item1 = mc.thePlayer.inventoryContainer.getSlot(id).getStack();
 	ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(id2).getStack();
-
+	return compareArmor(item1, item2);
+    }
+    
+    private boolean compareDamage(ItemStack item1, ItemStack item2) {
 	float damageWeapon1 = item1.getItem() instanceof ItemSword ? getDamageEnchant(item1) : ((ItemTool) item1.getItem()).getDamageVsEntity();
         float damageWeapon2 = item2.getItem() instanceof ItemSword ? getDamageEnchant(item2) : ((ItemTool) item2.getItem()).getDamageVsEntity();
 

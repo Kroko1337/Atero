@@ -176,7 +176,7 @@ public class Scaffold extends Module {
     public void onPre(EventPreMotionUpdate pre) {
         float[] rotation = data == null ? lastRot : RotationRecode2.rotationrecode7(this.data);
 
-        if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
+        //if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
             final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
 
             String mode = setting.getItemByName("RotationModes").getCurrent();
@@ -204,7 +204,7 @@ public class Scaffold extends Module {
                     pre.setPitch(85);
                     lastPitch = (rotation[1]);
                     break;
-            }
+           //}
         }
 
 

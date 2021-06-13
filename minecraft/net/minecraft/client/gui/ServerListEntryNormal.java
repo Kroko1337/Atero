@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.multiplayer.CustomGUISlotRenderer;
 import de.verschwiegener.atero.util.chat.ChatRenderer;
@@ -45,7 +46,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
     private DynamicTexture field_148305_h;
     private long field_148298_f;
     
-    private Fontrenderer fontRenderer;
+    private Font font;
     private ChatRenderer chatRenderer;
 
     protected ServerListEntryNormal(GuiMultiplayer p_i45048_1_, ServerData p_i45048_2_)
@@ -55,7 +56,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
         this.mc = Minecraft.getMinecraft();
         this.field_148306_i = new ResourceLocation("servers/" + p_i45048_2_.serverIP + "/icon");
         this.field_148305_h = (DynamicTexture)this.mc.getTextureManager().getTexture(this.field_148306_i);
-        fontRenderer = Management.instance.fontrenderer;
+        font = Management.instance.font;
         chatRenderer = new ChatRenderer();
     }
 
@@ -93,7 +94,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
         boolean flag1 = this.serverData.version < 47;
         boolean flag2 = flag || flag1;
         //this.mc.fontRendererObj.drawString(this.field_148301_e.serverName, x + 32 + 3, y + 1, 16777215);
-        fontRenderer.drawString(this.serverData.serverName, (x + 32 + 3) * 2, (y + 1) * 2, 16777215);
+        font.drawString(this.serverData.serverName, (x + 32 + 3) * 2, (y + 1) * 2, 16777215);
         List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(this.serverData.serverMOTD, listWidth - 32 - 2);
 
         for (int i = 0; i < Math.min(list.size(), 2); ++i)
@@ -278,7 +279,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
 	        boolean flag = this.serverData.version > 47;
 	        boolean flag1 = this.serverData.version < 47;
 	        boolean flag2 = flag || flag1;
-	        fontRenderer.drawString(this.serverData.serverName, (x + 32 + 3) * 2, (y + 1) * 2, 16777215);
+	        font.drawString(this.serverData.serverName, (x + 32 + 3), (y + 1), 16777215);
 	       // this.mc.fontRendererObj.drawString(this.field_148301_e.serverName, x + 32 + 3, y + 1, 16777215);
 	        List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(this.serverData.serverMOTD, listWidth - 32 - 2);
 
@@ -467,7 +468,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
 	        boolean flag = this.serverData.version > 47;
 	        boolean flag1 = this.serverData.version < 47;
 	        boolean flag2 = flag || flag1;
-	        fontRenderer.drawString(this.serverData.serverName, (x + 32 + 3) * 2, (y + 1) * 2, 16777215);
+	        font.drawString(this.serverData.serverName, (x + 32 + 3), (y + 1), 16777215);
 	       // this.mc.fontRendererObj.drawString(this.field_148301_e.serverName, x + 32 + 3, y + 1, 16777215);
 	        List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(this.serverData.serverMOTD, listWidth - 32 - 2);
 

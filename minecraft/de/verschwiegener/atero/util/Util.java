@@ -1,6 +1,9 @@
 package de.verschwiegener.atero.util;
 
+import java.awt.FontFormatException;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Inet6Address;
@@ -8,25 +11,43 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
+import java.nio.IntBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Enumeration;
+
+import javax.imageio.ImageIO;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 import com.mojang.authlib.GameProfile;
 
+import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.module.Module;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.shader.Framebuffer;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class Util {
 
-    Minecraft mc = Minecraft.getMinecraft();
+    static Minecraft mc = Minecraft.getMinecraft();
 
     /**
      * Sorts the Modules after the Name length
@@ -136,12 +157,102 @@ public class Util {
 	    } else if (isMovingBackward) {
 		yaw -= 135.0D;
 	    }
-
 	    yaw = Math.toRadians(yaw);
 	    player.motionX = -Math.sin(yaw) * speed;
 	    player.motionZ = Math.cos(yaw) * speed;
 	}
 
+    }
+
+    public static String getCLUsername() {
+	return System.getProperty("clname", "none");
+    }
+
+    public static int getClientRole() {
+	return Integer.parseInt(System.getProperty("clrole", "0"));
+    }
+    
+    public static java.awt.Font getFontByName(final String name) {
+	try {
+	    return java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, Management.class.getResourceAsStream(
+		    "/assets/minecraft/" + Management.instance.CLIENT_NAME.toLowerCase() + "/fonts/" + name + ".ttf"));
+	} catch (FontFormatException | IOException e) {
+	    e.printStackTrace();
+	}
+	return null;
+    }
+    
+    private static IntBuffer pixelBuffer;
+    private static int[] pixelValues;
+    
+    public static void saveFramebuffer(Framebuffer frameBuffer) {
+	int width = mc.displayWidth;
+	int height = mc.displayHeight;
+	if (OpenGlHelper.isFramebufferEnabled()) {
+	    width = frameBuffer.framebufferTextureWidth;
+	    height = frameBuffer.framebufferTextureHeight;
+	}
+	int targetCapacity = width * height;
+	if (pixelBuffer == null || pixelBuffer.capacity() < targetCapacity) {
+	    pixelBuffer = BufferUtils.createIntBuffer(targetCapacity);
+	    pixelValues = new int[targetCapacity];
+	}
+	GL11.glPixelStorei(3333, 1);
+	GL11.glPixelStorei(3317, 1);
+	pixelBuffer.clear();
+	if (OpenGlHelper.isFramebufferEnabled()) {
+	    GlStateManager.bindTexture(frameBuffer.framebufferTexture);
+	    GL11.glGetTexImage(3553, 0, 32993, 33639, pixelBuffer);
+	} else {
+	    GL11.glReadPixels(0, 0, width, height, 32993, 33639, pixelBuffer);
+	}
+	pixelBuffer.get(pixelValues);
+	TextureUtil.processPixelValues(pixelValues, width, height);
+	int[] pixelCopy = new int[pixelValues.length];
+	System.arraycopy(pixelValues, 0, pixelCopy, 0, pixelValues.length);
+	
+	int[] pixels = pixelCopy;
+	String captureTime = (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date());
+	BufferedImage image = null;
+	if (OpenGlHelper.isFramebufferEnabled()) {
+	    image = new BufferedImage(frameBuffer.framebufferWidth, frameBuffer.framebufferHeight, 1);
+	    int diff = frameBuffer.framebufferTextureHeight - frameBuffer.framebufferHeight;
+	    for (int i = diff; i < frameBuffer.framebufferTextureHeight; i++) {
+		for (int j = 0; j < frameBuffer.framebufferWidth; j++) {
+		    int pixel = pixels[i * frameBuffer.framebufferTextureWidth + j];
+		    image.setRGB(j, i - diff, pixel);
+		}
+	    }
+	} else {
+	    image = new BufferedImage(width, height, 1);
+	    image.setRGB(0, 0, width, height, pixels, 0, width);
+	}
+	File ssDir = new File("screenshots");
+	File ssFile = new File("screenshots", captureTime + ".png");
+	int iterator = 0;
+	while (ssFile.exists()) {
+	    iterator++;
+	    ssFile = new File("screenshots", captureTime + "_" + iterator + ".png");
+	}
+
+	try {
+	    ssDir.mkdirs();
+	    ImageIO.write(image, "png", ssFile);
+	    IChatComponent ichatcomponent = new ChatComponentText(ssFile.getName());
+	    ichatcomponent.getChatStyle()
+		    .setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, ssFile.getAbsolutePath()));
+	    ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+
+	    //ChatUtil.addIChatComponent(
+		    //new ChatComponentTranslation("screenshot.success", new Object[] { ichatcomponent }));
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    //ChatUtil.addIChatComponent(
+		   // new ChatComponentTranslation("screenshot.failure", new Object[] { e.getMessage() }));
+	}
+    }
+    public static float toRadians(float value) {
+	return (float) (value / 180.0F * Math.PI);
     }
 
 }

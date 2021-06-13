@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.ReconnectUtil;
 import de.verschwiegener.atero.util.TimeUtils;
@@ -14,7 +15,7 @@ import net.minecraft.client.gui.ScaledResolution;
 
 public class GuiReconnect {
     
-    private final Fontrenderer fontRenderer;
+    private final Font font;
     private int x;
     private int y;
     private String currentIPv4;
@@ -26,7 +27,7 @@ public class GuiReconnect {
     private TimeUtils timer = new TimeUtils();
     
     public GuiReconnect() {
-	fontRenderer = Management.instance.fontrenderer; 
+	font = Management.instance.font;
     }
     
     
@@ -36,24 +37,24 @@ public class GuiReconnect {
 	y = sr.getScaledHeight() / 2 - 50;
 	
 	RenderUtil.drawRectRound(x, y, 200, 100, 5, Management.instance.colorBlack);
-	fontRenderer.drawString("Reconnect", (x + 100) * 2 - (fontRenderer.getStringWidth2("Reconnect")), y * 2, Color.WHITE.getRGB());
+	font.drawString("Reconnect", (x + 100) - (font.getStringWidth2("Reconnect")), y, Color.WHITE.getRGB());
 	
-	fontRenderer.drawString("IPv4:", (x * 2) + 4, (y + 15) * 2, Color.WHITE.getRGB());
-	fontRenderer.drawString(currentIPv4, (x * 2) + 30 + fontRenderer.getStringWidth("IPv4:"), (y + 15) * 2, Color.WHITE.getRGB());
+	font.drawString("IPv4:", (x) + 4, (y + 15), Color.WHITE.getRGB());
+	font.drawString(currentIPv4, (x) + 30 + font.getStringWidth("IPv4:"), (y + 15), Color.WHITE.getRGB());
 	
-	fontRenderer.drawString("IPv6:", (x * 2) + 4,  (y + 27) * 2, Color.WHITE.getRGB());
-	fontRenderer.drawString(currentIPv6, (x * 2) + 30 + fontRenderer.getStringWidth("IPv6:"), (y + 27) * 2, Color.WHITE.getRGB());
+	font.drawString("IPv6:", (x) + 4,  (y + 27), Color.WHITE.getRGB());
+	font.drawString(currentIPv6, (x) + 30 + font.getStringWidth("IPv6:"), (y + 27), Color.WHITE.getRGB());
 	
-	fontRenderer.drawString("New IPv4:", (x * 2) + 4, (y + 42) * 2, Color.WHITE.getRGB());
-	fontRenderer.drawString(newIPv4, (x * 2) + 30 + fontRenderer.getStringWidth("New IPv4:"), (y + 42) * 2, Color.WHITE.getRGB());
+	font.drawString("New IPv4:", (x) + 4, (y + 42), Color.WHITE.getRGB());
+	font.drawString(newIPv4, (x) + 30 + font.getStringWidth("New IPv4:"), (y + 42), Color.WHITE.getRGB());
 	
-	fontRenderer.drawString("New IPv6:", (x * 2) + 4,  (y + 54) * 2, Color.WHITE.getRGB());
-	fontRenderer.drawString(newIPv6, (x * 2) + 30 + fontRenderer.getStringWidth("New IPv6:"), (y + 54) * 2, Color.WHITE.getRGB());
+	font.drawString("New IPv6:", (x) + 4,  (y + 54), Color.WHITE.getRGB());
+	font.drawString(newIPv6, (x) + 30 + font.getStringWidth("New IPv6:"), (y + 54), Color.WHITE.getRGB());
 	
 	RenderUtil.fillRect(x + 50, y + 80, 100, 16, Management.instance.colorGray);
-	fontRenderer.drawString("Reconnect", (x + 100) * 2 - (fontRenderer.getStringWidth2("Reconnect")), (y + 81) * 2, Color.WHITE.getRGB());
+	font.drawString("Reconnect", (x + 100) - (font.getStringWidth2("Reconnect")), (y + 81), Color.WHITE.getRGB());
 	
-	fontRenderer.drawString(reconnectState, (x + 100) * 2 - (fontRenderer.getStringWidth2(reconnectState)), (y + 66) * 2, reconnectColor.getRGB());
+	font.drawString(reconnectState, (x + 100) - (font.getStringWidth2(reconnectState)), (y + 66), reconnectColor.getRGB());
 	
 	if(reconnectState == "Reconnecting") {
 	    if(timer.hasReached(1000)) {

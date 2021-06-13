@@ -1,6 +1,7 @@
 package de.verschwiegener.atero.util.components;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
@@ -8,6 +9,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.client.renderer.GlStateManager;
@@ -66,7 +70,7 @@ public class CustomGuiTextField extends GuiTextField {
     private GuiPageButtonList.GuiResponder field_175210_x;
     private Predicate<String> field_175209_y = Predicates.<String>alwaysTrue();
     
-    private Fontrenderer fontRenderer;
+    private Font font;
     private boolean light;
 
     public CustomGuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width,
@@ -78,7 +82,7 @@ public class CustomGuiTextField extends GuiTextField {
 	this.yPosition = y;
 	this.width = par5Width;
 	this.height = par6Height;
-	this.fontRenderer = Management.instance.fontrenderer;
+	this.font = Management.instance.font;
     }
     public CustomGuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width,
 	    int par6Height, boolean light) {
@@ -89,8 +93,13 @@ public class CustomGuiTextField extends GuiTextField {
 	this.yPosition = y;
 	this.width = par5Width;
 	this.height = par6Height;
-	this.fontRenderer = Management.instance.fontrenderer;
+	this.font = Management.instance.font;
 	this.light = light;
+    }
+    
+    public void setPosition(int x, int y) {
+	this.xPosition = x;
+	this.yPosition = y;
     }
 
     public void func_175207_a(GuiPageButtonList.GuiResponder p_175207_1_) {
@@ -313,6 +322,7 @@ public class CustomGuiTextField extends GuiTextField {
      * Call this method from your GuiScreen to process the keys into the textbox
      */
     public boolean textboxKeyTyped(char p_146201_1_, int p_146201_2_) {
+	Keyboard.enableRepeatEvents(true);
 	if (!this.isFocused) {
 	    return false;
 	} else if (GuiScreen.isKeyComboCtrlA(p_146201_2_)) {
@@ -445,6 +455,10 @@ public class CustomGuiTextField extends GuiTextField {
 	    this.setCursorPosition(this.fontRendererInstance.trimStringToWidth(s, i).length() + this.lineScrollOffset);
 	}
     }
+    public boolean isHovered(int mouseX, int mouseY) {
+	return mouseX >= this.xPosition && mouseX < this.xPosition + this.width
+		&& mouseY >= this.yPosition && mouseY < this.yPosition + this.height;
+    }
     public void setyPosition(int yPosition) {
 	this.yPosition = yPosition;
     }
@@ -483,8 +497,8 @@ public class CustomGuiTextField extends GuiTextField {
 
 	    if (s.length() > 0) {
 		String s1 = flag ? s.substring(0, j) : s;
-		this.fontRenderer.drawString(s1, (float) l * 2, (float) i1 * 2 - 4, i);
-		j1 = this.fontRenderer.getStringWidth2(s1) + l + 1;
+		this.font.drawString(s1, (float) l, (float) i1 - 4, i);
+		j1 = this.font.getStringWidth2(s1) + l + 1;
 	    }
 
 	    boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
@@ -498,20 +512,20 @@ public class CustomGuiTextField extends GuiTextField {
 	    }
 
 	    if (s.length() > 0 && flag && j < s.length()) {
-		fontRenderer.drawString(s.substring(j), j1 * 2 + 1, i1 * 2 - 4, i);
-		j1 = this.fontRenderer.getStringWidth2(s.substring(j));
+		font.drawString(s.substring(j), j1 + 1, i1 - 4, i);
+		j1 = this.font.getStringWidth2(s.substring(j));
 	    }
 	    
 	    if (flag1) {
 		if (flag2) {
 		    Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
 		} else {
-		    fontRenderer.drawString("_", (float) k1 * 2, (float) i1 * 2 - 4, i);
+		    font.drawString("_", (float) k1, (float) i1 - 4, i);
 		}
 	    }
 
 	    if (k != j) {
-		int l1 = l + this.fontRenderer.getStringWidth(s.substring(0, k));
+		int l1 = l + this.font.getStringWidth(s.substring(0, k));
 		this.drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT);
 	    }
 	}

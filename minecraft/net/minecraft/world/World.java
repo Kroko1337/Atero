@@ -171,7 +171,6 @@ public abstract class World implements IBlockAccess
         if(Minecraft.getMinecraft().switchServer) {
             Minecraft.getMinecraft().switchServer = false;
             ChatUtil.sendConfigJoinMessage();
-            System.out.println("Connectet World");
         }
     }
 

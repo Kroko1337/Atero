@@ -288,7 +288,6 @@ public class Killaura extends Module {
     }
 
     @EventTarget
-
     public void onPre(final EventPreMotionUpdate pre) {
 	if ((target != null)) {
 	    facing = Killaura.Intavee(Minecraft.thePlayer, target);
@@ -296,6 +295,7 @@ public class Killaura extends Module {
 	    pre.setPitch(pitch);
 	    // yaw = facing[0];
 	    // pitch = facing[1];
+	    System.out.println("YawKillaura: " + yaw);
 	    yaw = interpolateRotation(yaw, facing[0], 180);
 	    pitch = interpolateRotation(pitch, facing[1], 180);
 	} else if (preaimtarget != null) {

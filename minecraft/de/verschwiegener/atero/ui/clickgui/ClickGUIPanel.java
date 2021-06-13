@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
@@ -21,7 +22,7 @@ public class ClickGUIPanel {
     private int x, y, width, yOffset, animationHeight;
     private final int panelYOffset;
     private final ArrayList<ClickGUIButton> modules = new ArrayList<>();
-    private final Fontrenderer fontRenderer;
+    private final Font font;
     private boolean animate, candrag;
     private int state = 2;
     private double dragx, dragy;
@@ -37,7 +38,7 @@ public class ClickGUIPanel {
 	this.x = x;
 	this.y = y;
 	panelYOffset = 15;
-	fontRenderer = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
+	font = Management.instance.fontmgr.getFontByName("Inter");
 	yOffset = 15;
 	animationHeight = yOffset;
 	// Sets the base Width
@@ -45,7 +46,7 @@ public class ClickGUIPanel {
 	for (final Module m : Management.instance.modulemgr.modules) {
 	    if (m.getCategory().toString().equalsIgnoreCase(name)) {
 		// passt die Panel Width an die Module Name Width an
-		if (fontRenderer.getStringWidth(m.getName()) > width) {
+		if (font.getStringWidth(m.getName()) > width) {
 		    //width = fontRenderer.getStringWidth(m.getName());
 		}
 		modules.add(new ClickGUIButton(m.getName(), yOffset, this));
@@ -106,14 +107,14 @@ public class ClickGUIPanel {
 	RenderUtil.fillRect(x, y, width, animationHeight, Management.instance.colorBlack);
 	if(drawCircle) {
 	    GL11.glEnable(GL11.GL_SCISSOR_TEST);
-	    //final ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
 	    final int scaleFactor = 2;
 	    GL11.glScissor((x) * scaleFactor, (((y + 15) * scaleFactor) - Minecraft.getMinecraft().displayHeight) /-1, width * scaleFactor, 15 * scaleFactor);
 	    RenderUtil.drawCircle(x - circleX, y - circleY, circleAnimationDiameter, new Color(48, 48, 48), isLongPressed);
 	    GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
-	RenderUtil.fillRect(x, y + getPanelYOffset() - 1, width, 1, Management.instance.colorBlue);
-	fontRenderer.drawString(name, x * 2 + width - fontRenderer.getStringWidth2(name), y * 2, Color.white.getRGB());
+	RenderUtil.fillRect(x, y + getPanelYOffset() * 2, width, 1, Management.instance.colorBlue);
+	font.drawString(name, x + width / 2 - font.getStringWidth2(name), y, Color.white.getRGB());
+	
 	if (state == 1) {
 	    modules.forEach(ClickGUIButton::drawButton);
 	}
@@ -128,7 +129,7 @@ public class ClickGUIPanel {
 
     public ClickGUIButton getButtonByPosition(final ClickGUIPanel p, final int x, final int y) {
 	return modules.stream().filter(module -> x > p.getX() && x < p.getX() + p.getWidth()
-		&& y > p.getY() + module.getY() && y < p.getY() + module.getY() + getPanelYOffset()).findFirst()
+		&& y > p.getY() + module.getY() && y < p.getY() + module.getY() + (getPanelYOffset() * 2)).findFirst()
 		.orElse(null);
     }
 
@@ -145,7 +146,7 @@ public class ClickGUIPanel {
     }
 
     public int getPanelYOffset() {
-	return panelYOffset;
+	return panelYOffset / 2;
     }
 
     public int getState() {
@@ -191,7 +192,7 @@ public class ClickGUIPanel {
     }
 
     private boolean isClickGUIPanelHovered(final int mouseX, final int mouseY) {
-	return mouseX > x && mouseX < x + width && mouseY > y - 1 && mouseY < y + getPanelYOffset();
+	return mouseX > x && mouseX < x + width && mouseY > y - 1 && mouseY < y + (getPanelYOffset() * 2);
     }
 
     public void keyTyped(final char typedChar, final int keyCode) {

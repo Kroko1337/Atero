@@ -22,6 +22,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -81,16 +82,17 @@ public class InventoryManager extends Module {
 	sort = setting.getItemByName("Sort").isState();
 	delay = setting.getItemByName("Delay").getCurrentValue();
 	hotbarDelay = setting.getItemByName("HotbarDelay").getCurrentValue();
-	
-	if(openInv) {
-	    if(!(mc.currentScreen instanceof GuiContainer)) {
-		if(hotbar) {
-		    runLogic(true);
+	if(!(Management.instance.modulemgr.getModuleByName("Cheststealer").isEnabled() && mc.thePlayer.openContainer instanceof ContainerChest)) {
+	    if (openInv) {
+		if (!(mc.currentScreen instanceof GuiContainer)) {
+		    if (hotbar) {
+			runLogic(true);
+		    }
+		    return;
 		}
-		return;
 	    }
+	    runLogic(false);
 	}
-	runLogic(false);
     }
 
     public void runLogic(boolean hotbar) {

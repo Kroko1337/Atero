@@ -49,7 +49,7 @@ public class ChatExecute {
 	    switch (args[1]) {
 	    case "load":
 		Management.instance.configmgr.getConfigByName(args[2]).loadConfig();
-		ChatUtil.sendMessageWithPrefix("Config loaded");
+		ChatUtil.sendMessageWithPrefix("Config loaded: " + args[2]);
 		break;
 	    }
 	    break;
@@ -57,7 +57,7 @@ public class ChatExecute {
 	    switch (args[1]) {
 	    case "del":
 		Management.instance.modulemgr.getModuleByName(args[2]).setKey(Keyboard.KEY_NONE);
-		// System.out.println("Bind del: " + args[2]);
+		ChatUtil.sendMessageWithPrefix("Removed Bind from Module: \"" + args[2] + "\"");
 		break;
 	    case "edit":
 		System.out.println("Bind edit: " + args[2]);

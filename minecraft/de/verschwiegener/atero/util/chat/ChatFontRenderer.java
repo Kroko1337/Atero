@@ -15,7 +15,7 @@ import net.minecraft.util.StringUtils;
 
 public class ChatFontRenderer {
 
-    public static ChatFont font = Management.instance.font;
+    public static ChatFont font = Management.instance.chatfont;
     public static Minecraft mc = Minecraft.getMinecraft();
     
     
@@ -45,7 +45,6 @@ public class ChatFontRenderer {
 		GL11.glTexParameteri(3553, 10240, 9729);
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		// Draw texture, see ShaderRenderer
-		System.out.println("X2: " + x + " Char: " + Character.toString(glyph));
 		double height = metric.getHeight();
 		double width = metric.getWidth();
 		GL11.glBegin(7);
@@ -78,20 +77,21 @@ public class ChatFontRenderer {
     public static int getStringWidthClean(String text) {
 	int width = 0;
 	text = StringUtils.stripControlCodes(text);
-	for(int i = 0; i < text.length();i++) {
-	    char glyph = text.charAt(i);
+	char[] characters = text.toCharArray();
+	for (char glyph : characters) {
 	    if(font.glyphMap.length > glyph) {
-		width += font.glyphMap[glyph].getWidth();
+		width += font.glyphMap[glyph].getWidth() - 8;
 	    }
 	}
 	return width;
     }
+
     public static int getStringWidth(String text) {
 	int width = 0;
-	for(int i = 0; i < text.length();i++) {
-	    char glyph = text.charAt(i);
-	    if(font.glyphMap.length > glyph) {
-		width += font.glyphMap[glyph].getWidth();
+	char[] characters = text.toCharArray();
+	for (char glyph : characters) {
+	    if (font.glyphMap.length > glyph) {
+		width += font.glyphMap[glyph].getWidth() - 8;
 	    }
 	}
 	return width;

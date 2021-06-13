@@ -23,13 +23,13 @@ public class ChatRenderer {
     Fontrenderer fontRenderer, fontRendererBold, fontRendererItalic;
 
     Color[] codes;
-    
+
     Color messagecolor;
     boolean boldStyle, italicStyle, underlineStyle, strikethroughStyle, randomStyle, effekt;
     Random rnd = new Random();
 
     public ChatRenderer() {
-	
+
 	codes = new Color[32];
 	codes[0] = new Color(0, 0, 0);
 	codes[1] = new Color(0, 0, 170);
@@ -48,8 +48,7 @@ public class ChatRenderer {
 	codes[14] = new Color(255, 255, 85);
 	codes[15] = new Color(255, 255, 255);
 	codes[16] = new Color(85, 255, 255);
-	
-	
+
 	colorCodes.putIfAbsent("0", new Color(0, 0, 0, 255));
 	colorCodes.putIfAbsent("1", new Color(0, 0, 170, 255));
 	colorCodes.putIfAbsent("2", new Color(0, 170, 0, 255));
@@ -66,13 +65,13 @@ public class ChatRenderer {
 	colorCodes.putIfAbsent("d", new Color(255, 85, 255, 255));
 	colorCodes.putIfAbsent("e", new Color(255, 255, 85, 255));
 	colorCodes.putIfAbsent("f", new Color(255, 255, 255, 255));
-	colorCodes.putIfAbsent("g",  new Color(0, 161, 249, 255));
-	fontRenderer = Management.instance.fontmgr.getFontByName("InterChat").getFontrenderer();
-	fontRendererBold = Management.instance.fontmgr.getFontByName("InterChatBold").getFontrenderer();
-	fontRendererItalic = Management.instance.fontmgr.getFontByName("InterChatItalic").getFontrenderer();
+	colorCodes.putIfAbsent("g", new Color(0, 161, 249, 255));
+	fontRenderer = Management.instance.fontmgr.getFontByName("Inter").getFontrenderer();
+	fontRendererBold = Management.instance.fontmgr.getFontByName("InterBold").getFontrenderer();
+	fontRendererItalic = Management.instance.fontmgr.getFontByName("InterItalic").getFontrenderer();
 	messagecolor = Color.white;
     }
-    
+
     public void drawChat(String line, int x, int y) {
 	String[] args = line.replace(" ", "# ").split("#");
 	int xoffset = 0;
@@ -106,7 +105,7 @@ public class ChatRenderer {
 	    }
 	}
     }
-    
+
     public Color getColorCode(String character) {
 	int i = "0123456789abcdefg".indexOf(character);
 	if (i >= 0 && i < this.codes.length) {
@@ -114,7 +113,7 @@ public class ChatRenderer {
 	    return j;
 	} else {
 	    int mode = character.charAt(0);
-	    //System.out.println("Mode: " + mode);
+	    // System.out.println("Mode: " + mode);
 	    switch (mode) {
 	    case 110:
 		// underline
@@ -160,7 +159,6 @@ public class ChatRenderer {
 	    return messagecolor;
 	}
     }
-    
 
     public void drawchat2(String line, int x, int y) {
 	String[] args = line.replace("§", "#§").split("#");
@@ -177,7 +175,7 @@ public class ChatRenderer {
 		if (colorCodes.containsKey(str.substring(1, 2))) {
 		    messagecolor = colorCodes.get(str.substring(1, 2).toLowerCase());
 		} else {
-		    //System.out.println("Case: " + str.substring(1, 2));
+		    // System.out.println("Case: " + str.substring(1, 2));
 		    switch (str.substring(1, 2)) {
 		    case "k":
 			effekt = true;
@@ -230,17 +228,19 @@ public class ChatRenderer {
 			    xoffset += fontRendererItalic.getStringWidth(str);
 			}
 		    } else if (randomStyle) {
-			fontRenderer.drawString(getRandomString(str.length() - 2), x + xoffset, y, messagecolor.getRGB());
+			fontRenderer.drawString(getRandomString(str.length() - 2), x + xoffset, y,
+				messagecolor.getRGB());
 			xoffset += fontRenderer.getStringWidth(str);
 		    }
 		    if (underlineStyle) {
-			
-			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3, fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
+			// drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3,
+			// fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		    if (strikethroughStyle) {
-			//drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()), fontRenderer.getStringWidth(str.substring(2)), messagecolor);
-			//System.out.println("Str: " + str.substring(2));
+			// drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()),
+			// fontRenderer.getStringWidth(str.substring(2)), messagecolor);
+			// System.out.println("Str: " + str.substring(2));
 			fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
 		    }
 		} else {
@@ -262,22 +262,22 @@ public class ChatRenderer {
 	GL11.glBegin(GL11.GL_LINES);
 	GL11.glVertex2f(x, y);
 	GL11.glVertex2f(x + width, y);
-	//GL11.glEnd();
+	// GL11.glEnd();
 	RenderUtil.disable();
-	
-	
-	/*Tessellator tessellator1 = Tessellator.getInstance();
-        WorldRenderer worldrenderer1 = tessellator1.getWorldRenderer();
-        GlStateManager.disableTexture2D();
-        worldrenderer1.begin(7, DefaultVertexFormats.POSITION);
-        int l = -1;
-        worldrenderer1.pos((double)(x + (float)l), (double)(y + (float)10), 0.0D).endVertex();
-        worldrenderer1.pos((double)(x), (double)(y + (float)10), 0.0D).endVertex();
-        worldrenderer1.pos((double)(x), (double)(y + (float)10 - 1.0F), 0.0D).endVertex();
-        worldrenderer1.pos((double)(x + (float)l), (double)(y + (float)10 - 1.0F), 0.0D).endVertex();
-        tessellator1.draw();
-        GlStateManager.enableTexture2D();*/
-	
+
+	/*
+	 * Tessellator tessellator1 = Tessellator.getInstance(); WorldRenderer
+	 * worldrenderer1 = tessellator1.getWorldRenderer();
+	 * GlStateManager.disableTexture2D(); worldrenderer1.begin(7,
+	 * DefaultVertexFormats.POSITION); int l = -1; worldrenderer1.pos((double)(x +
+	 * (float)l), (double)(y + (float)10), 0.0D).endVertex();
+	 * worldrenderer1.pos((double)(x), (double)(y + (float)10), 0.0D).endVertex();
+	 * worldrenderer1.pos((double)(x), (double)(y + (float)10 - 1.0F),
+	 * 0.0D).endVertex(); worldrenderer1.pos((double)(x + (float)l), (double)(y +
+	 * (float)10 - 1.0F), 0.0D).endVertex(); tessellator1.draw();
+	 * GlStateManager.enableTexture2D();
+	 */
+
     }
 
     private String getRandomString(int count) {

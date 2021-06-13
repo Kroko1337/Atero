@@ -55,6 +55,7 @@ public class LayerArrow implements LayerRenderer<EntityLivingBase>
                 double d0 = 0.0D;
                 double d1 = 0.0D;
                 double d2 = 0.0D;
+                
                 this.field_177168_a.getRenderManager().renderEntityWithPosYaw(entity, d0, d1, d2, 0.0F, partialTicks);
                 GlStateManager.popMatrix();
             }

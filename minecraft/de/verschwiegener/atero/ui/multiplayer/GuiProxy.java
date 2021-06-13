@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.proxy.Proxy;
 import de.verschwiegener.atero.proxy.ProxyType;
@@ -18,7 +19,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 public class GuiProxy {
 
-    private final Fontrenderer fontRenderer;
+    private final Font font;
     private ProxyType currentType;
 
     private int x;
@@ -31,15 +32,15 @@ public class GuiProxy {
     private Color messageColor;
 
     public GuiProxy() {
-	fontRenderer = Management.instance.fontrenderer;
+	font = Management.instance.font;
 	currentType = ProxyType.SOCKS4;
 	selectetTextField = 0;
     }
 
     private void drawCombobox(final int x, final int y) {
 	RenderUtil.fillRect(x + 50, y + 59, 100, 16, Management.instance.colorGray);
-	fontRenderer.drawString(currentType.toString(),
-		(x + 100) * 2 - fontRenderer.getStringWidth2(currentType.toString()), (y + 60) * 2,
+	font.drawString(currentType.toString(),
+		(x + 100) - font.getStringWidth2(currentType.toString()), (y + 60),
 		Color.WHITE.getRGB());
 	RenderUtil.drawRect(x + 60, y + 59, 1, 16, Management.instance.colorBlack, 2);
 	RenderUtil.drawRect(x + 140, y + 59, 1, 16, Management.instance.colorBlack, 2);
@@ -58,23 +59,23 @@ public class GuiProxy {
 
 	RenderUtil.drawRectRound(x, y, 200, 115, 5, Management.instance.colorBlack);
 
-	fontRenderer.drawString("Proxy", sr.getScaledWidth() / 2 * 2 - fontRenderer.getStringWidth2("Proxy"),
-		(sr.getScaledHeight() / 2 - 50) * 2 + fontRenderer.getBaseStringHeight() / 2 - 2, Color.WHITE.getRGB());
+	font.drawString("Proxy", sr.getScaledWidth() / 2 - font.getStringWidth2("Proxy"),
+		(sr.getScaledHeight() / 2 - 50) + font.getBaseStringHeight() / 2 - 2, Color.WHITE.getRGB());
 
-	fontRenderer.drawString("IP:", x * 2 + 3, (y + 20) * 2, Color.WHITE.getRGB());
+	font.drawString("IP:", x + 3, (y + 20), Color.WHITE.getRGB());
 	RenderUtil.fillRect(x + 25 + 3, y + 19, 150, 16, Management.instance.colorGray);
-	fontRenderer.drawString(field1Text, (x + 25 + 3) * 2, (y + 20) * 2, Color.WHITE.getRGB());
+	font.drawString(field1Text, (x + 25 + 3), (y + 20), Color.WHITE.getRGB());
 
-	fontRenderer.drawString("Port: ", x * 2 + 3, (y + 40) * 2, Color.WHITE.getRGB());
+	font.drawString("Port: ", x + 3, (y + 40) , Color.WHITE.getRGB());
 	RenderUtil.fillRect(x + 25 + 3, y + 39, 150, 16, Management.instance.colorGray);
-	fontRenderer.drawString(field2Text, (x + 25 + 3) * 2, (y + 40) * 2, Color.WHITE.getRGB());
+	font.drawString(field2Text, (x + 25 + 3), (y + 40), Color.WHITE.getRGB());
 
 	RenderUtil.fillRect(x + 50, y + 95, 100, 16, Management.instance.colorGray);
-	fontRenderer.drawString("Connect", (x + 100) * 2 - fontRenderer.getStringWidth2("Connect"), (y + 95) * 2 + 2,
+	font.drawString("Connect", (x + 100) - font.getStringWidth2("Connect"), (y + 95) + 2,
 		Color.WHITE.getRGB());
 	
 	if(hasFirstConnected) {
-	    fontRenderer.drawString(proxyState, (x + 100) * 2 - fontRenderer.getStringWidth2("Valid Proxy"), (y + 78) * 2, messageColor.getRGB());
+	    font.drawString(proxyState, (x + 100) * 2 - font.getStringWidth2("Valid Proxy"), (y + 78) * 2, messageColor.getRGB());
 	}
 
 	drawCombobox(x, y);

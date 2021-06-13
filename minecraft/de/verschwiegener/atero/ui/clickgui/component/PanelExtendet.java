@@ -79,6 +79,9 @@ public class PanelExtendet {
             case TEXT_FIELD:
                 offset = 13;
                 break;
+            case COLOR_PICKER:
+        	offset = 85;
+        	break;
         }
         for (int i = count; i < components.size(); i++) {
             try {
@@ -135,6 +138,9 @@ public class PanelExtendet {
             case TEXT_FIELD:
                 offset = 13;
                 break;
+            case COLOR_PICKER:
+        	offset = 85;
+        	break;
         }
         for (int i = count; i < components.size(); i++) {
             try {

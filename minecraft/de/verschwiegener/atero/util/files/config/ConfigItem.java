@@ -11,18 +11,15 @@ public class ConfigItem {
 
     public ConfigItem(String[] args) {
 	this.args = args;
-	System.out.println("LoadARgs: " + Arrays.toString(args));
     }
 
     public void execute() {
 	try {
-	    System.err.println("Args: " + Arrays.toString(args));
 	    switch (args[0]) {
 	    case "toggle":
 		Management.instance.modulemgr.getModuleByName(args[1]).toggle(Boolean.parseBoolean(args[2]));
 		break;
 	    case "set":
-		System.err.println("Args[3]: " + Arrays.toString(args));
 		if (args[3].equalsIgnoreCase("true") || args[3].equalsIgnoreCase("false")) {
 		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2])
 			    .setState(Boolean.valueOf(args[3]));
@@ -36,9 +33,7 @@ public class ConfigItem {
 		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).setColor(color);
 		    break;
 		} else {
-		    System.out.println("SetCurrent: " + args[3] + " ItemName: " + args[2] + " Module: " + args[1]);
 		    Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).setCurrent(args[3]);
-		    System.out.println("Set: " + Management.instance.settingsmgr.getSettingByName(args[1]).getItemByName(args[2]).getCurrent());
 		    break;
 		}
 	    }

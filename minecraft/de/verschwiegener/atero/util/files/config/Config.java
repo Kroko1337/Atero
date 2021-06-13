@@ -94,7 +94,6 @@ public class Config {
     }
     
     public void loadConfig() {
-	System.out.println("Items: " + items);
 	for(ConfigItem item : items) {
 	    item.execute();
 	}

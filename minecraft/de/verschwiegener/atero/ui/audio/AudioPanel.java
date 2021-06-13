@@ -13,6 +13,7 @@ import de.verschwiegener.atero.audio.Stream.Provider;
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.audio.channels.ChannelButton;
+import de.verschwiegener.atero.util.Util;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -29,10 +30,9 @@ public class AudioPanel extends GuiScreen {
     private final Minecraft mc = Minecraft.getMinecraft();
     private Provider currentProvider = Provider.values()[0];
 
-    private final String Fontchars = "<>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQURSTUWVXYZ0123456789�$%&?/{}()[].,;:-_|+*�`\"=";
-
-    private final Fontrenderer titlefont;
-    private final Fontrenderer songFont;
+    private final Font font;
+    private final Font titlefont;
+    private final Font songFont;
     double slidery;
     private double rotatevalue = 0;
     private int lengthOffset = 0;
@@ -45,10 +45,9 @@ public class AudioPanel extends GuiScreen {
 	width = 500;
 	height = 300;
 	int buttonYOffset = 25;
-	titlefont = new Font("AudioTitleFont", Fontrenderer.getFontByName("Inter-ExtraLight"), 6F, 6F, Fontchars)
-		.getFontrenderer();
-	songFont = new Font("SongFont", Fontrenderer.getFontByName("Inter-ExtraLight"), 4.5F, 4.5F, Fontchars)
-		.getFontrenderer();
+	font = Management.instance.font;
+	titlefont = new Font("AudioTitleFont", Util.getFontByName("Inter-ExtraLight"), 6F);
+	songFont = new Font("SongFont", Util.getFontByName("Inter-ExtraLight"), 4.5F);
 	for (final Provider provider : Provider.values()) {
 	    providerButtons.add(new ProviderButton(provider.toString(), buttonYOffset));
 	    buttonYOffset += 20;
@@ -122,7 +121,7 @@ public class AudioPanel extends GuiScreen {
 	// Draw Main rect
 	RenderUtil.fillRect(x, y, width, height, Management.instance.colorBlack);
 	RenderUtil.fillRect(x, y, width / 5, height, Management.instance.colorGray);
-	titlefont.drawString("Musik", x * 2 + titlefont.getStringWidth2("Musik"), (y + 3) * 2, Color.WHITE.getRGB());
+	titlefont.drawString("Musik", x + (width / 5) / 2 - titlefont.getStringWidth2("Musik"), (y + 3), Color.WHITE.getRGB());
 
 	providerButtons.forEach(button -> button.drawButton(this, x, y));
 	channelbuttons.forEach(button -> button.drawButton(this, x + width / 5, y + scrollY));
@@ -165,18 +164,17 @@ public class AudioPanel extends GuiScreen {
 		}
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(x * scaleFactor + (width / 5) * 2, y * scaleFactor, 170 * scaleFactor,
-			Management.instance.fontrenderer.getBaseStringHeight() * 4);
-		Management.instance.fontrenderer.drawString(currentStream.getFulltitle(),
-			(float) ((x * 2) + (width / 5) * 2
-				- (rotatevalue * Management.instance.fontrenderer.getSpaceWidth())),
-			(y + (height)) * 2 - 40, Color.WHITE.getRGB());
+			font.getBaseStringHeight() * 4);
+		font.drawString(currentStream.getFulltitle(),
+			(float) ((x) + (width / 5)
+				- (rotatevalue * font.getSpaceWidth())),
+			(y + (height)) - 22, Color.WHITE.getRGB());
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	    } else {
-		Management.instance.fontrenderer.drawString(currentStream.getFulltitle(), (x * 2) + (width / 5) * 2,
-			(y + (height)) * 2 - 40, Color.WHITE.getRGB());
+		font.drawString(currentStream.getFulltitle(), (x) + (width / 5),
+			(y + (height)) - 22, Color.WHITE.getRGB());
 	    }
 	}
-
 	GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
@@ -223,11 +221,11 @@ public class AudioPanel extends GuiScreen {
 	return height;
     }
 
-    public Fontrenderer getSongFont() {
+    public Font getSongFont() {
 	return songFont;
     }
 
-    public Fontrenderer getTitlefont() {
+    public Font getTitlefont() {
 	return titlefont;
     }
 

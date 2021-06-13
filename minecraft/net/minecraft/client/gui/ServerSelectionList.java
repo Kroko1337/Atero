@@ -58,7 +58,7 @@ public class ServerSelectionList extends GuiListExtended
     /**
      * Returns true if the element passed in is currently selected
      */
-    protected boolean isSelected(int slotIndex)
+    public boolean isSelected(int slotIndex)
     {
         return slotIndex == this.selectedSlotIndex;
     }

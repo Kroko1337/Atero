@@ -15,6 +15,7 @@ import com.darkmagician6.eventapi.events.callables.EventRenderShader;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.audio.Stream;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
@@ -95,14 +96,16 @@ public class CustomGUIIngame {
 		if (stream != null) {
 			ScaledResolution sr = new ScaledResolution(mc);
 			final int scaleFactor = sr.getScaleFactor();
-			Fontrenderer fontRenderer = Management.instance.fontrendererBold;
+			Font fontBold = Management.instance.fontBold;
 			drawImage(sr.getScaledWidth() - 54, sr.getScaledHeight() - 54, 50, 50, stream);
-			fontRenderer.drawString(stream.getFulltitle(),
-					(sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getFulltitle())) - 5,
-					(sr.getScaledHeight() - 54) * 2, Color.BLACK.getRGB());
-			fontRenderer.drawString(stream.getArtist(),
-					(sr.getScaledWidth() - 54) * 2 - (fontRenderer.getStringWidth(stream.getArtist())) - 5,
-					(sr.getScaledHeight() - 54) * 2 + (fontRenderer.getBaseStringHeight() * 2), Color.BLACK.getRGB());
+			System.out.println("Width: " + fontBold.getStringWidth2(stream.getFulltitle()) * 2);
+			fontBold.drawString(stream.getFulltitle(),
+				(sr.getScaledWidth() - 54) - (fontBold.getStringWidth2(stream.getFulltitle()) * 2) - 5,
+				(sr.getScaledHeight() - 53), Color.BLACK.getRGB());
+			fontBold.drawString(stream.getArtist(),
+				(sr.getScaledWidth() - 54) - (fontBold.getStringWidth2(stream.getArtist()) * 2) - 5,
+				(sr.getScaledHeight() - 53) + (fontBold.getBaseStringHeight()),
+				Color.BLACK.getRGB());
 		}
 	}
 
@@ -119,7 +122,7 @@ public class CustomGUIIngame {
 
 	public static void renderTargetHud(ScaledResolution scaledResolution) {
 
-		Fontrenderer fontRenderer = Management.instance.fontrenderer;
+		Font font = Management.instance.font;
 		EntityLivingBase target = Killaura.instance.getTarget();
 
 		if (target != null && target instanceof EntityPlayer || target instanceof EntityAnimal || target instanceof EntityVillager || target instanceof EntityMob && Management.instance.modulemgr.getModuleByName("Killaura").isEnabled()) {
@@ -128,20 +131,15 @@ public class CustomGUIIngame {
 
 			RenderUtil.fillRect(0, 0, 150, 60, Management.instance.colorGray);
 			RenderUtil.fillRect(0, 59, 150, 1, Management.instance.colorBlue);
-			//RenderUtil.drawRect(0, 0, 149, 0.5F, Util.getColor(0, 0, 0, 75));
-			//RenderUtil.drawRect(0, 1, 0.5F, 59.5F, Util.getColor(0, 0, 0, 75));
-			//RenderUtil.drawRect(0, 59.5F, 149, 60, Util.getColor(0, 0, 0, 75));
-			//RenderUtil.drawRect(149.5F, 0, 150, 60, Util.getColor(0, 0, 0, 75));
-			//RenderUtil.drawRect(0, 0, 150, 60, Util.getColor(0, 0, 0, 160));
 
-			fontRenderer.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
+			font.drawString(target.getName(), 20, 3F, Management.instance.colorBlue.getRGB());
 
 			renderPlayer(25, 55, 23, target);
 
 			float healthProcent = target.getHealth() / target.getMaxHealth();
 			RenderUtil.drawRect(55, 15, 55 + (90 * healthProcent), 25,
 					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
-			fontRenderer.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
+			font.drawString(String.valueOf(Math.round(target.getHealth())), 175, 6F,
 					Color.HSBtoRGB(Math.min(-healthProcent + 0.3F, 0), 1, 1));
 
 			double winChance = 0;
@@ -153,7 +151,7 @@ public class CustomGUIIngame {
 
 			String message = winChance == 0 ? "You could win"
 					: winChance < 0 ? "You could lose" : "You are going to win";
-			fontRenderer.drawString(message, 97.5F - fontRenderer.getStringWidth(message) + fontRenderer.getStringWidth(message) / 1F, 50F,
+			font.drawString(message, 97.5F - font.getStringWidth(message) + font.getStringWidth(message) / 1F, 50F,
 					Util.getColor(255, 240, 0, 255));
 			GlStateManager.popMatrix();
 		}

@@ -521,4 +521,7 @@ public class TileEntityChest extends TileEntityLockable implements ITickable, II
             this.chestContents[i] = null;
         }
     }
+    public ItemStack[] getChestContents() {
+	return chestContents;
+    }
 }
