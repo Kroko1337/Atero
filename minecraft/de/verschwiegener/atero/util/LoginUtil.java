@@ -10,42 +10,42 @@ import de.verschwiegener.atero.util.account.Account;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 
-import java.awt.Color;
+import java.awt.*;
 import java.net.Proxy;
 
 public class LoginUtil {
 
-    private static LoginUtil loginUtil;
-
     public static String status = "";
     public static Color statusColor;
-    
+    private static LoginUtil loginUtil;
+
     public static void reset() {
-	status = "";
-	statusColor = Color.WHITE;
+        status = "";
+        statusColor = Color.WHITE;
     }
-    
+
     public static void LoginAccount(Account account) {
-	try {
-	    TheAlteningAuthentication theAlteningAuthentication = TheAlteningAuthentication.mojang();
-	    YggdrasilUserAuthentication service = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(
-		    Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
-	    service.setUsername(account.getEmail());
-	    service.setPassword(account.getPassword());
-	    service.logIn();
-	    theAlteningAuthentication.updateService(AlteningServiceType.MOJANG);
-	    Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(),
-		    service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
-	    account.setLastLoginSuccess(true);
-	    account.setUsername(service.getSelectedProfile().getName());
-	    account.setUUID(service.getSelectedProfile().getId().toString());
-	    status = "Logged in as: " + service.getSelectedProfile().getName();
-	    statusColor = Color.GREEN;
-	} catch (Exception e) {
-	    account.setLastLoginSuccess(false);
-	    status = "Logging in Failed";
-	    statusColor = Color.RED;
-	}
+        try {
+            TheAlteningAuthentication theAlteningAuthentication = TheAlteningAuthentication.mojang();
+            YggdrasilUserAuthentication service = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(
+                    Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
+            service.setUsername(account.getEmail());
+            service.setPassword(account.getPassword());
+            service.logIn();
+            theAlteningAuthentication.updateService(AlteningServiceType.MOJANG);
+            Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(),
+                    service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
+            account.setLastLoginSuccess(true);
+            account.setUsername(service.getSelectedProfile().getName());
+            account.setUUID(service.getSelectedProfile().getId().toString());
+            status = "Logged in as: " + service.getSelectedProfile().getName();
+            statusColor = Color.GREEN;
+            Management.instance.ircClient.setIngameName(Minecraft.getMinecraft().session.getUsername());
+        } catch (Exception e) {
+            account.setLastLoginSuccess(false);
+            status = "Logging in Failed";
+            statusColor = Color.RED;
+        }
     }
 
     public static void login(String token) {
@@ -62,10 +62,11 @@ public class LoginUtil {
                         service.logIn();
                         Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(), service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
                         status = "Logged in as: " + service.getSelectedProfile().getName();
-            	    	statusColor = Color.GREEN;
+                        Management.instance.ircClient.setIngameName(Minecraft.getMinecraft().session.getUsername());
+                        statusColor = Color.GREEN;
                     } catch (Exception e) {
-                	status = "Logging in Failed";
-            	    	statusColor = Color.RED;
+                        status = "Logging in Failed";
+                        statusColor = Color.RED;
                     }
                 }
             };
@@ -80,40 +81,42 @@ public class LoginUtil {
                 theAlteningAuthentication.updateService(AlteningServiceType.MOJANG);
                 status = "Logged into §e" + name + " §7(§cCracked§7)";
                 Minecraft.getMinecraft().session = new Session(name, "", "", "LEGACY");
+                Management.instance.ircClient.setIngameName(Minecraft.getMinecraft().session.getUsername());
             }
         };
         loginCracked.start();
     }
 
     public static boolean login(String email, String password) {
-	try {
-	    TheAlteningAuthentication theAlteningAuthentication = TheAlteningAuthentication.mojang();
-	    YggdrasilUserAuthentication service = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(
-		    Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
-	    service.setUsername(email);
-	    service.setPassword(password);
-	    service.logIn();
-	    theAlteningAuthentication.updateService(AlteningServiceType.MOJANG);
-	    Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(),
-		    service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
-	    status = "Logged in as: " + service.getSelectedProfile().getName();
-	    statusColor = Color.GREEN;
-	    return true;
-	} catch (Exception e) {
-	    status = "Logging in Failed";
-	    statusColor = Color.RED;
-	    return false;
-	}
+        try {
+            TheAlteningAuthentication theAlteningAuthentication = TheAlteningAuthentication.mojang();
+            YggdrasilUserAuthentication service = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(
+                    Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
+            service.setUsername(email);
+            service.setPassword(password);
+            service.logIn();
+            theAlteningAuthentication.updateService(AlteningServiceType.MOJANG);
+            Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(),
+                    service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
+            status = "Logged in as: " + service.getSelectedProfile().getName();
+            statusColor = Color.GREEN;
+            Management.instance.ircClient.setIngameName(Minecraft.getMinecraft().session.getUsername());
+            return true;
+        } catch (Exception e) {
+            status = "Logging in Failed";
+            statusColor = Color.RED;
+            return false;
+        }
+    }
+
+    public static LoginUtil getInstance() {
+        if (loginUtil == null) {
+            loginUtil = new LoginUtil();
+        }
+        return loginUtil;
     }
 
     public void generate(String apiToken) {
 
-    }
-
-    public static LoginUtil getInstance() {
-        if(loginUtil == null) {
-            loginUtil = new LoginUtil();
-        }
-        return loginUtil;
     }
 }

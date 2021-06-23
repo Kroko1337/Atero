@@ -55,13 +55,13 @@ public class GuiPlayerTabOverlay extends Gui {
                 String client = ircPlayer.getType().getName();
 
                 if (ircPlayer.getRank() == IrcRank.ADMIN || ircPlayer.getRank() == IrcRank.DEV) {
-                    return "§8[§c" + client + "-Dev§8] §f";
+                    return "[" + client + "-Dev]";
                 } else if (ircPlayer.getRank() == IrcRank.MOD) {
-                    return "§8[§5" + client + "-Mod§8] §f";
+                    return "[" + client + "-Mod]";
                 } else if (ircPlayer.getRank() == IrcRank.VIP) {
-                    return "§8[§6" + client + "-Vip§8] §f";
+                    return "[" + client + "-Vip]";
                 } else {
-                    return "§8[§e" + client + "-User§8] §f";
+                    return "[" + client + "-User]";
                 }
             }
         } catch (Exception ex) {

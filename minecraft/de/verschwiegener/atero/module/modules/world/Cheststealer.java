@@ -79,6 +79,7 @@ public class Cheststealer extends Module {
 		if (timer.hasReached(delay)) {
 		    timer.reset();
 		    ArrayList<Integer> needIds = InventoryUtil.getneedItems(chest, intelligent);
+		    //System.out.println("Need: " + needIds);
 		    if (!needIds.isEmpty() && !isInventoryFull()) {
 			if (random) {
 			    Collections.shuffle(needIds);
@@ -95,7 +96,6 @@ public class Cheststealer extends Module {
 			System.out.println("BlockPos: " + currentChest);
 			Minecraft.thePlayer.closeScreen();
 			positions.add(currentChest);
-			
 		    }
 		}
 	    }

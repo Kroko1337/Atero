@@ -1,11 +1,13 @@
 package de.verschwiegener.atero.module.modules.movement;
 
+import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MathHelper;
 
+import net.minecraft.util.Timer;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -56,6 +58,7 @@ public class Speed extends Module {
 		modes.add("Vanilla");
 		modes.add("Vanilla2");
 		modes.add("VerusYPort");
+		modes.add("Mineplex");
 		//TODO Child Mode setting fixen im Speed
 		//So das wenn man Cubecraft auswählt, der CCBoost slider kommt
 		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "CCBoost", "Cubecraft"));
@@ -82,7 +85,7 @@ public class Speed extends Module {
 						if (mc.thePlayer.fallDistance > 0.08F) {
 							mc.timer.timerSpeed = 1.0F;
 						} else {
-							mc.timer.timerSpeed = (float) boostCC;
+							mc.timer.timerSpeed = (float) 1;
 						}
 
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -112,11 +115,17 @@ public class Speed extends Module {
 
 					break;
 				case "Vanilla":
-					if (Minecraft.thePlayer.onGround) {
+				//	if(mc.thePlayer.isCollidedHorizontally) {
+						Util.setSpeed(0.82);
+					//if (Minecraft.thePlayer.onGround) {
 						//Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					//} else {
-					    Util.setSpeed(0.7);
-					}
+						//} else {
+					//	mc.gameSettings.keyBindJump.pressed = true;
+
+				//	}else{
+					//	mc.gameSettings.keyBindJump.pressed = false;
+					//}
+				//	}
 
 					break;
 				case "VerusYPort":
@@ -149,17 +158,17 @@ public class Speed extends Module {
 							mc.timer.timerSpeed = 1F;
 						}
 					}else{
-						if (mc.thePlayer.fallDistance > 0.09F) {
-							mc.timer.timerSpeed =2F;
-						}else{
+						//if (mc.thePlayer.fallDistance > 0.09F) {
+							mc.timer.timerSpeed =1.4F;
+					//	}else{
 
-						}
+					//	}
 						if (Killaura.instance.getTarget() != null) {
 							//mc.timer.timerSpeed = 1F;
 						}
 
 						if (Killaura.instance.getTarget() != null) {
-							//	mc.timer.timerSpeed = 1F;
+								mc.timer.timerSpeed = 1F;
 						}
 					}
 					break;
@@ -200,7 +209,9 @@ public class Speed extends Module {
 					break;
 			}
 		}
-	}
+
+		}
+
 
 	private void hypixelOnGround() {
 		boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
@@ -277,7 +288,49 @@ public class Speed extends Module {
 		var1 *= 0.017453292F;
 		return var1;
 	}
+	@EventTarget
+	private void onUpdate(PlayerMoveEvent emP) {
+
+		String mode = setting.getItemByName("Modes").getCurrent();
+		switch (mode) {
+			case "Mineplex":
+		float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.1);
+		float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
+		float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
+		float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.007);
+				if (mc.gameSettings.keyBindForward.pressed) {
+					double speed = 0;
+					mc.timer.timerSpeed = 1f;
+					stage++;
+					if (mc.thePlayer.isCollidedHorizontally) {
+						stage = 50;
+					}
+					if (mc.thePlayer.onGround && (mc.thePlayer.moveForward != 0.0f || mc.thePlayer.moveStrafing != 0.0f)) {
+						mc.thePlayer.jump();
+						emP.setY(mc.thePlayer.motionY = 0.50);
+						stage = 0;
+						speed = 0;
+					}
+
+					if (!mc.thePlayer.onGround) {
+						if (mc.thePlayer.motionY > Y) {
+							mc.thePlayer.motionY += Y2;
+						} else {
+							mc.thePlayer.motionY += 0.01;
+						}
+						double slowdown = slowdown1;
+						speed = 0.8 - (stage * slowdown);
+						if (speed < 0) speed = 0;
+					}
+					Util.setSpeed1(emP, speed);
+				}
 
 
-}
+
+				break;
+
+		}
+		}
+
+	}
 

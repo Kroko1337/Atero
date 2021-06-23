@@ -69,6 +69,7 @@ public abstract class Module implements Wrapper{
 	}
 
 	public void onUpdate() {}
+	public void onUpdateClick() {}
 
 	public void toggle() {
 	    enabled = !enabled;

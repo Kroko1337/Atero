@@ -104,13 +104,13 @@ public class AccountLogin extends GuiScreen {
 
 	case 3:
 	    System.out.println("Clipboard");
-	    /*if (getClipboardString().contains(":")) {
+	    if (getClipboardString().contains(":")) {
 		String[] args = getClipboardString().split(":");
 		if (args.length == 2) {
 		    parent.handleArgs(mode, args[0], args[1]);
 		    mc.displayGuiScreen(parent);
 		}
-	    }*/
+	    }
 	default:
 	    break;
 	}

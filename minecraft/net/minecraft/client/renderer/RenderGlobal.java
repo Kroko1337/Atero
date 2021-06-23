@@ -317,9 +317,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         if (this.isRenderEntityOutlines())
         {
-           // GL11.glColor4f(0,255,255,255);
+            GL11.glColor4f(0,255,255,255);
             GlStateManager.enableBlend();
-           // GL11.glColor4f(0,255,255,255);
+           GL11.glColor4f(0,255,255,255);
             GlStateManager.tryBlendFuncSeparate(1, 1, 0, 0);
             this.entityOutlineFramebuffer.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
             GlStateManager.disableBlend();
