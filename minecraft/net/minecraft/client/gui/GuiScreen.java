@@ -107,15 +107,16 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        if (keyCode == 1)
-        {
-            this.mc.displayGuiScreen((GuiScreen)null);
+	if (keyCode == 1 && closeGUI()) {
+	    this.mc.displayGuiScreen((GuiScreen) null);
 
-            if (this.mc.currentScreen == null)
-            {
-                this.mc.setIngameFocus();
-            }
-        }
+	    if (this.mc.currentScreen == null) {
+		this.mc.setIngameFocus();
+	    }
+	}
+    }
+    protected boolean closeGUI() {
+	return true;
     }
 
     /**
@@ -351,7 +352,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
 			}
             
             
-            //if else in switch umgewandelt siehe drüber
+            //if else in switch umgewandelt siehe drï¿½ber
             /*if (hoverevent.getAction() == HoverEvent.Action.SHOW_ITEM)
             {
                 ItemStack itemstack = null;

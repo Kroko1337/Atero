@@ -134,8 +134,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         this.buttonList.add(new CustomGuiButton(3, this.width / 2 + 4 + 50, this.height - 52, 100, 20, I18n.format("selectServer.add", new Object[0])));
         this.buttonList.add(new CustomGuiButton(8, this.width / 2 + 4, this.height - 28, 70, 20, I18n.format("selectServer.refresh", new Object[0])));
         this.buttonList.add(new CustomGuiButton(0, this.width / 2 + 4 + 76, this.height - 28, 75, 20, I18n.format("gui.cancel", new Object[0])));
-        this.buttonList.add(new CustomGuiButton(9, this.width - 92, 15, 75, 15, "Proxy", true, false));
-        this.buttonList.add(new CustomGuiButton(10, this.width - 104, 0, 75, 15, "Reconnect", true, false));
+        this.buttonList.add(new CustomGuiButton(9, this.width - 92, 15, 75, 15, "Proxy", true).setFont( Management.instance.fontmgr.getFontByName("ArrayListFont")));
+        this.buttonList.add(new CustomGuiButton(10, this.width - 104, 0, 75, 15, "Reconnect", true).setFont( Management.instance.fontmgr.getFontByName("ArrayListFont")));
         this.selectServer(this.getServerListSelector().func_148193_k());
     }
 
@@ -446,6 +446,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 	this.hoveringText = null;
         //this.drawDefaultBackground();
         drawBackround();
+        serverListSelector.mouseX = mouseX;
+        serverListSelector.mouseY = mouseY;
         customRenderer.drawScreen(mouseX, mouseY, partialTicks);
         //this.serverListSelector.drawScreen(mouseX, mouseY, partialTicks);
         //this.drawCenteredString(this.fontRendererObj, I18n.format("multiplayer.title", new Object[0]), this.width / 2, 20, 16777215);

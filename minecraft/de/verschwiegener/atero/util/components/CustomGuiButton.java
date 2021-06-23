@@ -3,6 +3,7 @@ package de.verschwiegener.atero.util.components;
 import java.awt.Color;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.render.RenderUtil;
@@ -17,12 +18,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomGuiButton extends GuiButton {
     
-    boolean light, align;
+    boolean light;
+    Font font;
 
     public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
 	super(buttonId, x, y, widthIn, heightIn, buttonText);
-	this.width = 200;
-	this.height = 20;
 	this.enabled = true;
 	this.visible = true;
 	this.id = buttonId;
@@ -31,11 +31,10 @@ public class CustomGuiButton extends GuiButton {
 	this.width = widthIn;
 	this.height = heightIn;
 	this.displayString = buttonText;
+	font = Management.instance.font;
     }
-    public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean light, boolean align) {
+    public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean light) {
 	super(buttonId, x, y, widthIn, heightIn, buttonText);
-	this.width = 200;
-	this.height = 20;
 	this.enabled = true;
 	this.visible = true;
 	this.id = buttonId;
@@ -45,133 +44,38 @@ public class CustomGuiButton extends GuiButton {
 	this.height = heightIn;
 	this.displayString = buttonText;
 	this.light = light;
-	this.align = align;
+	font = Management.instance.font;
     }
 
     public CustomGuiButton(int buttonId, int x, int y, String buttonText) {
 	this(buttonId, x, y, 200, 20, buttonText);
     }
-
-    protected static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
-
-    /** Button width in pixels */
-    protected int width;
-
-    /** Button height in pixels */
-    protected int height;
-
-    /** The x position of this control. */
-    public int xPosition;
-
-    /** The y position of this control. */
-    public int yPosition;
-
-    /** The string displayed on this control. */
-    public String displayString;
-    public int id;
-
-    /** True if this control is enabled, false to disable. */
-    public boolean enabled;
-
-    /** Hides the button completely if false. */
-    public boolean visible;
-    protected boolean hovered;
-
-    /*
-     * public CustomGuiButton(int buttonId, int x, int y, String buttonText) {
-     * this(buttonId, x, y, 200, 20, buttonText); }
-     * 
-     * public CustomGuiButton(int buttonId, int x, int y, int widthIn, int heightIn,
-     * String buttonText) { this.width = 200; this.height = 20; this.enabled = true;
-     * this.visible = true; this.id = buttonId; this.xPosition = x; this.yPosition =
-     * y; this.width = widthIn; this.height = heightIn; this.displayString =
-     * buttonText; }
-     */
-
-    /**
-     * Returns 0 if the button is disabled, 1 if the mouse is NOT hovering over this
-     * button and 2 if it IS hovering over this button.
-     */
-    protected int getHoverState(boolean mouseOver) {
-	int i = 1;
-
-	if (!this.enabled) {
-	    i = 0;
-	} else if (mouseOver) {
-	    i = 2;
-	}
-
-	return i;
+    public void setLight(boolean light) {
+	this.light = light;
     }
-
+    public CustomGuiButton setFont(Font font) {
+	this.font = font;
+	return this;
+    }
     /**
      * Draws this button to the screen.
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 	if (this.visible) {
-	    Fontrenderer fontRenderer = Management.instance.fontrenderer;
+	    //Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont");
 	    if (!light) {
 		RenderUtil.fillRect(xPosition, yPosition, width, height, Management.instance.colorGray);
-		Management.instance.fontrenderer.drawString(this.displayString,
-			((this.xPosition * 2)
-				+ (this.width - Management.instance.fontrenderer.getStringWidth2(this.displayString))),
-			(this.yPosition) * 2 + (Management.instance.fontrenderer.getBaseStringHeight() / 2),
+		font.drawString(this.displayString, xPosition + width / 2 - font.getStringWidth2(displayString),
+			(this.yPosition) + (font.getBaseStringHeight() / 4),
 			Color.WHITE.getRGB());
 		RenderUtil.fillRect(this.xPosition, this.yPosition + this.height - 1, this.width, 1,
 			Management.instance.colorBlue);
 	    } else {
-		int xOffset = (xPosition > (mc.displayWidth / 2)) ? width - fontRenderer.getStringWidth(displayString) : 0;
-		int xOffset2 =  width + (align ? (xPosition < (mc.displayWidth / 2)) ? width - fontRenderer.getStringWidth(displayString) : 0 : (this.width - fontRenderer.getStringWidth2(this.displayString)));
-			fontRenderer.drawString(this.displayString,
-			((this.xPosition * 2) + xOffset2),
-			(this.yPosition) * 2 + (fontRenderer.getBaseStringHeight() / 2),
+		font.drawString(this.displayString,
+			((this.xPosition)),
+			(this.yPosition) + (font.getBaseStringHeight() / 2),
 			Color.WHITE.getRGB());
 	    }
 	}
-    }
-
-    /**
-     * Fired when the mouse button is dragged. Equivalent of
-     * MouseListener.mouseDragged(MouseEvent e).
-     */
-    protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-    }
-
-    /**
-     * Fired when the mouse button is released. Equivalent of
-     * MouseListener.mouseReleased(MouseEvent e).
-     */
-    public void mouseReleased(int mouseX, int mouseY) {
-    }
-
-    /**
-     * Returns true if the mouse has been pressed on this control. Equivalent of
-     * MouseListener.mousePressed(MouseEvent e).
-     */
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-	return this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition
-		&& mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-    }
-
-    /**
-     * Whether the mouse cursor is currently over the button.
-     */
-    public boolean isMouseOver() {
-	return this.hovered;
-    }
-
-    public void drawButtonForegroundLayer(int mouseX, int mouseY) {
-    }
-
-    public void playPressSound(SoundHandler soundHandlerIn) {
-	soundHandlerIn.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
-    }
-
-    public int getButtonWidth() {
-	return this.width;
-    }
-
-    public void setWidth(int width) {
-	this.width = width;
     }
 }

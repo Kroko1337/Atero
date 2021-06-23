@@ -236,18 +236,14 @@ public class RenderManager
         return render;
     }
 
-    public Render getEntityRenderObject(Entity entityIn)
-    {
-        if (entityIn instanceof AbstractClientPlayer)
-        {
-            String s = ((AbstractClientPlayer)entityIn).getSkinType();
-            RenderPlayer renderplayer = (RenderPlayer)this.skinMap.get(s);
-            return renderplayer != null ? renderplayer : this.playerRenderer;
-        }
-        else
-        {
-            return this.getEntityClassRenderObject(entityIn.getClass());
-        }
+    public Render getEntityRenderObject(Entity entityIn) {
+	if (entityIn instanceof AbstractClientPlayer) {
+	    String s = ((AbstractClientPlayer) entityIn).getSkinType();
+	    RenderPlayer renderplayer = (RenderPlayer) this.skinMap.get(s);
+	    return renderplayer != null ? renderplayer : this.playerRenderer;
+	} else {
+	    return this.getEntityClassRenderObject(entityIn.getClass());
+	}
     }
 
     public void cacheActiveRenderInfo(World worldIn, FontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks)
@@ -395,7 +391,6 @@ public class RenderManager
                     {
                         ((RendererLivingEntity)render).setRenderOutlines(this.renderOutlines);
                     }
-
                     render.doRender(entity, x, y, z, entityYaw, partialTicks);
                 }
                 catch (Throwable throwable2)

@@ -142,7 +142,7 @@ public class ClickGUI extends GuiScreen {
 
     public ClickGUIPanel getPanelButtonByPosition(final int x, final int y) {
 	return panels.stream().filter(module -> x > module.getX() && x < module.getX() + module.getWidth()
-		&& y > module.getY() && y < module.getY() + module.getPanelYOffset()).findFirst().orElse(null);
+		&& y > module.getY() && y < module.getY() + (module.getPanelYOffset() * 2)).findFirst().orElse(null);
     }
     public ClickGUIPanel getPanelButtonByName(String name) {
 	return panels.stream().filter(module -> module.getName().equalsIgnoreCase(name)).findFirst().orElse(null);

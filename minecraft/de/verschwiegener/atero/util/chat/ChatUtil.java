@@ -58,31 +58,44 @@ public class ChatUtil {
 
 	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
     }
+
     public static void addConfigMessage(Config config) {
-	IChatComponent message = new ChatComponentText("§r" + config.getName() + " | " + config.getDescription());
-	
+	IChatComponent message = new ChatComponentText("§r" + config.getName() + (config.getDescription() != "" ? " | " + config.getDescription() : " "));
+
 	IChatComponent componentload = new ChatComponentText("[Load]");
-	componentload.getChatStyle().setColor(EnumChatFormatting.DARK_BLUE);
-	componentload.getChatStyle()
-		.setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + config.getName()));
+	componentload.getChatStyle().setColor(EnumChatFormatting.GREEN);
+	componentload.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + config.getName()));
 	message.appendSibling(componentload);
-	
+
 	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(message);
     }
 
     public static void sendConfigJoinMessage() {
-	IChatComponent joinmessage = new ChatComponentText("Available Configs: ");
-	for (Config c : Management.instance.configmgr.configs) {
-	    System.out.println("Config: " + c.getName() + " IP: " + c.getRecommendedServerIP() + " ServerIP: " + Minecraft.getMinecraft().getCurrentServerData().serverIP);
-	    if (c.getRecommendedServerIP().equalsIgnoreCase(Minecraft.getMinecraft().getCurrentServerData().serverIP)) {
-		//System.out.println("Config: " + c.getName());
-		IChatComponent ichatcomponent2 = new ChatComponentText(c.getName() + " ,");
-		ichatcomponent2.getChatStyle().setColor(EnumChatFormatting.GREEN);
-		ichatcomponent2.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + c.getName()));
-		joinmessage.appendSibling(ichatcomponent2);
+	try {
+	    ArrayList<Config> configs = Management.instance.configmgr
+		    .getConfigsforServer(Minecraft.getMinecraft().getCurrentServerData().serverIP);
+	    if (!configs.isEmpty()) {
+		IChatComponent joinmessage = new ChatComponentText("Available Configs: ");
+		for (int i = 0; i < configs.size(); i++) {
+		    Config config = configs.get(i);
+		    IChatComponent ichatcomponent2 = new ChatComponentText(config.getName());
+		    ichatcomponent2.getChatStyle().setColor(EnumChatFormatting.GREEN);
+		    ichatcomponent2.getChatStyle().setChatClickEvent(
+			    new ClickEvent(ClickEvent.Action.CLIENT, "config_load_" + config.getName()));
+		    joinmessage.appendSibling(ichatcomponent2);
+		    if (i != configs.size() - 1) {
+			IChatComponent ichatcomponent3 = new ChatComponentText(", ");
+			ichatcomponent3.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			joinmessage.appendSibling(ichatcomponent3);
+		    }
+		}
+		if (!joinmessage.getSiblings().isEmpty()) {
+		    Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(joinmessage);
+		}
 	    }
+	} catch (Exception e) {
+
 	}
-	Minecraft.getMinecraft().ingameGUI.getChatGUI().addChatLine(joinmessage);
     }
 
 }

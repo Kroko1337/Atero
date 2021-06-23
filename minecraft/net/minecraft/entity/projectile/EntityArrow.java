@@ -1,6 +1,9 @@
 package net.minecraft.entity.projectile;
 
+import java.awt.Color;
 import java.util.List;
+
+import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -32,7 +35,7 @@ public class EntityArrow extends Entity implements IProjectile
     private int zTile = -1;
     private Block inTile;
     private int inData;
-    private boolean inGround;
+    public boolean inGround;
 
     /** 1 if the player can pick up the arrow */
     public int canBePickedUp;
@@ -43,7 +46,7 @@ public class EntityArrow extends Entity implements IProjectile
     /** The owner of this arrow. */
     public Entity shootingEntity;
     private int ticksInGround;
-    private int ticksInAir;
+    public int ticksInAir;
     private double damage = 2.0D;
 
     /** The amount of knockback an arrow applies when it hits a mob. */
@@ -287,6 +290,7 @@ public class EntityArrow extends Entity implements IProjectile
 
             if (movingobjectposition != null)
             {
+                inGround = true;
                 if (movingobjectposition.entityHit != null)
                 {
                     float f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);

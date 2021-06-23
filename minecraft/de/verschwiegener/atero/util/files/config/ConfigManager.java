@@ -3,6 +3,7 @@ package de.verschwiegener.atero.util.files.config;
 import java.util.ArrayList;
 
 import de.verschwiegener.atero.module.Module;
+import net.minecraft.client.Minecraft;
 
 public class ConfigManager {
     
@@ -21,4 +22,13 @@ public class ConfigManager {
    	return configs.stream().filter(config -> config.getName().toLowerCase().startsWith(name.toLowerCase()) && (config.getType() == type))
    		.findFirst().orElse(null);
        }
+    public ArrayList getConfigsforServer(String ServerIP) {
+	ArrayList<Config> configs = new ArrayList<>();
+	for(Config c : this.configs) {
+	    if(c.getRecommendedServerIP().equalsIgnoreCase(ServerIP)){
+		configs.add(c);
+	    }
+	}
+	return configs;
+    }
 }

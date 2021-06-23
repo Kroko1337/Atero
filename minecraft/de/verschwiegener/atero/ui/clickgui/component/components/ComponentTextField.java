@@ -3,6 +3,7 @@ package de.verschwiegener.atero.ui.clickgui.component.components;
 import java.awt.Color;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
 import de.verschwiegener.atero.ui.clickgui.component.PanelExtendet;
@@ -11,7 +12,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 
 public class ComponentTextField extends Component {
 
-    private final Fontrenderer fontRenderer;
+    private final Font font;
     private String currentText;
     private int textFieldEditPosition;
     private boolean textFieldSelected;
@@ -20,7 +21,7 @@ public class ComponentTextField extends Component {
 
     public ComponentTextField(final String name, final int y, final PanelExtendet pe) {
 	super(name, y, pe);
-	fontRenderer = Management.instance.fontrenderer;
+	font = Management.instance.font;
 	currentText = getItem().getCurrent();
     }
 
@@ -28,25 +29,25 @@ public class ComponentTextField extends Component {
     public void drawComponent(final int x, final int y) {
 	super.drawComponent(x, y);
 	if (!isParentextendet()) {
-	    final int textX = (getComponentX() + 3) * 2;
+	    final int textX = (getComponentX() + 3);
 	    if (textFieldSelected) {
 		try {
 		    final String split1 = currentText.substring(0, textFieldEditPosition);
 		    final String split2 = currentText.substring(textFieldEditPosition, currentText.length());
 
-		    fontRenderer.drawString(split1, textX,
-			    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(),
+		    font.drawString(split1, textX,
+			    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(),
 			    Color.white.getRGB());
-		    fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth2(split1) * 2 + 3,
-			    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(),
+		    font.drawString(split2, textX + font.getStringWidth2(split1) * 2 + 3,
+			    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(),
 			    Color.white.getRGB());
 
-		    drawSelected(getComponentX() + 3 + fontRenderer.getStringWidth2(split1));
+		    drawSelected(getComponentX() + 3 + font.getStringWidth2(split1));
 		} catch (final Exception e) {
 		}
 	    } else {
-		fontRenderer.drawString(getItem().getCurrent(), textX,
-			getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+		font.drawString(getItem().getCurrent(), textX,
+			getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
 	    }
 	}
     }
@@ -58,8 +59,8 @@ public class ComponentTextField extends Component {
 	    count = 0;
 	}
 	if (draw) {
-	    RenderUtil.fillRect(x + 1, getComponentY() - fontRenderer.getBaseStringHeight() + 5, 0.5,
-		    fontRenderer.getBaseStringHeight() - 1, Color.WHITE);
+	    RenderUtil.fillRect(x + 1, getComponentY() - font.getBaseStringHeight() + 5, 0.5,
+		    font.getBaseStringHeight() - 1, Color.WHITE);
 	}
     }
 
@@ -116,7 +117,7 @@ public class ComponentTextField extends Component {
 	if (button == 0 && isTextFieldHovered(mouseX, mouseY)) {
 	    textFieldSelected = true;
 	    draw = true;
-	    if (mouseX > getComponentX() + 3 + fontRenderer.getStringWidth(currentText)) {
+	    if (mouseX > getComponentX() + 3 + font.getStringWidth(currentText)) {
 		textFieldEditPosition = currentText.length();
 	    }
 	}

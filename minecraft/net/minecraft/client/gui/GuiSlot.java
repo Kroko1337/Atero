@@ -184,6 +184,9 @@ public abstract class GuiSlot
     {
         return (int)this.amountScrolled;
     }
+    public void setAmountScrolled(float amountScrolled) {
+	this.amountScrolled = amountScrolled;
+    }
 
     public boolean isMouseYWithinSlotBounds(int p_148141_1_)
     {

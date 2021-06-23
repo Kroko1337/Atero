@@ -16,9 +16,9 @@ public class ProviderButton {
     
     public void drawButton(AudioPanel panel, int x, int y) {
 	if(panel.getCurrentProvider() != null && panel.getCurrentProvider().toString() == name) {
-	    Management.instance.fontrenderer.drawString(name, (x * 2) + ((panel.getWidth() / 5) - Management.instance.fontrenderer.getStringWidth2(name)), (y + this.y) * 2, Management.instance.colorBlue.getRGB());
+	    Management.instance.font.drawString(name, x + ((panel.getWidth() / 5) / 2 - Management.instance.font.getStringWidth2(name)), (y + this.y), Management.instance.colorBlue.getRGB());
 	}else {
-	    Management.instance.fontrenderer.drawString(name, (x * 2) + ((panel.getWidth() / 5) - Management.instance.fontrenderer.getStringWidth2(name)), (y + this.y) * 2, Color.WHITE.getRGB());
+	    Management.instance.font.drawString(name, x + ((panel.getWidth() / 5) / 2 - Management.instance.font.getStringWidth2(name)), (y + this.y), Color.WHITE.getRGB());
 	}
     }
 

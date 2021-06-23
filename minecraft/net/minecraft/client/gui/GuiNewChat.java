@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.util.chat.ChatFontRenderer;
 import de.verschwiegener.atero.util.chat.ChatRenderer;
 
 import java.util.ArrayList;
@@ -262,72 +263,50 @@ public class GuiNewChat extends Gui
     /**
      * Gets the chat component under the mouse
      */
-	public IChatComponent getChatComponent(int p_146236_1_, int p_146236_2_) {
-		if (!this.getChatOpen()) {
-			return null;
-		} else {
-			ScaledResolution scaledresolution = new ScaledResolution(this.mc);
-			int i = scaledresolution.getScaleFactor();
-			float f = this.getChatScale();
-			int j = p_146236_1_ / i - 3;
-			int k = p_146236_2_ / i - 27;
-			j = MathHelper.floor_float((float) j / f);
-			k = MathHelper.floor_float((float) k / f);
+    public IChatComponent getChatComponent(int p_146236_1_, int p_146236_2_) {
+	if (!this.getChatOpen()) {
+	    return null;
+	} else {
+	    ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+	    int i = scaledresolution.getScaleFactor();
+	    float f = this.getChatScale();
+	    int j = p_146236_1_ / i - 3;
+	    int k = p_146236_2_ / i - 27;
+	    j = MathHelper.floor_float((float) j / f);
+	    k = MathHelper.floor_float((float) k / f);
 
-			if (j >= 0 && k >= 0) {
-				int l = Math.min(this.getLineCount(), this.field_146253_i.size());
+	    if (j >= 0 && k >= 0) {
+		int l = Math.min(this.getLineCount(), this.field_146253_i.size());
 
-				if (j <= MathHelper.floor_float((float) this.getChatWidth() / this.getChatScale())
-						&& k < this.mc.fontRendererObj.FONT_HEIGHT * l + l) {
-					int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
+		if (j <= MathHelper.floor_float((float) this.getChatWidth() / this.getChatScale())
+			&& k < this.mc.fontRendererObj.FONT_HEIGHT * l + l) {
+		    int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
 
-					if (i1 >= 0 && i1 < this.field_146253_i.size()) {
-						ChatLine chatline = (ChatLine) this.field_146253_i.get(i1);
-						int j1 = 0;
+		    if (i1 >= 0 && i1 < this.field_146253_i.size()) {
+			ChatLine chatline = (ChatLine) this.field_146253_i.get(i1);
+			int j1 = 0;
 
-						/*for(IChatComponent ichatcomponent : chatline.getComponents()) {
-							if(!ichatcomponent.getSiblings().isEmpty()) {
-								for(IChatComponent ichatcomponent2 : ichatcomponent.getSiblings()) {
-									if (ichatcomponent2 instanceof ChatComponentText) {
-										j1 += this.mc.fontRendererObj.getStringWidth(GuiUtilRenderComponents.func_178909_a(((ChatComponentText) ichatcomponent2).getChatComponentText_TextValue(), false));
-
-										if (j1 > j) {
-											return ichatcomponent2;
-										}
-									}
-								}
-							}else {
-								if (ichatcomponent instanceof ChatComponentText) {
-									j1 += this.mc.fontRendererObj.getStringWidth(GuiUtilRenderComponents.func_178909_a(((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false));
-
-									if (j1 > j) {
-										return ichatcomponent;
-									}
-								}
-							}
-						}*/
-						
-						for (IChatComponent ichatcomponent : chatline.getChatComponent()) {
-							if (ichatcomponent instanceof ChatComponentText) {
-								j1 += this.mc.fontRendererObj.getStringWidth(GuiUtilRenderComponents.func_178909_a(((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false));
-
-								if (j1 > j) {
-									return ichatcomponent;
-								}
-							}
-						}
-
-					}
-
-					return null;
-				} else {
-					return null;
+			for (IChatComponent ichatcomponent : chatline.getChatComponent()) {
+			    if (ichatcomponent instanceof ChatComponentText) {
+				j1 += ChatFontRenderer.getStringWidthClean(GuiUtilRenderComponents.func_178909_a(
+					((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false)) / 2;
+				if (j1 > j) {
+				    return ichatcomponent;
 				}
-			} else {
-				return null;
+			    }
 			}
+
+		    }
+
+		    return null;
+		} else {
+		    return null;
 		}
+	    } else {
+		return null;
+	    }
 	}
+    }
 
     /**
      * Returns true if the chat GUI is open

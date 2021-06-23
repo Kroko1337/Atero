@@ -58,9 +58,11 @@ public class AutoComplete {
 			}
 		} else {
 			Command c2 = Management.instance.commandmgr.getCommandByStartsWith(args[0]);
-			hasSuggestion = true;
-			currentSuggestion = c2.getSyntax();
-			return c2.getSyntax();
+			if(c2 != null) {
+			    hasSuggestion = true;
+			    currentSuggestion = c2.getSyntax();
+			    return c2.getSyntax();
+			}
 		    }
 	    }
 	} catch (Exception e) {

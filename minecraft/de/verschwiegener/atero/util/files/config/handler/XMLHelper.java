@@ -111,7 +111,7 @@ public class XMLHelper {
 	    return writer.getBuffer().toString();
 
 	} catch (final Exception e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
 	}
 	return null;
     }
@@ -126,7 +126,7 @@ public class XMLHelper {
 		textBuilder.append((char) c);
 	    }
 	} catch (final IOException e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
 	}
 	
 	parse(convertStringToXMLDocument(textBuilder.toString()), type);
@@ -140,9 +140,9 @@ public class XMLHelper {
 	    final Document doc = db.parse(file);
 	    parse(doc, type);
 	} catch (SAXException | IOException e) {
-	    e.printStackTrace();
+	   // e.printStackTrace();
 	} catch (ParserConfigurationException e) {
-	    e.printStackTrace();
+	   // e.printStackTrace();
 	}
    	
        }
@@ -155,7 +155,7 @@ public class XMLHelper {
 	    Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
 	    return doc;
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
 	}
 	return null;
     }
@@ -194,7 +194,7 @@ public class XMLHelper {
 	    config.setItems(items);
 	    Management.instance.configmgr.configs.add(config);
 	} catch (final Exception e) {
-	    e.printStackTrace();
+	   // e.printStackTrace();
 	}
     }
 
@@ -220,7 +220,7 @@ public class XMLHelper {
 	    transf.transform(source, file);
 
 	} catch (final Exception e) {
-	    e.printStackTrace();
+	    //e.printStackTrace();
 	}
     }
 

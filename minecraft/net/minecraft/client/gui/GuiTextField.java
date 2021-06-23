@@ -66,6 +66,10 @@ public class GuiTextField extends Gui
         this.width = par5Width;
         this.height = par6Height;
     }
+    public void setPosition(int x, int y) {
+	this.xPosition = x;
+        this.yPosition = y;
+    }
 
     public void func_175207_a(GuiPageButtonList.GuiResponder p_175207_1_)
     {

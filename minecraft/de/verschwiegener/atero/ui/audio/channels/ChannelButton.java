@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.audio.Stream;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.ui.audio.AudioPanel;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class ChannelButton {
     }
 
     public void drawButton(final AudioPanel panel, final int x, final int y) {
-	final Fontrenderer fontrenderer = Management.instance.fontrenderer;
+	final Font font = Management.instance.font;
 	final Stream stream = Management.instance.streamManager.getStreamByName(channel);
 	
 	this.x = x + xOffset;
@@ -39,10 +40,10 @@ public class ChannelButton {
 	
 	if (stream != null && stream.getImage() != null) {
 	    drawImage(this.x + width / 4, this.y + height / 8, width - width / 2, height - height / 2, stream);
-	    final int stringWidth = fontrenderer.getStringWidth(channel);
-	    fontrenderer.drawString(channel, this.x * 2 + width - stringWidth / 2, (this.y + height / 4 * 2.7F) * 2, Management.instance.colorBlue.getRGB());
-	    panel.getSongFont().drawString(stream.getTitle(), this.x * 2 + width - panel.getSongFont().getStringWidth(stream.getTitle()) / 2, (this.y + height / 4 * 3.1F) * 2, Color.white.getRGB());
-	    panel.getSongFont().drawString(stream.getArtist(), this.x * 2 + width - panel.getSongFont().getStringWidth(stream.getArtist()) / 2,(this.y + height / 4 * 3.5F) * 2, Color.WHITE.getRGB());
+	    final int stringWidth = font.getStringWidth2(channel);
+	    font.drawString(channel, this.x + width / 2 - stringWidth, (this.y + height / 4 * 2.7F), Management.instance.colorBlue.getRGB());
+	    panel.getSongFont().drawString(stream.getTitle(), this.x + width / 2 - panel.getSongFont().getStringWidth2(stream.getTitle()), (this.y + height / 4 * 3.1F), Color.white.getRGB());
+	    panel.getSongFont().drawString(stream.getArtist(), this.x + width / 2 - panel.getSongFont().getStringWidth2(stream.getArtist()), (this.y + height / 4 * 3.5F), Color.WHITE.getRGB());
 	}
     }
     

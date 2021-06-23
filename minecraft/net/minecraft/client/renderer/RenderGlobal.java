@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.modules.render.ESP;
+import de.verschwiegener.atero.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockEnderChest;
@@ -68,6 +69,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -314,9 +317,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         if (this.isRenderEntityOutlines())
         {
-           // GL11.glColor4f(0,255,255,255);
+            GL11.glColor4f(0,255,255,255);
             GlStateManager.enableBlend();
-           // GL11.glColor4f(0,255,255,255);
+           GL11.glColor4f(0,255,255,255);
             GlStateManager.tryBlendFuncSeparate(1, 1, 0, 0);
             this.entityOutlineFramebuffer.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
             GlStateManager.disableBlend();
@@ -694,17 +697,15 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 if (!flag || Reflector.callBoolean(entity1, Reflector.ForgeEntity_shouldRenderInPass, new Object[] {Integer.valueOf(i)}))
                 {
                     ++this.countEntitiesRendered;
-
-                    if (entity1.isInRangeToRender3d(d0, d1, d2))
-                    {
-                        this.renderManager.renderEntitySimple(entity1, partialTicks);
-                    }
+		    if (entity1.isInRangeToRender3d(d0, d1, d2)) {
+			this.renderManager.renderEntitySimple(entity1, partialTicks);
+		    }
                 }
             }
 
             if (this.isRenderEntityOutlines())
             {
-                GL11.glColor4f(0,255,255,255);
+                GL11.glColor4f(255,255,255,255);
                 GlStateManager.depthFunc(519);
                 GlStateManager.disableFog();
                 this.entityOutlineFramebuffer.framebufferClear();
@@ -712,12 +713,13 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 this.theWorld.theProfiler.endStartSection("entityOutlines");
                 RenderHelper.disableStandardItemLighting();
                 this.renderManager.setRenderOutlines(true);
+                
+               // System.err.println("EntityBuffer");
+                //Util.saveFramebuffer(entityOutlineFramebuffer);
 
                 for (int k = 0; k < list.size(); ++k)
                 {
                     Entity entity3 = (Entity)list.get(k);
-
-                    boolean esp = Management.instance.modulemgr.getModuleByName("ESP").isEnabled();
 
                     if (!flag || Reflector.callBoolean(entity3, Reflector.ForgeEntity_shouldRenderInPass, new Object[] {Integer.valueOf(i)}))
                     {
@@ -730,7 +732,12 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         }
                     }
                 }
+                //System.err.println("EntityBuffer2");
+                //Util.saveFramebuffer(entityOutlineFramebuffer);
+             
                 ESP.instance.drawChestESP();
+                //System.err.println("EntityBuffer3");
+                //Util.saveFramebuffer(entityOutlineFramebuffer);
                 
                 GL11.glColor4f(0,0,0,0);
                 
@@ -786,10 +793,12 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
                             entity2 = (Entity)iterator.next();
 
-                            if (!flag || Reflector.callBoolean(entity2, Reflector.ForgeEntity_shouldRenderInPass, new Object[] {Integer.valueOf(i)}))
+                            if (!flag || Reflector.callBoolean(entity2, Reflector.ForgeEntity_shouldRenderInPass, new Object[] {Integer.valueOf(i)}) || entity2 instanceof EntityArrow || entity2 instanceof EntitySnowball)
                             {
-                                flag5 = this.renderManager.shouldRender(entity2, camera, d0, d1, d2) || entity2.riddenByEntity == this.mc.thePlayer;
-
+                        	//JULIUS
+                        	//Render Arrow even when of screen last statement
+                                flag5 = this.renderManager.shouldRender(entity2, camera, d0, d1, d2) || entity2.riddenByEntity == this.mc.thePlayer || entity2 instanceof EntityArrow || entity2 instanceof EntitySnowball;
+                                
                                 if (!flag5)
                                 {
                                     break;

@@ -236,7 +236,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     /** Instance of PlayerUsageSnooper. */
     private PlayerUsageSnooper usageSnooper = new PlayerUsageSnooper("client", this, MinecraftServer.getCurrentTimeMillis());
-    public WorldClient theWorld;
+    public static WorldClient theWorld;
     public RenderGlobal renderGlobal;
     private RenderManager renderManager;
     private RenderItem renderItem;
@@ -1484,58 +1484,62 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Called when user clicked he's mouse right button (place)
      */
 
-	 public void rightClickMouse() {
-		if (!this.playerController.func_181040_m()) {
-			this.rightClickDelayTimer = 4;
-			boolean flag = true;
-			ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
+    public void rightClickMouse() {
+	if (!this.playerController.func_181040_m()) {
+	    this.rightClickDelayTimer = 4;
+	    boolean flag = true;
+	    ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
 
-			if (this.objectMouseOver == null) {
-				logger.warn("Null returned as \'hitResult\', this shouldn\'t happen!");
-			} else {
-				switch (this.objectMouseOver.typeOfHit) {
-					case ENTITY:
-						if (this.playerController.func_178894_a(this.thePlayer, this.objectMouseOver.entityHit, this.objectMouseOver)) {
-							flag = false;
-						} else if (this.playerController.interactWithEntitySendPacket(this.thePlayer, this.objectMouseOver.entityHit)) {
-							flag = false;
-						}
+	    if (this.objectMouseOver == null) {
+		logger.warn("Null returned as \'hitResult\', this shouldn\'t happen!");
+	    } else {
+		switch (this.objectMouseOver.typeOfHit) {
+		case ENTITY:
+		    if (this.playerController.func_178894_a(this.thePlayer, this.objectMouseOver.entityHit,
+			    this.objectMouseOver)) {
+			flag = false;
+		    } else if (this.playerController.interactWithEntitySendPacket(this.thePlayer,
+			    this.objectMouseOver.entityHit)) {
+			flag = false;
+		    }
 
-						break;
+		    break;
 
-					case BLOCK:
-						BlockPos blockpos = this.objectMouseOver.getBlockPos();
+		case BLOCK:
+		    BlockPos blockpos = this.objectMouseOver.getBlockPos();
 
-						if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
-							int i = itemstack != null ? itemstack.stackSize : 0;
+		    if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
+			int i = itemstack != null ? itemstack.stackSize : 0;
 
-							if (this.playerController.onPlayerRightClick(this.thePlayer, this.theWorld, itemstack, blockpos, this.objectMouseOver.sideHit, this.objectMouseOver.hitVec)) {
-								flag = false;
-								this.thePlayer.swingItem();
-							}
-
-							if (itemstack == null) {
-								return;
-							}
-
-							if (itemstack.stackSize == 0) {
-								this.thePlayer.inventory.mainInventory[this.thePlayer.inventory.currentItem] = null;
-							} else if (itemstack.stackSize != i || this.playerController.isInCreativeMode()) {
-								this.entityRenderer.itemRenderer.resetEquippedProgress();
-							}
-						}
-				}
+			if (this.playerController.onPlayerRightClick(this.thePlayer, this.theWorld, itemstack, blockpos,
+				this.objectMouseOver.sideHit, this.objectMouseOver.hitVec)) {
+			    flag = false;
+			    this.thePlayer.swingItem();
 			}
 
-			if (flag) {
-				ItemStack itemstack1 = this.thePlayer.inventory.getCurrentItem();
-
-				if (itemstack1 != null && this.playerController.sendUseItem(this.thePlayer, this.theWorld, itemstack1)) {
-					this.entityRenderer.itemRenderer.resetEquippedProgress2();
-				}
+			if (itemstack == null) {
+			    return;
 			}
+
+			if (itemstack.stackSize == 0) {
+			    this.thePlayer.inventory.mainInventory[this.thePlayer.inventory.currentItem] = null;
+			} else if (itemstack.stackSize != i || this.playerController.isInCreativeMode()) {
+			    this.entityRenderer.itemRenderer.resetEquippedProgress();
+			}
+		    }
 		}
+	    }
+
+	    if (flag) {
+		ItemStack itemstack1 = this.thePlayer.inventory.getCurrentItem();
+
+		if (itemstack1 != null
+			&& this.playerController.sendUseItem(this.thePlayer, this.theWorld, itemstack1)) {
+		    this.entityRenderer.itemRenderer.resetEquippedProgress2();
+		}
+	    }
 	}
+    }
     
 
     /**

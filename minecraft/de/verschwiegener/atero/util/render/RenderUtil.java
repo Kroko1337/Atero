@@ -42,6 +42,11 @@ public class RenderUtil {
 	    GL11.glVertex2d(x + diameter * Math.sin(i * twicePi / stop), y + diameter * Math.cos(i * twicePi / stop));
 	}
     }
+    
+    public static void setColor(Color color) {
+	GL11.glColor4f(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F,
+		color.getAlpha() / 255.0F);
+    }
 
     public static void drawCircleP(final float x, final float y, final float diameter, final int start, final int stop,
 	    final Color color) {
@@ -379,11 +384,12 @@ public class RenderUtil {
     public static void drawBackround(int width, int height) {
 	GlStateManager.disableLighting();
 	GlStateManager.disableFog();
+	GlStateManager.enableTexture2D();
 	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	Minecraft.getMinecraft().getTextureManager().bindTexture(background);
 	Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0F, 0.0F, width, height, width, height);
 	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
-	// GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	GlStateManager.disableTexture2D();
     }
 
 }

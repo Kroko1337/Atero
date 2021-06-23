@@ -12,7 +12,7 @@ public class FileManager {
     
     
     public void saveValues(String[] keys, ArrayList<Object[]> values, File directory, String fileName)throws Exception {
-	if(values.isEmpty() || (keys.length != values.get(1).length)) {
+	if(values.isEmpty() || (keys.length != values.get(0).length)) {
 	    throw new Exception("Values is Empty or there are not enouth keys");
 	}
 	
@@ -63,7 +63,6 @@ public class FileManager {
     
     private Object getObjects(String value) {
 	if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-	    //TODO booelan wird nicht true nur false
 	    return Boolean.valueOf(value);
 	}else if(isInt(value)) {
 	    return Integer.parseInt(value);

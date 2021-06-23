@@ -1,21 +1,10 @@
 package de.verschwiegener.atero;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-
+import com.darkmagician6.eventapi.EventManager;
 import de.liquiddev.ircclient.api.IrcClient;
+import de.liquiddev.ircclient.api.SimpleIrcApi;
 import de.liquiddev.ircclient.client.ClientType;
 import de.liquiddev.ircclient.client.IrcClientFactory;
-import de.verschwiegener.slinky.IRC.IrcChatListener;
-import org.lwjgl.input.Keyboard;
-
-import com.darkmagician6.eventapi.EventManager;
-
 import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.audio.StreamManager;
 import de.verschwiegener.atero.audio.Streamer;
@@ -23,8 +12,8 @@ import de.verschwiegener.atero.cape.GIF;
 import de.verschwiegener.atero.cape.GIFManager;
 import de.verschwiegener.atero.cape.GifLoader;
 import de.verschwiegener.atero.command.CommandManager;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.FontManager;
-import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.friend.FriendManager;
 import de.verschwiegener.atero.github.GitHubUtils;
 import de.verschwiegener.atero.github.OnlineConfigHandler;
@@ -35,6 +24,7 @@ import de.verschwiegener.atero.settings.SettingsManager;
 import de.verschwiegener.atero.ui.clickgui.ClickGUI;
 import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
+import de.verschwiegener.atero.util.Util;
 import de.verschwiegener.atero.util.account.AccountManager;
 import de.verschwiegener.atero.util.chat.ChatFont;
 import de.verschwiegener.atero.util.files.FileManager;
@@ -43,17 +33,25 @@ import de.verschwiegener.atero.util.files.config.ConfigManager;
 import de.verschwiegener.atero.util.files.config.ConfigType;
 import de.verschwiegener.atero.util.files.config.handler.XMLHelper;
 import de.verschwiegener.atero.util.inventory.InventoryUtil;
+import de.verschwiegener.slinky.IRC.IrcChatListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ServerListEntryNormal;
+import net.minecraft.util.ChatComponentText;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Management {
 
     public static Management instance = new Management();
 
     public final String CLIENT_NAME = "Atero";
-    public final String CLIENT_VERSION = "B2";
+    public final String CLIENT_VERSION = "B4";
     public String selectedDesign = "AteroDesign";
 
     public Color colorBlue = new Color(0, 161, 249);
@@ -70,8 +68,8 @@ public class Management {
 
     public CommandManager commandmgr;
     public ClickGUI clickgui;
-    public Fontrenderer fontrenderer;
-    public Fontrenderer fontrendererBold;
+    public Font font;
+    public Font fontBold;
     public StreamManager streamManager;
     public Stream currentStream;
     public Streamer streamer;
@@ -83,8 +81,8 @@ public class Management {
     public AccountManager accountmgr;
     public ConfigManager configmgr;
     public GitHubUtils ghUtils;
-    public ChatFont font;
-    
+    public ChatFont chatfont;
+	public IrcClient ircClient;
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
     
@@ -109,8 +107,8 @@ public class Management {
 	GIFmgr.addGif(new GIF("Fire", "tenor"));
 	//GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
-	fontrenderer = fontmgr.getFontByName("Inter").getFontrenderer();
-	fontrendererBold = new Fontrenderer(Fontrenderer.getFontByName("Inter-ExtraLight"), 4F, 4F,"", true, false);
+	font = fontmgr.getFontByName("Inter");
+	fontBold = new Font("FontBold", Util.getFontByName("Inter-ExtraLight"), 4F, true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
 
@@ -123,8 +121,6 @@ public class Management {
 	    e2.printStackTrace();
 	}
 	
-	font = new ChatFont();
-	
 	
 	ghUtils = new GitHubUtils();
 	try {
@@ -135,7 +131,7 @@ public class Management {
 	    e1.printStackTrace();
 	}
 	
-	font = new ChatFont();
+	chatfont = new ChatFont();
 	
 	
 
@@ -169,15 +165,29 @@ public class Management {
 	    e.printStackTrace();
 	}
 	
+	accountmgr.loadAccounts();
+	
 	InventoryUtil.addGroups();
 
 	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
+		String ign = Minecraft.getMinecraft().session.getUsername();
+		this.ircClient = IrcClientFactory.getDefault().createIrcClient(ClientType.ATERO, "UFXaV2gqvMhGZDNX", ign, instance.CLIENT_VERSION);
+		this.ircClient.getApiManager().registerApi(new IrcChatListener());
+
+		this.ircClient.getApiManager().registerApi(new SimpleIrcApi() {
+
+			@Override
+			public void addChat(String string) {
+				if (Minecraft.getMinecraft().thePlayer == null) return;
+				Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(string));
+			}
+		});
 
     }
 
     public void stop() {
 	
-	//Safe Modules
+	//Save Modules
 	try {
 	    ArrayList<Object[]> modulevalues = new ArrayList<>();
 	    for (Module m : modulemgr.modules) {
@@ -187,7 +197,7 @@ public class Management {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-	//Safe ClickGUI
+	//Save ClickGUI
 	try {
 	    ArrayList<Object[]> clickguivalue = new ArrayList<>();
 	    for(ClickGUIPanel panel : clickgui.getPanels()) {
@@ -203,6 +213,7 @@ public class Management {
 		XMLHelper.write(config);
 	    }
 	}
+	accountmgr.saveAccounts();
     }
     
     private void registerEvents() {

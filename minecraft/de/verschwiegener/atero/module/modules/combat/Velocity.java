@@ -60,12 +60,12 @@ public class Velocity extends Module {
 
                                 if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
                                     final float SPEED = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, 0.2);
-                                    setSpeed(0.3);
+                                    setSpeed(0.2);
                                     // mc.thePlayer.motionX = 0F;
                                     //  mc.thePlayer.motionZ = 0F;
                                 }
                                 if (Minecraft.thePlayer.onGround) {
-                                    //Minecraft.thePlayer.motionY = 0.1F;
+                                    Minecraft.thePlayer.motionY = 0.42F;
                                 }
                             }
                     //    }

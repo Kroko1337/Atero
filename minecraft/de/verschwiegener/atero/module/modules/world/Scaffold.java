@@ -66,6 +66,7 @@ public class Scaffold extends Module {
         modes.add("NCPStatic");
         modes.add("AAC");
         modes.add("NCP");
+        modes.add("WatchdogFast");
         items.add(new SettingsItem("RotationModes", modes, "NCP", "", ""));
         items.add(new SettingsItem("Down", false, ""));
         items.add(new SettingsItem("SameY", false, ""));
@@ -90,6 +91,7 @@ public class Scaffold extends Module {
     }
 
     public void onDisable() {
+        mc.timer.timerSpeed = 1F;
         mc.thePlayer.rotationYawHead = +170;
         mc.thePlayer.prevRotationPitch = +22;
         switched = false;
@@ -176,12 +178,22 @@ public class Scaffold extends Module {
     public void onPre(EventPreMotionUpdate pre) {
         float[] rotation = data == null ? lastRot : RotationRecode2.rotationrecode7(this.data);
 
-        if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
+        //if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
             final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
 
             String mode = setting.getItemByName("RotationModes").getCurrent();
             switch (mode) {
                 case "NCP":
+                    mc.timer.timerSpeed = 1;
+                    pre.setYaw(rotation[0]);
+                    lastYaw = rotation[0];
+                    pre.setPitch(rotation[1]);
+                    lastPitch = (rotation[1]);
+                    break;
+
+                case "WatchdogFast":
+                    float TIMER = (float) MathHelper.getRandomDoubleInRange(new Random(), 2.2, 2.4);
+                    mc.timer.timerSpeed = TIMER;
                     pre.setYaw(rotation[0]);
                     lastYaw = rotation[0];
                     pre.setPitch(rotation[1]);
@@ -190,7 +202,7 @@ public class Scaffold extends Module {
 
 
                 case "AAC":
-
+                    mc.timer.timerSpeed = 1;
                     pre.setYaw((Minecraft.thePlayer.rotationYaw + 180F));
                     lastYaw = rotation[0];
                     pre.setPitch(rotation[1]);
@@ -199,12 +211,13 @@ public class Scaffold extends Module {
 
 
                 case "NCPStatic":
+                    mc.timer.timerSpeed = 1;
                     pre.setYaw(rotation[0]);
                     lastYaw = rotation[0];
                     pre.setPitch(85);
                     lastPitch = (rotation[1]);
                     break;
-            }
+           //}
         }
 
 

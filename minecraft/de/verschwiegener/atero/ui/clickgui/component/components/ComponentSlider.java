@@ -7,6 +7,7 @@ import java.text.ParseException;
 import org.lwjgl.input.Mouse;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.ui.clickgui.component.Component;
@@ -19,7 +20,7 @@ public class ComponentSlider extends Component {
     private boolean sliderSelected;
     private boolean textFieldSelected;
     private int textFieldEditPosition;
-    private final Fontrenderer fontRenderer;
+    private final Font font;
     private final DecimalFormat df = new DecimalFormat("0.0");
     private int count;
     private boolean draw;
@@ -29,7 +30,7 @@ public class ComponentSlider extends Component {
 
     public ComponentSlider(String name, int y, PanelExtendet pe) {
 	super(name, y, pe);
-	this.fontRenderer = Management.instance.fontrenderer;
+	this.font = Management.instance.font;
 	currentValue = df.format(getItem().getCurrentValue());
     }
 
@@ -47,38 +48,40 @@ public class ComponentSlider extends Component {
 	    }
 	    double percent = (getItem().getCurrentValue() - getItem().getMinValue())
 		    / (getItem().getMaxValue() - getItem().getMinValue());
-	    fontRenderer.drawString(getName(), (getComponentX() + 3) * 2,
-		    getComponentY() * 2 - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
-	    int textX = (getComponentX() + getPanelExtendet().getWidth()) * 2 - 50;
+	    font.drawString(getName(), (getComponentX() + 3),
+		    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+	    int textX = (getComponentX() + getPanelExtendet().getWidth()) - 25;
 	    if (textFieldSelected) {
 		try {
 		    String split1 = currentValue.substring(0, textFieldEditPosition);
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
 		    
 		    //System.out.println("TextX: " + textX);
+		   
 		    
-		    fontRenderer.drawString(split1, textX,
-			    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
+		    font.drawString(split1, textX - 1,
+			    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
 			    Color.WHITE.getRGB());
+		    
 		    if(textFieldEditPosition != 0) {
-			fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth(split1) + 3,
-				    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
+			font.drawString(split2, textX + font.getStringWidth2(split1) + 4,
+				    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
 				    Color.WHITE.getRGB());
 		    }else {
-			fontRenderer.drawString(split2, textX + fontRenderer.getStringWidth(split1),
-				    (getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(),
+			font.drawString(split2, textX + font.getStringWidth(split1),
+				    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
 				    Color.WHITE.getRGB());
 		    }
 		    
 		    drawSelected((getComponentX() + getPanelExtendet().getWidth() - 25)
-			    + fontRenderer.getStringWidth2(split1));
+			    + font.getStringWidth(split1) / 2);
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
 	    } else {
-		fontRenderer.drawString(currentValue,
+		font.drawString(currentValue,
 			textX,
-			(getComponentY() * 2) - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
+			(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
 	    }
 
 	    RenderUtil.fillRect(getComponentX() + 1, (getComponentY()) + 5, getPanelExtendet().getWidth(), 1.5D,
@@ -103,7 +106,7 @@ public class ComponentSlider extends Component {
 	    count = 0;
 	}
 	if(draw) {
-	    RenderUtil.fillRect(x, getComponentY() - fontRenderer.getBaseStringHeight() + 6, 0.5, fontRenderer.getBaseStringHeight(), Color.WHITE);
+	    RenderUtil.fillRect(x, getComponentY() - font.getBaseStringHeight() + 6, 0.5, font.getBaseStringHeight(), Color.WHITE);
 	}
     }
 

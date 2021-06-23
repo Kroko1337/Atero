@@ -4,11 +4,11 @@ import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.Util;
 
-public class TextFont extends Font{
+public class TextFontItalic extends Font{
 	
 	
-	public TextFont() {
-		super("Inter", Util.getFontByName("Inter-ExtraLight"), 4F);
+	public TextFontItalic() {
+		super("InterItalic", Util.getFontByName("Inter-ExtraLight"), 4F, false, true);
 	}
 	
 
