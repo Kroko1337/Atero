@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.ui.ingame.ConfigUI;
 import de.verschwiegener.atero.util.components.CustomChatTextField;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
 
@@ -140,7 +141,10 @@ public class GuiChat extends GuiScreen
                 this.sendChatMessage(s);
             }
 
-            this.mc.displayGuiScreen((GuiScreen)null);
+            System.out.println("Screen: " + mc.currentScreen);
+            if(!(mc.currentScreen instanceof ConfigUI)) {
+                this.mc.displayGuiScreen((GuiScreen)null);
+            }
         }
     }
 

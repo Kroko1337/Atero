@@ -34,15 +34,15 @@ public class LayerArrow implements LayerRenderer<EntityLivingBase>
             {
                 GlStateManager.pushMatrix();
                 ModelRenderer modelrenderer = this.field_177168_a.getMainModel().getRandomModelBox(random);
-                ModelBox modelbox = (ModelBox)modelrenderer.cubeList.get(random.nextInt(modelrenderer.cubeList.size()));
-                modelrenderer.postRender(0.0625F);
+              //  ModelBox modelbox = (ModelBox)modelrenderer.cubeList.get(random.nextInt(modelrenderer.cubeList.size()));
+               // modelrenderer.postRender(0.0625F);
                 float f = random.nextFloat();
                 float f1 = random.nextFloat();
                 float f2 = random.nextFloat();
-                float f3 = (modelbox.posX1 + (modelbox.posX2 - modelbox.posX1) * f) / 16.0F;
-                float f4 = (modelbox.posY1 + (modelbox.posY2 - modelbox.posY1) * f1) / 16.0F;
-                float f5 = (modelbox.posZ1 + (modelbox.posZ2 - modelbox.posZ1) * f2) / 16.0F;
-                GlStateManager.translate(f3, f4, f5);
+               // float f3 = (modelbox.posX1 + (modelbox.posX2 - modelbox.posX1) * f) / 16.0F;
+               // float f4 = (modelbox.posY1 + (modelbox.posY2 - modelbox.posY1) * f1) / 16.0F;
+               // float f5 = (modelbox.posZ1 + (modelbox.posZ2 - modelbox.posZ1) * f2) / 16.0F;
+                //GlStateManager.translate(f3, f4, f5);
                 f = f * 2.0F - 1.0F;
                 f1 = f1 * 2.0F - 1.0F;
                 f2 = f2 * 2.0F - 1.0F;

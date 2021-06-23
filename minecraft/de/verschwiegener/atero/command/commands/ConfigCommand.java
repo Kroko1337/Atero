@@ -2,9 +2,11 @@ package de.verschwiegener.atero.command.commands;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.command.Command;
+import de.verschwiegener.atero.ui.ingame.ConfigUI;
 import de.verschwiegener.atero.util.chat.ChatUtil;
 import de.verschwiegener.atero.util.files.config.Config;
 import de.verschwiegener.atero.util.files.config.ConfigType;
+import net.minecraft.client.Minecraft;
 
 public class ConfigCommand extends Command {
 
@@ -32,22 +34,24 @@ public class ConfigCommand extends Command {
 		try {
 		    Management.instance.configmgr.getConfigByName(args[3], ConfigType.locale).loadConfig();
 		    ChatUtil.sendMessageWithPrefix("Config loaded");
-		} catch (final NullPointerException e) {
+		} catch (final Exception e) {
 		    ChatUtil.sendMessageWithPrefix("Config not found: " + args[3]);
 		}
 		break;
 		
 	    case "save":
-		System.out.println("Args: " + args.length);
-		if (args.length == 6) {
-		    try {
-			Management.instance.configmgr.configs.add(new Config(args[3], args[4], args[5], ConfigType.locale));
-		    } catch (final Exception e) {
-			Management.instance.configmgr.configs.add(new Config(args[3], ConfigType.locale));
-		    }
-		} else {
-		    Management.instance.configmgr.configs.add(new Config(args[3], ConfigType.locale));
-		}
+		System.out.println("Save");
+		Minecraft.getMinecraft().displayGuiScreen(new ConfigUI());
+		//System.out.println("Args: " + args.length);
+		//if (args.length == 6) {
+		    //try {
+			//Management.instance.configmgr.configs.add(new Config(args[3], args[4], args[5], ConfigType.locale));
+		    //} catch (final Exception e) {
+			//Management.instance.configmgr.configs.add(new Config(args[3], ConfigType.locale));
+		    //}
+		//} else {
+		    //Management.instance.configmgr.configs.add(new Config(args[3], ConfigType.locale));
+		//}
 		break;
 	    }
 	    break;

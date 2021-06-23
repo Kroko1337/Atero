@@ -21,6 +21,7 @@ import java.util.Enumeration;
 
 import javax.imageio.ImageIO;
 
+import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -254,5 +255,35 @@ public class Util {
     public static float toRadians(float value) {
 	return (float) (value / 180.0F * Math.PI);
     }
+	public static void setSpeed1(PlayerMoveEvent moveEvent, double moveSpeed) {
+		setSpeed1(moveEvent, moveSpeed, mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
+	}
 
+	public static void setSpeed1(PlayerMoveEvent moveEvent, double moveSpeed, float pseudoYaw, double pseudoStrafe, double pseudoForward) {
+		double forward = pseudoForward;
+		double strafe = pseudoStrafe;
+		float yaw = pseudoYaw;
+		if (forward != 0.0D) {
+			if (strafe > 0.0D) {
+				yaw += ((forward > 0.0D) ? -45 : 45);
+			} else if (strafe < 0.0D) {
+				yaw += ((forward > 0.0D) ? 45 : -45);
+			}
+			strafe = 0.0D;
+			if (forward > 0.0D) {
+				forward = 1.0D;
+			} else if (forward < 0.0D) {
+				forward = -1.0D;
+			}
+		}
+		if (strafe > 0.0D) {
+			strafe = 1.0D;
+		} else if (strafe < 0.0D) {
+			strafe = -1.0D;
+		}
+		double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
+		double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
+		moveEvent.setX((forward * moveSpeed * mx + strafe * moveSpeed * mz));
+		moveEvent.setZ((forward * moveSpeed * mz - strafe * moveSpeed * mx));
+	}
 }

@@ -2,8 +2,6 @@ package de.verschwiegener.atero.ui.multiplayer;
 
 import java.awt.Color;
 
-import javax.xml.ws.handler.MessageContext.Scope;
-
 import org.lwjgl.opengl.GL11;
 
 import de.verschwiegener.atero.Management;

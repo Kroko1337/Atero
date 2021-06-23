@@ -488,7 +488,7 @@ public class CustomGuiTextField extends GuiTextField {
 	    boolean flag = j >= 0 && j <= s.length();
 	    boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
 	    int l = this.enableBackgroundDrawing ? this.xPosition + 4 : this.xPosition;
-	    int i1 = this.enableBackgroundDrawing ? this.yPosition + (this.height - 8) / 2 : this.yPosition;
+	    int i1 = this.enableBackgroundDrawing ? this.yPosition + (this.height - 5) / 2 : this.yPosition;
 	    int j1 = l;
 
 	    if (k > s.length()) {
@@ -498,7 +498,7 @@ public class CustomGuiTextField extends GuiTextField {
 	    if (s.length() > 0) {
 		String s1 = flag ? s.substring(0, j) : s;
 		this.font.drawString(s1, (float) l, (float) i1 - 4, i);
-		j1 = this.font.getStringWidth2(s1) + l + 1;
+		j1 = this.font.getStringWidth(s1) / 2 + l + 1;
 	    }
 
 	    boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
@@ -513,12 +513,12 @@ public class CustomGuiTextField extends GuiTextField {
 
 	    if (s.length() > 0 && flag && j < s.length()) {
 		font.drawString(s.substring(j), j1 + 1, i1 - 4, i);
-		j1 = this.font.getStringWidth2(s.substring(j));
+		j1 = this.font.getStringWidth(s.substring(j)) / 2;
 	    }
 	    
 	    if (flag1) {
 		if (flag2) {
-		    Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
+		    Gui.drawRect(k1 + 1, i1 - 3, k1 + 2, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT - 2, -3092272);
 		} else {
 		    font.drawString("_", (float) k1, (float) i1 - 4, i);
 		}
@@ -526,7 +526,7 @@ public class CustomGuiTextField extends GuiTextField {
 
 	    if (k != j) {
 		int l1 = l + this.font.getStringWidth(s.substring(0, k));
-		this.drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT);
+		this.drawCursorVertical(k1, i1 - 3, l1 - 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT - 2);
 	    }
 	}
     }

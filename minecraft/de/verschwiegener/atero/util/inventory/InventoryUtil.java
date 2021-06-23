@@ -18,6 +18,7 @@ public class InventoryUtil {
     private static ArrayList<Group> groups = new ArrayList<>();
     public static int count;
     public static int count2;
+    public static ArrayList<Integer> blacklistSlot = new ArrayList<>();
     
     public static void addGroups() {
 	groups.add(new Group("Blocks", 0, 3, 0, new Integer[] {1, 2, 3, 4, 5, 24, 35, 41, 42, 45, 48, 46, 57, 79, 80, 95}));
@@ -66,7 +67,7 @@ public class InventoryUtil {
 		if (intelligent) {
 		    int id = Item.getIdFromItem(item.getItem());
 		    for (Group g : groups) {
-			if (g.getItemIDs().contains(id) && !need.contains(i)) {
+			if (g.getItemIDs().contains(id) && !need.contains(i) && !blacklistSlot.contains(i)) {
 			    need.add(i);
 			}
 		    }
@@ -95,7 +96,6 @@ public class InventoryUtil {
 	}
 	boolean needItem = false;
 	for(Group g : groups) {
-	    System.out.println("Item: " + Item.getIdFromItem(itemchest.getItem()));
 	    if(g.getItemIDs().contains(Item.getIdFromItem(itemchest.getItem()))) {
 		if(g.compareBestItems(itemchest)) {
 		   needItem = true; 

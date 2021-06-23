@@ -82,7 +82,7 @@ public class InventoryManager extends Module {
 	sort = setting.getItemByName("Sort").isState();
 	delay = setting.getItemByName("Delay").getCurrentValue();
 	hotbarDelay = setting.getItemByName("HotbarDelay").getCurrentValue();
-	if(!(Management.instance.modulemgr.getModuleByName("Cheststealer").isEnabled() && mc.thePlayer.openContainer instanceof ContainerChest)) {
+	if(!(Management.instance.modulemgr.getModuleByName("Cheststealer").isEnabled() || mc.thePlayer.openContainer instanceof ContainerChest)) {
 	    if (openInv) {
 		if (!(mc.currentScreen instanceof GuiContainer)) {
 		    if (hotbar) {
@@ -106,10 +106,10 @@ public class InventoryManager extends Module {
 		mc.playerController.windowClick(0, garbageIDs.get(0), 1, 4, mc.thePlayer);
 
 	    } else {
+
 		if (autoarmor) {
 		    InventoryUtil.putArmor(hotbar);
 		}
-		
 		if(sort) {
 		    InventoryUtil.putInBestSlot(hotbar);
 		}

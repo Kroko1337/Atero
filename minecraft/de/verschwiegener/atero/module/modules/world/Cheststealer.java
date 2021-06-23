@@ -84,7 +84,11 @@ public class Cheststealer extends Module {
 			    Collections.shuffle(needIds);
 			}
 			ItemStack itemStack = chest.getLowerChestInventory().getStackInSlot(needIds.get(0));
-			if (intelligent && InventoryUtil.compareItem(itemStack)) {
+			if (intelligent) {
+			    if(!InventoryUtil.compareItem(itemStack)) {
+				InventoryUtil.blacklistSlot.add(needIds.get(0));
+				return;
+			    }
 			    Minecraft.playerController.windowClick(chest.windowId, needIds.get(0), 0, 1,
 				    Minecraft.thePlayer);
 			} else if (!intelligent) {
@@ -95,7 +99,6 @@ public class Cheststealer extends Module {
 			System.out.println("BlockPos: " + currentChest);
 			Minecraft.thePlayer.closeScreen();
 			positions.add(currentChest);
-			
 		    }
 		}
 	    }

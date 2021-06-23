@@ -40,23 +40,18 @@ public class ModuleManager {
 	modules.add(new AutoClicker());
 	modules.add(new AutoEagle());
 	modules.add(new Fucker());
-	modules.add(new Trajectories());
+	//modules.add(new Trajectories());
     }
 
     public Module getModuleByName(final String name) {
-	return modules.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase()))
-		.findFirst().orElse(null);
+	return modules.stream().filter(module -> module.getName().toLowerCase().equalsIgnoreCase(name.toLowerCase())).findFirst().orElse(null);
     }
-
     public Module getModulebyStartsWith(final String name) {
-	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase()))
-		.findFirst().orElse(null);
+	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase())).findFirst().orElse(null);
     }
-
     public ArrayList<Module> getModules() {
 	return modules;
     }
-
     public void onKey(final int key) {
 	if (Minecraft.getMinecraft().currentScreen == null) {
 	    for (final Module m : modules) {
@@ -80,6 +75,17 @@ public class ModuleManager {
 	    if (m.isEnabled()) {
 		try {
 		    m.onUpdate();
+		}catch(Exception e) {
+		    //e.printStackTrace();
+		}
+	    }
+	}
+    }
+    public void onUpdateClick() {
+	for (final Module m : modules) {
+	    if (m.isEnabled()) {
+		try {
+		    m.onUpdateClick();
 		}catch(Exception e) {
 		    //e.printStackTrace();
 		}

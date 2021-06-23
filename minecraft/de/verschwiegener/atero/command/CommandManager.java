@@ -7,7 +7,7 @@ import de.verschwiegener.atero.command.commands.BindCommand;
 import de.verschwiegener.atero.command.commands.BindsCommand;
 import de.verschwiegener.atero.command.commands.ConfigCommand;
 import de.verschwiegener.atero.command.commands.TestCommand;
-import de.verschwiegener.atero.module.modules.misc.MusikPlayer;
+
 import de.verschwiegener.atero.util.chat.ChatUtil;
 
 public class CommandManager {
