@@ -573,8 +573,17 @@ public abstract class Entity implements ICommandSender {
             boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
           //  if (Scaffold.instance.isEnabled() && Scaffold.instance.canSafewalk()) {
                 if (this instanceof EntityPlayer) {
-                    if(Minecraft.getMinecraft().gameSettings.keyBindSneak.pressed && !Minecraft.getMinecraft().gameSettings.keyBindJump.pressed)
-                    flag = true;
+                    if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
+                        String mode = Scaffold.setting.getItemByName("RotationModes").getCurrent();
+                        switch (mode) {
+                            case "WatchdogFast":
+                             //   flag = true;
+                                break;
+                        }
+
+                    }else{
+                        //flag = true;
+                    }
                 }
           //  }
             if (Scaffold.instance.isEnabled() && Scaffold.instance.allowdown) {
@@ -1082,8 +1091,6 @@ public abstract class Entity implements ICommandSender {
      * Used in both water and by flying objects
      */
     public void moveFlying(float strafe, float forward, float friction) {
-       // EventMoveFly moveFly = new EventMoveFly(rotationYaw);
-     //   EventManager.call(moveFly);
         if (this != Minecraft.thePlayer) return;
         float yaw = 0;
 

@@ -364,7 +364,7 @@ public class ItemRenderer
                     case 4:
                         this.transformFirstPersonItem(0.0f, f1 );
                         this.func_178103_d();
-                        GlStateManager.translate(-0.3f, 0.1f, -0.305f);
+                        GlStateManager.translate(-0.4f, 0.1f, -0.105f);
 
                         break;
 
@@ -375,9 +375,11 @@ public class ItemRenderer
             } else {
                 if (Killaura.instance.hasTarget()) {
                     if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
-                        this.transformFirstPersonItem(0.0f, f1 );
-                        this.func_178103_d();
-                        GlStateManager.translate(-0.3f, 0.1f, -0.305f);
+
+                            this.transformFirstPersonItem2(f, f1);
+                            this.func_178103_d();
+
+
 
 
                     }else {
@@ -682,6 +684,34 @@ public class ItemRenderer
             catch (NoSuchFieldError var1)
             {
                 ;
+            }
+        }
+    }
+    private void transformFirstPersonItem2(float equipProgress, float swingProgress) {
+        //if (Killaura.instance.hasTarget()) {
+        //    if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
+        //            GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
+          //          GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
+           //         GlStateManager.rotate(70.0F, 0.0F, 1.0F, 0.0F);
+            //        float f = MathHelper.sin(swingProgress * swingProgress * (float) Math.PI);
+             //       float f1 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
+             //       GlStateManager.rotate(f * -20.0F, 0.0F, 1.0F, 0.0F);
+              //      GlStateManager.rotate(f1 * -20.0F, 1.0F, 0.0F, 0.0F);
+              //      GlStateManager.rotate(f1 * -30.0F, 0.0F, 0.0F, 0.0F);
+               //     GlStateManager.scale(0.4F, 0.4F, 0.4F);
+        if (Killaura.instance.hasTarget()) {
+            if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
+                GlStateManager.translate(0.56F, -0.42F, -0.91999997F);
+                GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
+                GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+                float f = MathHelper.sin(swingProgress * swingProgress * (float) Math.PI);
+                float f1 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
+                GlStateManager.rotate(f * -15.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(f1 * -20.0F, 3.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(f1 * -20.0F, 1.0F, 0.0F, 0.5F);
+                GlStateManager.scale(0.4F, 0.4F, 0.4F);
+
+
             }
         }
     }

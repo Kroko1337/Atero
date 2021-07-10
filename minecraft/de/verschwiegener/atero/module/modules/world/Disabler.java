@@ -40,21 +40,32 @@ public class Disabler extends Module {
 
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
-            @EventTarget
-            public void onUpdate(EventReceivedPacket ppe) {
+    @EventTarget
+    public void onUpdate(EventReceivedPacket ppe) {
         Packet p = ppe.getPacket();
-        mc.getNetHandler().addToSendQueue(new C00PacketKeepAlive());
-        if(p instanceof  C00PacketKeepAlive) {
-            if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
+
+
+
+            if (p instanceof C13PacketPlayerAbilities && !mc.thePlayer.isUsingItem()) {
                 ppe.setCancelled(true);
-            }
-        }
-        mc.thePlayer.capabilities.isFlying = false;
+
+
+
+            //    @EventTarget
+        //    public void onUpdate(EventReceivedPacket ppe) {
+        //Packet p = ppe.getPacket();
+       // mc.getNetHandler().addToSendQueue(new C00PacketKeepAlive());
+     //   if(p instanceof  C00PacketKeepAlive) {
+        //    if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
+        //        ppe.setCancelled(true);
+       //     }
+      //  }
+       // mc.thePlayer.capabilities.isFlying = false;
        // mc.thePlayer.sendQueue.addToSendQueue(new C0BPacketEntityAction());
       // mc.thePlayer.sendQueue.addToSendQueue(new C0FPacketConfirmTransaction());
-        if(p instanceof  C0BPacketEntityAction) {
+      //  if(p instanceof  C0BPacketEntityAction) {
 
-                ppe.setCancelled(true);
+       //         ppe.setCancelled(true);
 
         }
         }

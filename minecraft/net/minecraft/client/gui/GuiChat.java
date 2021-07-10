@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.util.components.CustomChatTextField;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
 
@@ -186,10 +187,27 @@ public class GuiChat extends GuiScreen
             {
                 return;
             }
+
+            int posX = CustomGUIIngame.posX + CustomGUIIngame.mouseX;
+            int posY = CustomGUIIngame.posY + CustomGUIIngame.mouseY;
+            boolean hovering = mouseX >= posX && mouseY >= posY && mouseX <= posX + CustomGUIIngame.width + 2 && mouseY <= posY + CustomGUIIngame.height;
+
+            if(hovering) {
+                CustomGUIIngame.dragging = true;
+
+                CustomGUIIngame.lastMouseX = mouseX - CustomGUIIngame.mouseX;
+                CustomGUIIngame.lastMouseY = mouseY - CustomGUIIngame.mouseY;
+            }
         }
 
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+
+        CustomGUIIngame.dragging = false;
     }
 
     /**

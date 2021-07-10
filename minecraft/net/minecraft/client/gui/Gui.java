@@ -1,5 +1,6 @@
 package net.minecraft.client.gui;
 
+import de.verschwiegener.atero.font.FontManager;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -49,17 +50,17 @@ public class Gui
     /**
      * Draws a solid color rectangle with the specified coordinates and color (ARGB format). Args: x1, y1, x2, y2, color
      */
-    public static void drawRect(int left, int top, int right, int bottom, int color) {
+    public static void drawRect(double left, double top, double right, double bottom, int color) {
         if (left < right)
         {
-            int i = left;
+            double i = left;
             left = right;
             right = i;
         }
 
         if (top < bottom)
         {
-            int j = top;
+            double j = top;
             top = bottom;
             bottom = j;
         }
@@ -123,7 +124,7 @@ public class Gui
      */
     public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int color)
     {
-        fontRendererIn.drawStringWithShadow(text, (float)(x - fontRendererIn.getStringWidth(text) / 2), (float)y, color);
+        FontManager.ROBOTOTHIN_20.drawString(text, (float)(x - fontRendererIn.getStringWidth(text) / 2), (float)y, color,false);
     }
 
     /**
@@ -131,7 +132,7 @@ public class Gui
      */
     public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color)
     {
-        fontRendererIn.drawStringWithShadow(text, (float)x, (float)y, color);
+        FontManager.ROBOTOTHIN_20.drawString(text, (float)x, (float)y, color, false);
     }
 
     /**

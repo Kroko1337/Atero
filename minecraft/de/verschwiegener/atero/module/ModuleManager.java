@@ -6,10 +6,7 @@ import de.verschwiegener.atero.module.modules.combat.*;
 import de.verschwiegener.atero.module.modules.misc.MusikPlayer;
 import de.verschwiegener.atero.module.modules.movement.*;
 import de.verschwiegener.atero.module.modules.player.InventoryManager;
-import de.verschwiegener.atero.module.modules.render.CapeManager;
-import de.verschwiegener.atero.module.modules.render.ClickGui;
-import de.verschwiegener.atero.module.modules.render.ESP;
-import de.verschwiegener.atero.module.modules.render.Trajectories;
+import de.verschwiegener.atero.module.modules.render.*;
 import de.verschwiegener.atero.module.modules.world.*;
 import net.minecraft.client.Minecraft;
 
@@ -40,6 +37,8 @@ public class ModuleManager {
 	modules.add(new AutoClicker());
 	modules.add(new AutoEagle());
 	modules.add(new Fucker());
+	modules.add(new Chat());
+	//modules.add(new ChestESP());
 	//modules.add(new Trajectories());
     }
 

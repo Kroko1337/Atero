@@ -2,24 +2,33 @@ package de.verschwiegener.atero.util.render;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.util.glu.GLU;
+
+import javax.vecmath.Vector3d;
 
 public class RenderUtil {
 
     private static ResourceLocation background = new ResourceLocation("atero/assets/background.jpg");
-
+	private static Frustum frustum = new Frustum();
+	private final static IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
+	private final static FloatBuffer modelview = GLAllocation.createDirectFloatBuffer(16);
+	private final static FloatBuffer projection = GLAllocation.createDirectFloatBuffer(16);
+	private static final FloatBuffer vector = GLAllocation.createDirectFloatBuffer(4);
     public static void disable() {
 	GL11.glEnd();
 	GL11.glDisable(3042);
@@ -392,4 +401,27 @@ public class RenderUtil {
 	GlStateManager.disableTexture2D();
     }
 
+    private boolean isInViewFrustrum(Entity entity) {
+        return isInViewFrustrum(entity.getEntityBoundingBox()) || entity.ignoreFrustumCheck;
+    }
+
+    public static boolean isInViewFrustrum(AxisAlignedBB bb) {
+        Entity current = Minecraft.getMinecraft().getRenderViewEntity();
+        frustum.setPosition(current.posX, current.posY, current.posZ);
+        return frustum.isBoundingBoxInFrustum(bb);
+    }
+	public static Vector3d project2D(int scaleFactor, double x, double y, double z) {
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelview);
+		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
+		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
+
+		if (GLU.gluProject((float) x, (float) y, (float) z, modelview, projection, viewport, vector)) {
+			return new Vector3d(vector.get(0) / scaleFactor, (Display.getHeight() - vector.get(1)) / scaleFactor, vector.get(2));
+		}
+
+		return null;
+	}
+	public static double interpolate(double current, double old, double scale) {
+		return old + (current - old) * scale;
+	}
 }
