@@ -12,6 +12,8 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 
+import java.util.Random;
+
 public class MovementInputFromOptions extends MovementInput {
     private final GameSettings gameSettings;
 
@@ -52,16 +54,16 @@ public class MovementInputFromOptions extends MovementInput {
 	// getPlayer().rotationYaw, false, false).onFire();
 	//moveForward = updatePlayerMovementState.getMoveForward();
 	//moveStrafe = updatePlayerMovementState.getMoveStrafe();
-	
+
 	//moveForward = updatePlayerMovementState.getMoveForward();
         //moveStrafe = updatePlayerMovementState.getMoveStrafe();
-	
+
         //System.out.println("MoveStrafe: " + moveStrafe);
         //System.out.println("MoveForward: " + moveForward);
         //System.out.println("Silent: " + updatePlayerMovementState.getYaw());
-	
+
 	//System.out.println("MoveSTrafe1: " + moveStrafe + " Forward1: " + moveForward);
-	
+
 	//if(useCorrectMovement() && (moveForward != 0 || moveStrafe != 0)) {
 	    //timer.reset();
 	    //mc.thePlayer.setSprinting(false);
@@ -74,13 +76,13 @@ public class MovementInputFromOptions extends MovementInput {
 		//moveStrafe = lastStrafe;
 	    //}
 	//}
-	
+
 	//if(useCorrectMovement() && !(moveForward == 0 && moveStrafe == 0)) {
 	    //System.out.println("MoveForward: " + moveForward + " Strafe: " + moveStrafe);
 	    //testfix(moveForward, moveStrafe);
 	//}
 	    //System.out.println("MoveSTrafe2: " + moveStrafe + " Forward2: " + moveForward);
-        
+
 	//if (updatePlayerMovementState.isSilentMoveFix() && (moveForward != 0 || moveStrafe != 0)) {
 	//    correctMovement2(moveForward, moveStrafe, EventPreMotionUpdate.getInstance.getYaw());
 	    //getCorrectedMovement(moveForward, moveStrafe, EventPreMotionUpdate.getInstance.getYaw(), 0, false);
@@ -90,24 +92,25 @@ public class MovementInputFromOptions extends MovementInput {
 	this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
 
 	if (this.sneak) {
-	    this.moveStrafe = (float) ((double) this.moveStrafe * 0.3D);
-	    this.moveForward = (float) ((double) this.moveForward * 0.3D);
+		final float RandomSneak = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.8, 1);
+	    this.moveStrafe = (float) ((double) this.moveStrafe * RandomSneak);
+	    this.moveForward = (float) ((double) this.moveForward * RandomSneak);
 	}
 	//System.out.println("MoveStrafe: " + moveStrafe);
        //System.out.println("MoveForward: " + moveForward);
     }
-    
+
     private boolean useCorrectMovement() {
 	return(Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.hasTarget());
     }
-    
+
     private boolean testlast(float forward, float strafe) {
-	
+
 	if(Float.isNaN(lastForward) || Float.isNaN(lastStrafe)) {
 	    return false;
 	}
-	
-	
+
+
 	float slipperiness = 0.91F;
 	if (mc.thePlayer.onGround) {
 	    slipperiness = mc.theWorld.getBlockState(new BlockPos(MathHelper.floor_double(mc.thePlayer.posX),
@@ -123,56 +126,56 @@ public class MovementInputFromOptions extends MovementInput {
 	} else {
 	    friction = mc.thePlayer.jumpMovementFactor;
 	}
-	
+
 	float f = strafe * strafe + forward * forward;
-	
+
 	f = friction / f;
-	
-	
+
+
 	float clientStrafe = strafe * f;
 	float clientForward = forward * f;
 	float clientRotationSin = MathHelper.sin(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F) - 90;
 	float clientRotationCos = MathHelper.cos(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F);
 	float clientMotionX = (clientStrafe * clientRotationCos - clientForward * clientRotationSin);
 	float clientMotionZ = (clientForward * clientRotationCos + clientStrafe * clientRotationSin);
-	
+
 	//System.out.println("MotionXDif: " + (clientMotionX - mc.thePlayer.motionX));
 	//System.out.println("MotionZDif: " + (clientMotionZ - mc.thePlayer.motionZ));
-	
+
 	float serverRotationSin = MathHelper.sin(EventPreMotionUpdate.getInstance.getYaw() * (float) Math.PI / 180.0F) - 90;
 	float serverRotationCos = MathHelper.cos(EventPreMotionUpdate.getInstance.getYaw() * (float) Math.PI / 180.0F);
-	
+
 	//System.out.println("F: " + f);
-	
+
 	float calcStrafe = lastStrafe * f;
 	float calcForward = lastForward * f;
-	
+
 	//System.err.println("CalsStrafe: " + calcStrafe + " F: " + calcForward);
-	
+
 	float calcMotionX = (calcStrafe * serverRotationCos - calcForward * serverRotationSin);
 	float calcMotionZ = (calcForward * serverRotationCos + calcStrafe * serverRotationSin);
-	
+
 	//System.err.println("CalcMotion: " + calcMotionX + " Z: " + calcMotionZ);
-	
+
 	float diffMotionX = calcMotionX - clientMotionX;
 	float diffMotionZ = calcMotionZ - clientMotionZ;
-	
+
 	//System.out.println("DifMotion: " + diffMotionX + " Z: " + diffMotionZ);
-	
+
 	float distance = MathHelper.sqrt_float(diffMotionZ * diffMotionZ + diffMotionX * diffMotionX);
-	
+
 	System.out.println("Distance: " + distance);
-	
+
 	if(distance < 0.10) {
 	    moveForward = lastForward;
 	    moveStrafe = lastStrafe;
 	    return true;
 	}
 	return false;
-	
+
     }
-    
-    
+
+
     private void testfix(float forward, float strafe) {
 	float slipperiness = 0.91F;
 	if (mc.thePlayer.onGround) {
@@ -189,15 +192,15 @@ public class MovementInputFromOptions extends MovementInput {
 	} else {
 	    friction = mc.thePlayer.jumpMovementFactor;
 	}
-	
+
 	float f = strafe * strafe + forward * forward;
 	//f = MathHelper.sqrt_float(f);
-	
+
 	//if (f < 1.0F) f = 1.0F;
-	
+
 	f = friction / f;
-	
-	
+
+
 	float clientStrafe = strafe * f;
 	float clientForward = forward * f;
 	float clientRotationSin = MathHelper.sin(mc.thePlayer.rotationYaw * (float) Math.PI / 180.0F);
@@ -205,15 +208,15 @@ public class MovementInputFromOptions extends MovementInput {
 	float clientMotionX = (clientStrafe * clientRotationCos - clientForward * clientRotationSin);
 	float clientMotionZ = (clientForward * clientRotationCos + clientStrafe * clientRotationSin);
 	System.out.println("ClientMotionX: " + clientMotionX +  " MotionZ: " + clientMotionZ);
-	
+
 	//System.out.println("MotionXDif: " + (clientMotionX - mc.thePlayer.motionX));
 	//System.out.println("MotionZDif: " + (clientMotionZ - mc.thePlayer.motionZ));
-	
+
 	System.out.println("Yaw: " + EventPreMotionUpdate.getInstance.getYaw() + " Yaw2: " + Killaura.yaw);
-	
+
 	float serverRotationSin = MathHelper.sin(Killaura.yaw * (float) Math.PI / 180.0F);
 	float serverRotationCos = MathHelper.cos(Killaura.yaw * (float) Math.PI / 180.0F);
-	
+
 	float smalestDistance = Float.NaN;
 	float posibleForward = 0;
 	float posibleStrafe = 0;

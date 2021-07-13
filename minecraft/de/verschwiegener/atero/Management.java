@@ -51,14 +51,14 @@ public class Management {
     public static Management instance = new Management();
 
     public final String CLIENT_NAME = "Atero";
-    public final String CLIENT_VERSION = "B4";
+    public final String CLIENT_VERSION = "B5";
     public String selectedDesign = "AteroDesign";
 
     public Color colorBlue = new Color(0, 161, 249);
     public Color colorBlack = new Color(28, 28, 28);
     public Color colorGray = new Color(45, 45, 45);
     
-    public File CLIENT_DIRECTORY = new File("Atero");
+    public File CLIENT_DIRECTORY = new File(Minecraft.getMinecraft().mcDataDir + "/Atero");
 
     public boolean modulechange;
 
@@ -85,6 +85,7 @@ public class Management {
 	public IrcClient ircClient;
     public ExecutorService EXECUTOR_SERVICE;
     public ExecutorService ANIMATION_EXECUTOR;
+    public de.verschwiegener.atero.font.FontManager fontManager;
     
     public ServerListEntryNormal currentServer;
 
@@ -111,6 +112,7 @@ public class Management {
 	fontBold = new Font("FontBold", Util.getFontByName("Inter-ExtraLight"), 4F, true, false);
 	streamer = new Streamer();
 	proxymgr = new ProxyManager();
+	fontManager = new de.verschwiegener.atero.font.FontManager();
 
 	accountmgr = new AccountManager();
 	configmgr = new ConfigManager();

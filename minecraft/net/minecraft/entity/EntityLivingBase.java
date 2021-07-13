@@ -1166,11 +1166,11 @@ public abstract class EntityLivingBase extends Entity {
      * enchantments into account.
      */
     private int getArmSwingAnimationEnd() {
-	return this.isPotionActive(Potion.digSpeed)
-		? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1
-		: (this.isPotionActive(Potion.digSlowdown)
-			? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
-			: 6);
+    	if(Killaura.instance.hasTarget()&& Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
+			return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1 : (this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 15);
+		}else{
+			return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1 : (this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6);
+		}
     }
 
     /**

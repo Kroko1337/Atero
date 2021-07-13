@@ -53,7 +53,7 @@ public class TargetStrafe extends Module {
         if (Killaura.instance.hasTarget()) {
             if (strafe) {
                 float[] rotations = getRotations(Killaura.instance.getTarget());
-                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= 2)
+                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= 1.5)
                     setSpeed(event, moveSpeed, rotations[0], direction, 0);
                 else setSpeed(event, moveSpeed, rotations[0], direction, 1);
             }

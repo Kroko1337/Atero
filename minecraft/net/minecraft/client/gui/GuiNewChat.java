@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
+import de.verschwiegener.atero.font.FontManager;
+import de.verschwiegener.atero.module.modules.render.Chat;
 import de.verschwiegener.atero.util.chat.ChatFontRenderer;
 import de.verschwiegener.atero.util.chat.ChatRenderer;
 
@@ -92,15 +94,24 @@ public class GuiNewChat extends Gui
                                 drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
                                 GlStateManager.enableBlend();
                                 String s = chatline.getChatComponent().getUnformattedText();
-                                
-                                //this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
+
+                               // FontManager.ROBOTOTHIN_20.drawString(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24),true);
                                 //System.out.println("Line: " + s);
-                                cr.drawChat(s, i2, j2 - 12);
+                                //cr.drawChat(s, i2, j2 - 12);
 				// cr.drawChat(s, i2, (j2 * 2 ) - 22);
 				// System.out.println("I2: " + i2);
 				// System.out.println("J2: " + j2);
-				// cr.drawchat2(s, i2, (j2 * 2 ) - 22);
-
+                                if(Management.instance.modulemgr.getModuleByName("Chat").isEnabled()) {
+                                    String mode = Chat.setting.getItemByName("ChatMode").getCurrent();
+                                    switch (mode) {
+                                        case "Broke":
+                                            cr.drawchat2(s, i2, (j2 * 2) - 22);
+                                            break;
+                                        case "Broke2":
+                                            cr.drawChat(s, i2, (j2 * 2 ) - 22);
+                                            break;
+                                    }
+                                }
                                 GlStateManager.disableAlpha();
                                 GlStateManager.disableBlend();
                             }
@@ -144,9 +155,9 @@ public class GuiNewChat extends Gui
 	public void printChatMessage(IChatComponent ichatcomponent) {
 		System.out.println("Type2: " + ichatcomponent.getChatStyle().getChatHoverEvent());
 		this.printChatMessageWithOptionalDeletion(ichatcomponent, 0);
-		
+
 	}
-	
+
 	public void addChatLine(IChatComponent ichatcomponent) {
 		setChatLine(ichatcomponent, 0, this.mc.ingameGUI.getUpdateCounter(), false);
 	}
@@ -197,9 +208,9 @@ public class GuiNewChat extends Gui
             }
         }
     }
-    
+
 	/*private void setChatLine(ArrayList<IChatComponent> components, int p_146237_2_, int p_146237_3_, boolean p_146237_4_) {
-		
+
 		this.field_146253_i.add(0, new ChatLine(p_146237_3_, components, p_146237_2_));
 	}*/
 

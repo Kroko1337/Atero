@@ -2,27 +2,14 @@ package de.verschwiegener.atero.module.modules.movement;
 
 import net.minecraft.client.Minecraft;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MinecraftError;
-import net.minecraft.util.Timer;
 import org.lwjgl.input.Keyboard;
 
-import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.Util;
 import god.buddy.aot.BCompiler;
-
-import java.awt.*;
-import java.util.Random;
 
 public class HighJump extends Module {
     TimeUtils timeUtils;
@@ -96,7 +83,7 @@ public class HighJump extends Module {
 		if (Dmg)
 		    if (Minecraft.thePlayer.hurtTime > 0) {
 			mc.gameSettings.keyBindForward.pressed = true;
-			Util.setSpeed(0.4D);
+			Util.setSpeed( 0.4D);
 		    }
 	    }
 	}
@@ -110,7 +97,7 @@ public class HighJump extends Module {
 	if (Dmg)
 	    if (Minecraft.thePlayer.hurtTime > 0) {
 		mc.gameSettings.keyBindForward.pressed = true;
-		Util.setSpeed(0.4D);
+		Util.setSpeed( 0.4D);
 	    }
     }
     // }

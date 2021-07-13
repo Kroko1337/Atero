@@ -4,6 +4,8 @@ package de.verschwiegener.atero.module.modules.combat;
 
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventCancellable;
+import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
+import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
 import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.settings.Setting;
@@ -56,27 +58,36 @@ public class Velocity extends Module {
                 switch (modes) {
                     case "AAC":
                    //     if (mc.thePlayer.isCollidedHorizontally) {
-                            if (Minecraft.thePlayer.hurtTime != 0) {
 
                                 if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
                                     final float SPEED = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.1, 0.2);
-                                    setSpeed(0.2);
-                                    // mc.thePlayer.motionX = 0F;
-                                    //  mc.thePlayer.motionZ = 0F;
+
                                 }
-                                if (Minecraft.thePlayer.onGround) {
-                                    Minecraft.thePlayer.motionY = 0.42F;
+                                     if (Minecraft.thePlayer.hurtTime != 0) {
+                                         if(!mc.thePlayer.onGround){
+                                             setSpeed(setting.getItemByName("AACStrength").getCurrentValue());
+                                         }else {
+                                             setSpeed(0);
+                                         }
+                                    if (setting.getItemByName("Jump").isState()) {
+                                        if (Minecraft.thePlayer.onGround) {
+                                            Minecraft.thePlayer.motionY = 0.42F;
+                                        }
+                                  //  }
                                 }
                             }
                     //    }
                         break;
                     case "WallReverse":
-                            if (mc.thePlayer.isCollidedHorizontally) {
-                        if (Minecraft.thePlayer.hurtTime != 0) {
-                                setSpeed(0.2);
-                            }
+                       //     if (mc.thePlayer.isCollidedHorizontally) {
+                     //   if (Minecraft.thePlayer.hurtTime != 0) {
+                        ///        setSpeed(setting.getItemByName("WallStrength").getCurrentValue());
+                         //       if(mc.thePlayer.onGround) {
+                                    //mc.thePlayer.motionY = 0.42;
+                          //      }
+                         //   }
 
-                        }
+                       // }
                         break;
                     case "NCP":
                         if (p instanceof S12PacketEntityVelocity) {
@@ -91,8 +102,10 @@ public class Velocity extends Module {
 
                     case "Cubecraft":
                         if (Minecraft.thePlayer.hurtTime != 0) {
+
                             boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
                             if (mc.thePlayer.onGround) {
+                                mc.thePlayer.motionY = 0.42F;
                             //    mc.timer.timerSpeed = 2F;
                                 //	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
                             } else {
@@ -122,7 +135,10 @@ public class Velocity extends Module {
         modes.add("NCP");
         modes.add("Cubecraft");
         modes.add("WallReverse");
-        items.add(new SettingsItem("VelocityMode", modes, "AAC", "", ""));
+        items.add(new SettingsItem("VelocityMode", modes, "AAC", "Jump", "AAC"));
+        items.add(new SettingsItem("WallStrength", 0, 0.4F, 0.4F, ""));
+        items.add(new SettingsItem("AACStrength", 0, 0.7F, 0.4F, ""));
+        items.add(new SettingsItem("Jump", false, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
     public static void setSpeed(double speed) {
@@ -159,5 +175,25 @@ public class Velocity extends Module {
             player.motionZ = Math.cos(yaw) * speed;
         }
 
+    }
+
+
+
+    @EventTarget
+    public void onPost(EventPreMotionUpdate pre) {
+        String modes = setting.getItemByName("VelocityMode").getCurrent();
+        switch (modes) {
+            case "WallReverse":
+        if (Minecraft.thePlayer.hurtTime != 0) {
+            final float speed = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.04, 0.08);
+            if(!mc.thePlayer.isInLava()) {
+                setSpeed(speed);
+            if(mc.thePlayer.onGround && mc.thePlayer.ticksExisted % 10 == 0) {
+                mc.thePlayer.motionY = 0.42F;
+            }
+                break;
+            }
+        }
+        }
     }
 }

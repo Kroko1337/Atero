@@ -40,6 +40,7 @@ public class ClickGUIButton {
 			new Color(48, 48, 48), true);
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	    }
+		//TODO WhiteMODE
 	    Color color = Management.instance.modulemgr.getModuleByName(name).isEnabled() ? Management.instance.colorBlue : Color.WHITE;
 	    font.drawString(name, panel.getX() + panel.getWidth() / 2 - font.getStringWidth2(name), (panel.getY()) + y,
 		    color.getRGB());

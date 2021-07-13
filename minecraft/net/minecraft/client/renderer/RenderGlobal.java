@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.render.ChestESP;
 import de.verschwiegener.atero.module.modules.render.ESP;
 import de.verschwiegener.atero.util.Util;
 import net.minecraft.block.Block;
@@ -330,8 +331,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     {
         //GL11.glColor4f(0,255,255,255);
         return Management.instance.modulemgr.getModuleByName("ESP").isEnabled();
-
-        //return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing() ? this.entityOutlineFramebuffer != null && this.entityOutlineShader != null && this.mc.thePlayer != null && this.mc.thePlayer.isSpectator() && this.mc.gameSettings.keyBindSpectatorOutlines.isKeyDown() : false;
+     //   return !Config.isFastRender() && !Config.isShaders() && !Config.isAntialiasing() ? this.entityOutlineFramebuffer != null && this.entityOutlineShader != null && this.mc.thePlayer != null && this.mc.thePlayer.isSpectator() && this.mc.gameSettings.keyBindSpectatorOutlines.isKeyDown() : false;
     }
 
     private void generateSky2()
@@ -734,8 +734,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 }
                 //System.err.println("EntityBuffer2");
                 //Util.saveFramebuffer(entityOutlineFramebuffer);
-             
-                ESP.instance.drawChestESP();
+
+                 ChestESP.drawChestESP();
+
                 //System.err.println("EntityBuffer3");
                 //Util.saveFramebuffer(entityOutlineFramebuffer);
                 

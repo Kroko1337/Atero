@@ -1,20 +1,9 @@
 package net.minecraft.client.gui;
 
-import com.darkmagician6.eventapi.EventManager;
-import com.darkmagician6.eventapi.events.Event;
-import com.darkmagician6.eventapi.events.callables.EventRender2D;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
-import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
-import de.verschwiegener.atero.util.render.RenderUtil;
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -41,17 +30,14 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
+import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import optifine.Config;
 import optifine.CustomColors;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
 
 public class GuiIngame extends Gui
 {
@@ -357,7 +343,7 @@ public class GuiIngame extends Gui
 
         CustomGUIIngame.drawArrayList();
         CustomGUIIngame.drawMusikTab();
-        CustomGUIIngame.renderTargetHud(scaledresolution);
+        CustomGUIIngame.renderTargetHUD2();
         //Management.instance.designmgr.getDesignByName(Management.instance.selectedDesign).drawGUIIngame(this);
         
 

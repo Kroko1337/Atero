@@ -1,13 +1,20 @@
 package de.verschwiegener.atero.module.modules.movement;
 
 import com.darkmagician6.eventapi.EventTarget;
+import com.darkmagician6.eventapi.events.callables.EventReceivedPacket;
+import com.darkmagician6.eventapi.events.callables.EventSendPacket;
 import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
+import de.verschwiegener.atero.module.modules.world.Scaffold;
+import de.verschwiegener.atero.util.TimeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
+import net.minecraft.network.play.client.C13PacketPlayerAbilities;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 
-import net.minecraft.util.Timer;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -16,17 +23,16 @@ import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
-import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.Util;
 import god.buddy.aot.BCompiler;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 public class Speed extends Module {
 
-	private Setting setting;
+	public static Setting setting;
 	private int stage = 1;
 
 	public Speed() {
@@ -40,29 +46,36 @@ public class Speed extends Module {
 	}
 
 	public void onDisable() {
+		try{
+		if(Scaffold.setting.getItemByName("SameY").isState()){
+		//	Management.instance.modulemgr.getModuleByName("Scaffold").setEnabled(false);
+		}
+		}catch (NullPointerException e) {
+		}
 		Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = false;
 		Minecraft.getMinecraft().timer.timerSpeed = 1F;
 
 		super.onDisable();
 	}
-	private double boostCC = 0;
+
+	public static double boostCC = 0;
+
+
 	@Override
 	public void setup() {
 		super.setup();
 		final ArrayList<SettingsItem> items = new ArrayList<>();
 		final ArrayList<String> modes = new ArrayList<>();
-		modes.add("HypixelOnGround");
-		modes.add("Hypixel");
-		modes.add("Cubecraft");
-		modes.add("Cubecraft1vs1");
+		modes.add("Watchdog");
 		modes.add("Vanilla");
 		modes.add("Vanilla2");
 		modes.add("VerusYPort");
 		modes.add("Mineplex");
 		//TODO Child Mode setting fixen im Speed
 		//So das wenn man Cubecraft auswählt, der CCBoost slider kommt
-		items.add(new SettingsItem("Modes", modes, "HypixelOnGround", "CCBoost", "Cubecraft"));
-		items.add(new SettingsItem("CCBoost", 1.2F, 4F, 1.2F, ""));
+		items.add(new SettingsItem("Modes", modes, "Watchdog", "CCBoost", "Watchdog"));
+		items.add(new SettingsItem("WatchdogBoost", 1.0F, 1.4F, 1.0F, ""));
+		items.add(new SettingsItem("High", 0.12F, 0.50F, 0.42F, ""));
 		Management.instance.settingsmgr.addSetting(new Setting(this, items));
 	}
 
@@ -76,23 +89,20 @@ public class Speed extends Module {
 					hypixelOnGround();
 					break;
 
-				case "Cubecraft":
-					boostCC = setting.getItemByName("CCBoost").getCurrentValue();
-					boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
-					if (mc.thePlayer.onGround) {
-						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-					} else {
-						if (mc.thePlayer.fallDistance > 0.08F) {
-							mc.timer.timerSpeed = 1.0F;
-						} else {
-							mc.timer.timerSpeed = (float) 1;
-						}
+				case "Watchdog":
 
+					mc.thePlayer.setSprinting(true);
+					boostCC = setting.getItemByName("WatchdogBoost").getCurrentValue();
+					boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
+					if ((mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed || mc.gameSettings.keyBindBack.pressed) && mc.thePlayer.onGround) {
+						mc.gameSettings.keyBindJump.pressed = true;
+					} else {
+						mc.gameSettings.keyBindJump.pressed = false;
+							mc.timer.timerSpeed = (float) boostCC;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
-						double speed = boost ? 1 : 1D;
 						double direction = getDirection();
-						mc.thePlayer.motionX = -Math.sin(direction) * speed * currentSpeed;
-						mc.thePlayer.motionZ = Math.cos(direction) * speed * currentSpeed;
+						mc.thePlayer.motionX = -Math.sin(direction) * 1 * currentSpeed;
+						mc.thePlayer.motionZ = Math.cos(direction) * 1 * currentSpeed;
 
 					}
 
@@ -102,7 +112,7 @@ public class Speed extends Module {
 					boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if (mc.thePlayer.onGround) {
 						mc.timer.timerSpeed = 2F;
-					//	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
+						//	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
 					} else {
 						mc.timer.timerSpeed = 1F;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
@@ -115,17 +125,10 @@ public class Speed extends Module {
 
 					break;
 				case "Vanilla":
-				//	if(mc.thePlayer.isCollidedHorizontally) {
-						Util.setSpeed(0.82);
-					//if (Minecraft.thePlayer.onGround) {
-						//Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-						//} else {
-					//	mc.gameSettings.keyBindJump.pressed = true;
 
-				//	}else{
-					//	mc.gameSettings.keyBindJump.pressed = false;
-					//}
-				//	}
+					//	mc.timer.timerSpeed =2.5F;
+							Util.setSpeed( 1);
+
 
 					break;
 				case "VerusYPort":
@@ -136,7 +139,7 @@ public class Speed extends Module {
 					if (mc.thePlayer.onGround) {
 						mc.thePlayer.motionY = 0.42F;
 						if (mc.thePlayer.ticksExisted % 3 == 0) {
-						    Util.setSpeed(0.3);
+							Util.setSpeed(0.3);
 						}
 					} else {
 						mc.thePlayer.motionY = -11F;
@@ -151,66 +154,72 @@ public class Speed extends Module {
 
 					break;
 				case "Hypixel":
-					if (mc.thePlayer.onGround) {
-						mc.timer.timerSpeed =1F;
-						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
-						if (Killaura.instance.getTarget() != null) {
-							mc.timer.timerSpeed = 1F;
-						}
-					}else{
-						//if (mc.thePlayer.fallDistance > 0.09F) {
-							mc.timer.timerSpeed =1.4F;
-					//	}else{
+					if (Minecraft.thePlayer.onGround) {
+						Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = false;
+						// Minecraft.thePlayer.jump();
+						float TIMMER1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 4.0, 1.0);
+						if (Minecraft.getMinecraft().thePlayer.onGround) {
 
-					//	}
-						if (Killaura.instance.getTarget() != null) {
-							//mc.timer.timerSpeed = 1F;
-						}
+							if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
+								Minecraft.getMinecraft().timer.timerSpeed = 20;
+							} else {
+								//	Minecraft.getMinecraft().timer.timerSpeed = 1;
+							}
+							if (Minecraft.thePlayer.ticksExisted % 3 == 0) {
+								Minecraft.getMinecraft().timer.timerSpeed = 0.2F;
+							}
 
-						if (Killaura.instance.getTarget() != null) {
-								mc.timer.timerSpeed = 1F;
+
 						}
 					}
+
+
 					break;
 
 
-
 				case "Vanilla2":
+					if(mc.gameSettings.keyBindSprint.pressed) {
 					float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.1);
 					float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
 					float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
 					float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.006);
-						double speed = 0;
-						mc.timer.timerSpeed = 1f;
-						stage++;
-						if (mc.thePlayer.isCollidedHorizontally) {
-							stage = 50;
-						}
-						if (mc.thePlayer.onGround && (mc.thePlayer.moveForward != 0.0f || mc.thePlayer.moveStrafing != 0.0f)) {
-							mc.gameSettings.keyBindJump.pressed = true;
-							stage = 0;
-							speed = 0;
-						}
+					double speed = 0;
+					mc.timer.timerSpeed = 1f;
+					stage++;
+					if (mc.thePlayer.isCollidedHorizontally) {
+						stage = 50;
+					}
+					if (mc.thePlayer.onGround && (mc.thePlayer.moveForward != 0.0f || mc.thePlayer.moveStrafing != 0.0f)) {
+						mc.gameSettings.keyBindJump.pressed = true;
+						stage = 0;
+						speed = 0;
+					}
 
-						if (!mc.thePlayer.onGround) {
-							if (mc.thePlayer.motionY > Y) {
-								mc.thePlayer.motionY += 0.002;
-							} else {
-								mc.thePlayer.motionY += 0.003;
-							}
-							double slowdown = slowdown1;
-							speed = 0.8 - (stage * slowdown);
-							if (speed < 0) speed = 0;
+					if (!mc.thePlayer.onGround) {
+						if (mc.thePlayer.motionY > Y) {
+							mc.thePlayer.motionY += 0.002;
+						} else {
+							mc.thePlayer.motionY += 0.003;
 						}
+						double slowdown = slowdown1;
+						speed = 0.8 - (stage * slowdown);
+						if (speed < 0) speed = 0;
+					}
+
 						Util.setSpeed(1.2);
-
+					}else{
+						if(mc.thePlayer.onGround){
+							mc.thePlayer.motionY = 0.42F;
+						}
+						Util.setSpeed(0.5);
+					}
 
 
 					break;
 			}
 		}
 
-		}
+	}
 
 
 	private void hypixelOnGround() {
@@ -227,12 +236,10 @@ public class Speed extends Module {
 				float TIMMER1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 4.0, 1.0);
 				if (Minecraft.getMinecraft().thePlayer.onGround) {
 
-					if (Minecraft.thePlayer.ticksExisted % 2 == 0) {
-						Minecraft.getMinecraft().timer.timerSpeed = 20;
-					} else {
-						Minecraft.getMinecraft().timer.timerSpeed = 1;
+					if (Minecraft.thePlayer.ticksExisted % 5 == 0) {
+						Minecraft.getMinecraft().timer.timerSpeed = 15;
 					}
-					if (Minecraft.thePlayer.ticksExisted % 10 == 0) {
+					if (Minecraft.thePlayer.ticksExisted % 8 == 0) {
 						Minecraft.getMinecraft().timer.timerSpeed = 1;
 					}
 					if (Killaura.instance.getTarget() != null) {
@@ -243,24 +250,29 @@ public class Speed extends Module {
 						}
 					}
 				}
-			}}
+			}
+		}
 
 	}
+
 	public void addMotion(double speed, float yaw) {
 		Minecraft.thePlayer.motionX -= (MathHelper.sin((float) Math.toRadians(yaw)) * speed);
 		Minecraft.thePlayer.motionZ += (MathHelper.cos((float) Math.toRadians(yaw)) * speed);
 	}
-	public void setSpeed(PlayerMoveEvent moveEvent, double moveSpeed, float rotationYaw, double speed, float yaw) {
+
+	public static void setSpeed(PlayerMoveEvent moveEvent, double moveSpeed, float rotationYaw, double speed, float yaw) {
 		Minecraft.thePlayer.motionX = -Math.sin(Math.toRadians(getDirection(yaw))) * speed;
 		Minecraft.thePlayer.motionZ = Math.cos(Math.toRadians(getDirection(yaw))) * speed;
 	}
-	public float getDirection(float rotationYaw) {
+
+	public static float getDirection(float rotationYaw) {
 		float left = Minecraft.getMinecraft().gameSettings.keyBindLeft.pressed ? Minecraft.getMinecraft().gameSettings.keyBindBack.pressed ? 45 : Minecraft.getMinecraft().gameSettings.keyBindForward.pressed ? -45 : -90 : 0;
 		float right = Minecraft.getMinecraft().gameSettings.keyBindRight.pressed ? Minecraft.getMinecraft().gameSettings.keyBindBack.pressed ? -45 : Minecraft.getMinecraft().gameSettings.keyBindForward.pressed ? 45 : 90 : 0;
-		float back = Minecraft.getMinecraft().gameSettings.keyBindBack.pressed ? + 180 : 0;
+		float back = Minecraft.getMinecraft().gameSettings.keyBindBack.pressed ? +180 : 0;
 		float yaw = left + right + back;
 		return rotationYaw + yaw;
 	}
+
 	public static float getDirection() {
 		Minecraft mc = Minecraft.getMinecraft();
 		float var1 = mc.thePlayer.rotationYaw;
@@ -272,9 +284,9 @@ public class Speed extends Module {
 		float forward = 1.0F;
 
 		if (mc.thePlayer.moveForward < 0.0F) {
-			forward = -0.5F;
+			forward = -0.50F;
 		} else if (mc.thePlayer.moveForward > 0.0F) {
-			forward = 0.5F;
+			forward = 0.50F;
 		}
 
 		if (mc.thePlayer.moveStrafing > 0.0F) {
@@ -288,16 +300,17 @@ public class Speed extends Module {
 		var1 *= 0.017453292F;
 		return var1;
 	}
+
 	@EventTarget
 	private void onUpdate(PlayerMoveEvent emP) {
 
 		String mode = setting.getItemByName("Modes").getCurrent();
 		switch (mode) {
 			case "Mineplex":
-		float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.1);
-		float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
-		float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
-		float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.007);
+				float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.0);
+				float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
+				float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
+				float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.007);
 				if (mc.gameSettings.keyBindForward.pressed) {
 					double speed = 0;
 					mc.timer.timerSpeed = 1f;
@@ -326,11 +339,28 @@ public class Speed extends Module {
 				}
 
 
-
 				break;
 
 		}
+	}
+
+	@EventTarget
+	public void onUpdate(EventReceivedPacket ppe) {
+		Packet p = ppe.getPacket();
+		//mc.getNetHandler().addToSendQueue(new C13PacketPlayerAbilities());
+		if (p instanceof S08PacketPlayerPosLook) {
+			String mode = setting.getItemByName("Modes").getCurrent();
+			switch (mode) {
+				case "Watchdog":
+					Management.instance.modulemgr.getModuleByName("Speed").setEnabled(false);
+					mc.timer.timerSpeed = 1F;
+			}
 		}
+		if (p instanceof C13PacketPlayerAbilities && !mc.thePlayer.isUsingItem()) {
+			ppe.setCancelled(true);
+		}
+	}
 
 	}
+
 

@@ -35,7 +35,7 @@ public class Nofall extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-            if (Minecraft.thePlayer.fallDistance > 2.0F) {
+            if (Minecraft.thePlayer.fallDistance > 2.7F) {
                 Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
             }
 

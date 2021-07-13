@@ -21,7 +21,7 @@ public class RotationRecode2 {
         double ymax = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - y;
         double allmax = MathHelper.sqrt_double(x * x + z * z);
         float yaw = (float) (Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
-        float pitch = (float) (Math.atan2(ymax + 5, allmax) * 180.0D / Math.PI);
+        float pitch = (float) (Math.atan2(ymax + 10, allmax) * 180.0D / Math.PI);
 
         final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
         final float f3 = f2 * f2 * f2 * 1.2F;

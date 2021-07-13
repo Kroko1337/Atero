@@ -7,14 +7,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 
-import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.Util;
 import god.buddy.aot.BCompiler;
-
-import java.awt.*;
 
 public class Fly extends Module {
     TimeUtils timeUtils;
@@ -23,10 +20,14 @@ public class Fly extends Module {
     }
 
     public void onEnable() {
-        super.onEnable();
+        if(mc.thePlayer.onGround) {
+            mc.thePlayer.motionY = 0.42F;
+        }
+super.onEnable();
     }
 
     public void onDisable() {
+        mc.timer.timerSpeed =1F;
 	Util.setSpeed(0);
         Minecraft.thePlayer.capabilities.isFlying = false;
         super.onDisable();
@@ -35,34 +36,41 @@ public class Fly extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-
-           // Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
-        //    Minecraft.thePlayer.cameraYaw = 0.1f;
-            if (Minecraft.thePlayer.onGround) {
-                Minecraft.thePlayer.jump();
+            double value = 0.1;
+                if(mc.thePlayer.ticksExisted % 3 == 0){
+                    mc.thePlayer.motionY = 0.2;
+                }else{
+                    mc.thePlayer.motionY = -0.1;
+                }
+         //   mc.thePlayer.motionY = 0F;
+            Util.setSpeed(1);
+            if(mc.gameSettings.keyBindJump.pressed){
+                mc.thePlayer.motionY = 0.42F;
             }
-            Util.setSpeed(1.5);
-         //   Minecraft.thePlayer.capabilities.isFlying = true;
-
-        }
-
-
-        if(mc.thePlayer.ticksExisted % 2 == 0) {
-            if(Minecraft.getMinecraft().gameSettings.keyBindSneak.pressed) {
-                mc.thePlayer.motionY = -1.2F;
-            }else {
-                mc.thePlayer.motionY = -0.1F;
-            }
-        }else{
-            if(Minecraft.getMinecraft().gameSettings.keyBindJump.pressed) {
-                mc.thePlayer.motionY = 1.2F;
-            }else {
-                mc.thePlayer.motionY = 0.1F;
+            if(mc.gameSettings.keyBindSneak.pressed){
+                mc.thePlayer.motionY = -0.42F;
             }
         }
-
-       // }
     }
 
+    public static float getDirection() {
+        float var1 = Minecraft.getMinecraft().thePlayer.rotationYaw;
 
+        if (Minecraft.getMinecraft().thePlayer.moveForward < 0)
+            var1 += 180F;
+        float forward = 2F;
+        if (Minecraft.getMinecraft().thePlayer.moveForward < 0)
+            forward = -.6F;
+        else if (Minecraft.getMinecraft().thePlayer.moveForward > 0)
+            forward = .6F;
+        else
+            forward = 3F;
+
+        if (Minecraft.getMinecraft().thePlayer.moveStrafing > 0)
+            var1 -= 90F * forward;
+        if (Minecraft.getMinecraft().thePlayer.moveStrafing < 0)
+            var1 += 90F * forward;
+        var1 *= .0173292F;
+        return var1;
+    }
 }
