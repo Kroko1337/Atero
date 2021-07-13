@@ -51,35 +51,35 @@ public class Main {
         OptionSet optionset = optionparser.parse(p_main_0_);
         List<String> list = optionset.valuesOf(optionspec19);
         // TODO: 26.06.2021
-        if (optionspec20.value(optionset) == null || (!optionspec20.value(optionset).equals("AteroIsBest"))) {
-            {
-                JLabel label = new JLabel();
-                Font font = label.getFont();
+        //if (optionspec20.value(optionset) == null || (!optionspec20.value(optionset).equals("AteroIsBest"))) {
+         //   {
+            //    JLabel label = new JLabel();
+              //  Font font = label.getFont();
 
-                String style = "font-family:" + font.getFamily() + ";" + "font-weight:" + (font.isBold() ? "bold" : "normal") + ";" +
-                        "font-size:" + font.getSize() + "pt;";
+               // String style = "font-family:" + font.getFamily() + ";" + "font-weight:" + (font.isBold() ? "bold" : "normal") + ";" +
+                   //     "font-size:" + font.getSize() + "pt;";
+//
+              //  JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
+                     //   + "Please launch the client via its own launcher!" +
+                     //   " If you believe this is an error contact me on discord." +
+                    //    " <a href=\"https://xbuttonn.github.io/\">https://xbuttonn.github.io/</a>"
+                   //     + "</body></html>");
 
-                JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">"
-                        + "Please launch the client via its own launcher!" +
-                        " If you believe this is an error contact me on discord." +
-                        " <a href=\"https://xbuttonn.github.io/\">https://xbuttonn.github.io/</a>"
-                        + "</body></html>");
-
-                ep.addHyperlinkListener(e -> {
-                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
-                        try {
-                            Desktop.getDesktop().browse(e.getURL().toURI());
-                        } catch (IOException | URISyntaxException ioException) {
-                            ioException.printStackTrace();
-                        }
-                    }
-                });
-                ep.setEditable(false);
-                ep.setBackground(label.getBackground());
-                JOptionPane.showMessageDialog(null, ep, "Atero", JOptionPane.ERROR_MESSAGE);
-            }
-            System.exit(0);
-        }
+               // ep.addHyperlinkListener(e -> {
+                   // if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                     //   try {
+                    //        Desktop.getDesktop().browse(e.getURL().toURI());
+                   //     } catch (IOException | URISyntaxException ioException) {
+                  //          ioException.printStackTrace();
+                //        }
+              //      }
+             //   });
+             //   ep.setEditable(false);
+             //   ep.setBackground(label.getBackground());
+           //     JOptionPane.showMessageDialog(null, ep, "Atero", JOptionPane.ERROR_MESSAGE);
+          //  }
+          //  System.exit(0);
+        //}
 
         if (!list.isEmpty()) {
             System.out.println("Completely ignored arguments: " + list);

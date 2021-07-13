@@ -9,6 +9,8 @@ import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.font.FontManager;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.module.modules.render.Design;
+import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.util.Util;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import de.verschwiegener.atero.util.render.ShaderRenderer;
@@ -54,11 +56,11 @@ public class CustomGUIIngame {
     public static int lastMouseX;
     public static int lastMouseY;
     public static boolean dragging;
-
+    public static Setting setting;
     public static int posX = 2;
     public static int posY = 23;
-    public static double width = 100;
-    public static double height = 100;
+    public static double width = 75;
+    public static double height = 75;
 
     public static void drawArrayList() {
         Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
@@ -69,14 +71,18 @@ public class CustomGUIIngame {
         }
         int yoffset = 0;
         int xoffset = 3;
+int rainbow = 0;
         ModuleManager mm = Management.instance.modulemgr;
         ScaledResolution sr = new ScaledResolution(mc);
         for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
             if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
-                RenderUtil.fillRect(((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset - 2, yoffset, xoffset + FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()), FontManager.ROBOTOTHIN_20.getFontHeight() + 4, new Color(0, 0, 0, 100));
-                FontManager.ROBOTOTHIN_20.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset - 1, yoffset + 2, Management.instance.colorBlue.getRGB(), false);
-                RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, FontManager.ROBOTOTHIN_20.getFontHeight() + 4, Management.instance.colorBlue);
-                RenderUtil.fillRect(((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset - 3, yoffset, xoffset + FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()), FontManager.ROBOTOTHIN_20.getFontHeight() + 4, new Color(0, 0, 0, 50));
+                RenderUtil.fillRect(((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset  -2, yoffset, xoffset + FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()), FontManager.ROBOTOTHIN_20.getFontHeight() + 4, new Color(0, 0, 0, 170));
+              //  FontManager.ROBOTOTHIN_20.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset +1, yoffset + 2, rainbow2( 500 ,rainbow *2  ), true);
+                FontManager.ROBOTOTHIN_20.drawString(mm.modules.get(i).getName(), ((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset -1, yoffset + 2, Color.WHITE.getRGB(),false);
+
+                rainbow++;
+                RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, FontManager.ROBOTOTHIN_20.getFontHeight() + 4,Management.instance.colorBlue);
+            //    RenderUtil.fillRect(((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) - xoffset - 3, yoffset, xoffset + FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()), FontManager.ROBOTOTHIN_20.getFontHeight() + 4, new Color(0, 0, 0, 50));
                 //fontRenderer.drawString(mm.modules.get(i).getName(),
                 //((sr.getScaledWidth() * 2) - fontRenderer.getStringWidth(mm.modules.get(i).getName()))
                 //- xoffset,
@@ -93,18 +99,18 @@ public class CustomGUIIngame {
             CustomGUIIngame.mouseY = mouseY - lastMouseY;
         }
 
-        int posX = CustomGUIIngame.posX + CustomGUIIngame.mouseX;
+        int posX = CustomGUIIngame.posX + CustomGUIIngame.mouseX ;
         int posY = CustomGUIIngame.posY + CustomGUIIngame.mouseY;
 
-        RenderUtil.drawRect(posX, posY, posX + width + 2, posY + height, new Color(5, 5, 5, 255).getRGB());
-        drawBorderedRect(posX + .5, posY + .5, posX + width + 1.5, posY + height - .5, 0.5, new Color(40, 40, 40, 255).getRGB(), new Color(60, 60, 60, 255).getRGB(), true);
-        drawBorderedRect(posX + 2, posY + 2, posX + width, posY + height - 2, 0.5, new Color(22, 22, 22, 255).getRGB(), new Color(60, 60, 60, 255).getRGB(), true);
-        RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width - .5, posY + 4.5, new Color(9, 9, 9, 255).getRGB());
+     // RenderUtil.drawRect(posX, posY, posX + width + 2, posY + height,  new Color(100,100,255,160).getRGB());
+       //drawBorderedRect(posX + .5, posY + .5, posX + width + 1.5, posY + height - .5, 0.5, new Color(100,100,255,160).getRGB(),  new Color(100,100,255,160).getRGB(), true);
+        drawBorderedRect(posX , posY + 2, posX + width, posY + height - 2, 0.3, new Color(22, 22, 22, 255).getRGB(),new Color(255,255,255,30).getRGB(), true);
+     //   RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width - .5, posY + 4.5,  new Color(100,100,255,160).getRGB());
 
-        for (int i = posX + 4; i < width + posX - 2; i++) {
-            Color rainbow = new Color(rainbow(3, 1f, 1f, 10L * i));
-            RenderUtil.drawRect(-1 + i, posY + 3, i + 2, posY + 4, rainbow.getRGB());
-        }
+        //for (int i = posX + 4; i < width + posX - 2; i++) {
+         //   Color rainbow = new Color(rainbow(3, 1f, 1f, 10L * i));
+           // RenderUtil.drawRect(-1 + i, posY + 3, i + 2, posY + 4, rainbow.getRGB());
+      //  }
 
         double halfWidth = width / 2 + 0.5;
         double halfHeight = height / 2 - 0.5;
@@ -123,7 +129,7 @@ public class CustomGUIIngame {
                     double clampedX = MathHelper.clamp_double(diffX, -halfWidth + 3, halfWidth - 3);
                     double clampedY = MathHelper.clamp_double(diffZ, -halfHeight + 5, halfHeight - 3);
 
-                    RenderUtil.drawRect(posX + halfWidth + clampedX, posY + halfHeight + clampedY, posX + halfWidth + clampedX + 1, posY + halfHeight + clampedY + 1, new Color(179, 2, 8, 255).getRGB());
+                    RenderUtil.drawRect(posX + halfWidth + clampedX, posY + halfHeight + clampedY, posX + halfWidth + clampedX + 1, posY + halfHeight + clampedY + 1, Management.instance.colorBlue.getRGB());
                 }
             }
         }
@@ -302,23 +308,25 @@ public class CustomGUIIngame {
         GlStateManager.disableBlend();
         final String server = mc.isSingleplayer() ? "local" : mc.getCurrentServerData().serverIP.toLowerCase();
            //mc.thePlayer.getUniqueID();
-        final String text =   "Atero.cc | " + server + " | " + Minecraft.getDebugFPS() + " fps | " + "0" + " ms" + " | " + "Build " + Management.instance.CLIENT_VERSION;
+        final String text =   "Atero";
+        //final String text =   "Atero.cc | " + server + " | " + Minecraft.getDebugFPS() + " fps | " + "0" + " ms" + " | " + "Build " + Management.instance.CLIENT_VERSION;
+
         final float width1 = FontManager.ROBOTOTHIN_20.getStringWidth(text) + 8;
         final int height1 = 18;
         final int posX = 2;
         final int posY = 2;
 
-        RenderUtil.drawRect(posX, posY, posX + width1 + 2, posY + height1, new Color(5, 5, 5, 255).getRGB());
-        drawBorderedRect(posX + .5, posY + .5, posX + width1 + 1.5, posY + height1 - .5, 0.5, new Color(40, 40, 40, 255).getRGB(), new Color(60, 60, 60, 255).getRGB(), true);
-        drawBorderedRect(posX + 2, posY + 2, posX + width1, posY + height1 - 2, 0.5, new Color(22, 22, 22, 255).getRGB(), new Color(60, 60, 60, 255).getRGB(), true);
-        RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width1 - .5, posY + 4.5, new Color(9, 9, 9, 255).getRGB());
+       // RenderUtil.drawRect(posX, posY, posX + width1 + 2, posY + height1, Management.instance.colorBlue.getRGB());
+        drawBorderedRect(posX + .5, posY + .5, posX + width1 + 1.5, posY + height1 - .5, 0.5, new Color(40, 40, 40, 255).getRGB(),new Color(255,255,255,30).getRGB(), true);
+        drawBorderedRect(posX + 2, posY + 2, posX + width1, posY + height1 - 2, 0.5, new Color(22, 22, 22, 255).getRGB(),  new Color(22, 22, 22, 255).getRGB(), true);
+     //   RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width1 - .5, posY + 4.5, new Color(9, 9, 9, 255).getRGB());
 
-        for (int i = 6; i < width1; i++) {
-            Color rainbow = new Color(rainbow(3, 1f, 1f, 10L * i));
-            RenderUtil.drawRect(-1 + i, posY + 3, i + 2, posY + 4, rainbow.getRGB());
-        }
+      //  for (int i = 6; i < width1; i++) {
+           //Color rainbow = new Color(rainbow(3, 1f, 1f, 10L * i));
+            //RenderUtil.drawRect(-1 + i, posY + 3, i + 2, posY + 4, rainbow.getRGB());
+       // }
 
-        FontManager.ROBOTOTHIN_20.drawString(text, 4 + posX, posY + FontManager.ROBOTOTHIN_20.getFontHeight() -8, -1, true);
+        FontManager.ROBOTOTHIN_20.drawString(text, 4 + posX, posY + FontManager.ROBOTOTHIN_20.getFontHeight() -9, -1, true);
 
         GlStateManager.enableBlend();
         GlStateManager.popMatrix();
@@ -378,8 +386,17 @@ public class CustomGUIIngame {
             int rectRight = right + FontManager.ROBOTOTHIN_20.getStringWidth(target.getName()) / 2 - 5;
             float healthPos = calculatedHealth * right3;
             //WHITEMODE
+                    if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+                        Util.drawRect(left, top, rectRight, bottom, new Color(0, 0, 0, 120));
+                    }else {
+                        Util.drawRect(left, top, rectRight, bottom, Management.instance.colorGray);
+                    }
+
+
+
+
             //Util.drawRect(left, top, rectRight, bottom, new Color(255,255,255,255));
-            Util.drawRect(left, top, rectRight, bottom, Management.instance.colorGray);
+
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             List NetworkMoment = GuiPlayerTabOverlay.field_175252_a.sortedCopy(mc.thePlayer.sendQueue.getPlayerInfoMap());
             Iterator itarlor = NetworkMoment.iterator();
@@ -402,11 +419,14 @@ public class CustomGUIIngame {
 
             renderPlayer(260, 260, 0, Killaura.instance.getTarget());
             //WhiteMODE
-           // FontManager.ROBOTOTHIN_20.drawString(target.getName(),left +50 ,top,Color.BLUE.getRGB(),false);
-           // FontManager.ROBOTOTHIN_20.drawString("Health: " + Math.round(curTargetHealth), left + 50, top + 15,Color.BLUE.getRGB(),false);
-            FontManager.ROBOTOTHIN_20.drawString(target.getName(),left +50 ,top,Color.WHITE.getRGB(),false);
-            FontManager.ROBOTOTHIN_20.drawString("Health: " + Math.round(curTargetHealth), left + 50, top + 15,Color.WHITE.getRGB(),false);
-
+            if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+                FontManager.ROBOTOTHIN_20.drawString(target.getName(),left +50 ,top,Color.WHITE.getRGB(),false);
+                FontManager.ROBOTOTHIN_20.drawString("Health: " + Math.round(curTargetHealth), left + 50, top + 15,Color.WHITE.getRGB(),false);
+            }else {
+                FontManager.ROBOTOTHIN_20.drawString(target.getName(), left + 50, top, Color.WHITE.getRGB(), false);
+                FontManager.ROBOTOTHIN_20.drawString("Health: " + Math.round(curTargetHealth), left + 50, top + 15, Color.WHITE.getRGB(), false);
+            }
         }
     }
+
 }

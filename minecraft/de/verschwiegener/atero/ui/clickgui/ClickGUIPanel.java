@@ -104,7 +104,11 @@ public class ClickGUIPanel {
 	// draws panel extendet
 	ePanels.forEach(panel -> panel.drawScreen(mouseX, mouseY));
 		//TODO WhiteMODE
-	RenderUtil.fillRect(x, y, width, animationHeight, Management.instance.colorBlack);
+		if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+			RenderUtil.fillRect(x, y, width, animationHeight, new Color(0,0,0,120));
+		}else{
+			RenderUtil.fillRect(x, y, width, animationHeight, Management.instance.colorBlack);
+		}
 	if(drawCircle) {
 	    GL11.glEnable(GL11.GL_SCISSOR_TEST);
 	    final int scaleFactor = 2;
@@ -114,7 +118,11 @@ public class ClickGUIPanel {
 	}
 	RenderUtil.fillRect(x, y + getPanelYOffset() * 2, width, 1, Management.instance.colorBlue);
 		//TODO WhiteMODE
-	font.drawString(name, x + width / 2 - font.getStringWidth2(name), y, Color.white.getRGB());
+		if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+			font.drawString(name, x + width / 2 - font.getStringWidth2(name), y, Color.white.getRGB());
+		}else{
+			font.drawString(name, x + width / 2 - font.getStringWidth2(name), y, Color.white.getRGB());
+		}
 	
 	if (state == 1) {
 	    modules.forEach(ClickGUIButton::drawButton);

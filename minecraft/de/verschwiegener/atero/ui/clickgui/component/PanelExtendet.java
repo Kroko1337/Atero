@@ -6,6 +6,7 @@ import de.verschwiegener.atero.ui.clickgui.ClickGUIPanel;
 import de.verschwiegener.atero.ui.clickgui.component.components.*;
 import de.verschwiegener.atero.util.render.RenderUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class PanelExtendet {
@@ -111,8 +112,13 @@ public class PanelExtendet {
     public void drawScreen(final int mouseX, final int mouseY) {
         if (!isEmpty) {
             if ((animate || state != 1) && panel.getState() == 1) {
-                RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
-                        Management.instance.colorBlack);
+                if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+                    RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
+                            new Color(0, 0, 0, 120));
+                }else{
+                    RenderUtil.fillRect(panel.getX() + panel.getWidth() + 1, panel.getY() + y, animationX, height,
+                           Management.instance.colorBlack);
+                }
             }
 
             if (getState() == 2 && !isAnimate() && getPanel().getState() == 1) {

@@ -58,19 +58,23 @@ public class Scaffold extends Module {
 
     public void setup() {
         final ArrayList<SettingsItem> items = new ArrayList<>();
-        items.add(new SettingsItem("Delay", 0, 500, 0, ""));
-        items.add(new SettingsItem("Safewalk", false, ""));
         items.add(new SettingsItem("Sprint", false, ""));
-        items.add(new SettingsItem("Sneak", false, ""));
-        items.add(new SettingsItem("Silent", true, ""));
-        items.add(new SettingsItem("Tower", false, ""));
+        items.add(new SettingsItem("Swing", false, ""));
         ArrayList<String> modes = new ArrayList<>();
+        ArrayList<String> modess = new ArrayList<>();
+        //RotationModes
         modes.add("NCPStatic");
         modes.add("AAC");
         modes.add("NCP");
         modes.add("WatchdogFast");
+        //TowerModes
+        modess.add("Watchdog");
+        modess.add("NCP");
+        modess.add("TP");
+        modess.add("TimerTP");
+        modess.add("Legit");
         items.add(new SettingsItem("RotationModes", modes, "NCP", "", ""));
-        items.add(new SettingsItem("Down", false, ""));
+        items.add(new SettingsItem("TowerModes", modess, "Watchdog", "", ""));
         items.add(new SettingsItem("SameY", false, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
@@ -81,7 +85,7 @@ public class Scaffold extends Module {
         String mode = setting.getItemByName("RotationModes").getCurrent();
         switch (mode) {
             case "WatchdogFast":
-                Util.setSpeed(-1.0);
+                Util.setSpeed(-0.7);
                 break;
 
         }
@@ -106,11 +110,15 @@ public class Scaffold extends Module {
     }
 
     public void onDisable() {
+        try{
         String mode = setting.getItemByName("RotationModes").getCurrent();
         switch (mode) {
             case "WatchdogFast":
                 Util.setSpeed(-0.5);
                 break;
+
+        }   }catch (NullPointerException e) {
+
         }
         mc.timer.timerSpeed = 1F;
       //  mc.thePlayer.rotationYawHead = +170;
@@ -127,11 +135,29 @@ public class Scaffold extends Module {
     @Override
     public void onUpdateClick(){
         super.onUpdateClick();
+        String modes = setting.getItemByName("TowerModes").getCurrent();
+        switch (modes) {
+            case "TP":
+                if (mc.gameSettings.keyBindJump.pressed) {
+                    Minecraft.thePlayer.setPosition(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY + 0.6D, Minecraft.thePlayer.posZ);
+                    Minecraft.thePlayer.motionY = 0.4D;
+                }
+                break;
+            case  "TimerTP":
+                if (mc.gameSettings.keyBindJump.pressed) {
+                    Minecraft.thePlayer.setPosition(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY + 0.6D, Minecraft.thePlayer.posZ);
+                    Minecraft.thePlayer.motionY = 0.4D;
+
+                }
+                break;
+
+        }
+
         String mode = setting.getItemByName("RotationModes").getCurrent();
         switch (mode) {
             case "WatchdogFast":
-                final float timer = (float) MathHelper.getRandomDoubleInRange(new Random(), 3, 4);
-                mc.timer.timerSpeed = 3.0F;
+                final float timer = (float) MathHelper.getRandomDoubleInRange(new Random(), 2.6, 2.7);
+                mc.timer.timerSpeed = timer;
                 break;
         }
 
@@ -143,7 +169,15 @@ public class Scaffold extends Module {
 
     @EventTarget
     public void onUpdate() {
-    super.onUpdate();
+        super.onUpdate();
+        String modes = setting.getItemByName("TowerModes").getCurrent();
+        switch (modes) {
+            case "TimerTP":
+                if (mc.gameSettings.keyBindJump.pressed) {
+                    mc.timer.timerSpeed = 2F;
+                }
+                break;
+        }
 
 //System.out.println(getSpeed());
 
@@ -174,20 +208,60 @@ public class Scaffold extends Module {
                 //   mc.rightClickMouse();
                 if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld, mc.thePlayer.inventory.getStackInSlot(currentItem), BlockData.getPos(), BlockData.getFacing(), hitVec)) {
                     mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+                    if(setting.getItemByName("Swing").isState()) {
+                        mc.thePlayer.swingItem();
+                    }
                 }
             }
-            if (setting.getItemByName("Tower").isState()) {
 
-                if (mc.gameSettings.keyBindJump.pressed) {
-                    mc.timer.timerSpeed = 1.0F;
-                    if (timer.hasReached(1500)) {
-                        timer.reset();
-                    } else if (mc.thePlayer.ticksExisted % 3 == 0)
-                        mc.thePlayer.motionY = 0.4196;
-                }
-                timer.reset();
+
+            switch (modes) {
+                case "Watchdog":
+                    final float aaaaa = (float) MathHelper.getRandomDoubleInRange(new Random(), 3.2, 3.5);
+                    if (mc.gameSettings.keyBindJump.pressed) {
+                        mc.timer.timerSpeed = aaaaa;
+                        if (timer.hasReached(1350)) {
+                            timer.reset();
+                        } else if (mc.thePlayer.ticksExisted % 6 == 0)
+                            mc.thePlayer.motionY = 0.4196;
+                    }
+                    timer.reset();
+
+                    break;
+                case "NCP":
+                    if (mc.gameSettings.keyBindJump.pressed) {
+                            mc.timer.timerSpeed = 1.0F;
+                             if (timer.hasReached(1500)) {
+                               timer.reset();
+                          } else if (mc.thePlayer.ticksExisted % 3 == 0)
+                              mc.thePlayer.motionY = 0.4196;
+                        }
+                           timer.reset();
+
+                    break;
+                case "Legit":
+                    if (mc.gameSettings.keyBindJump.pressed) {
+                        mc.timer.timerSpeed = 1.0F;
+                        if(mc.thePlayer.onGround) {
+                            mc.thePlayer.motionY = 0.42F;
+                        }
+                    }
+                    break;
             }
         }
+
+
+
+           //     if (mc.gameSettings.keyBindJump.pressed) {
+                //    mc.timer.timerSpeed = 1.0F;
+              //      if (timer.hasReached(1500)) {
+                //        timer.reset();
+                //    } else if (mc.thePlayer.ticksExisted % 3 == 0)
+                 //       mc.thePlayer.motionY = 0.4196;
+               // }
+             //   timer.reset();
+           // }
+
         Minecraft.getMinecraft().thePlayer.setSprinting(false);
     }
 

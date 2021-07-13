@@ -22,27 +22,51 @@ public class ComponentCombobox extends Component {
 
     @Override
     public void drawComponent(int x, int y) {
-	super.drawComponent(x, y);
-	if (!isParentextendet()) {
-	    int textx = (getComponentX() + 1);
-	    int texty = (getComponentY()) - 6;
-	    font.drawString(getName(), (textx) + getPanelExtendet().getWidth() / 2- font.getStringWidth2(getName()), texty, Color.WHITE.getRGB());
-	    RenderUtil.fillRect(textx,
-		    getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
-	    if (extendet) {
-		texty += 2;
-		for (String str : getItem().getModes()) {
-		    texty += 12;
-		    if (str.equals(getItem().getCurrent())) {
-			font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty,
-				Management.instance.colorBlue.getRGB());
-		    } else {
-			font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty, Color.WHITE.getRGB());
-		    }
+		super.drawComponent(x, y);
+		if (!isParentextendet()) {
+			int textx = (getComponentX() + 1);
+			int texty = (getComponentY()) - 6;
+			if (Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+				font.drawString(getName(), (textx) + getPanelExtendet().getWidth() / 2 - font.getStringWidth2(getName()), texty, Color.WHITE.getRGB());
+			} else {
+				font.drawString(getName(), (textx) + getPanelExtendet().getWidth() / 2 - font.getStringWidth2(getName()), texty, Color.WHITE.getRGB());
+
+			}
+			if (Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+				RenderUtil.fillRect(textx, getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
+				if (extendet) {
+					texty += 2;
+					for (String str : getItem().getModes()) {
+						texty += 12;
+						if (str.equals(getItem().getCurrent())) {
+							font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty,
+									Management.instance.colorBlue.getRGB());
+						} else {
+							font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty, Color.WHITE.getRGB());
+						}
+					}
+				}
+			}
+			if (!Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+				RenderUtil.fillRect(textx, getComponentY() + 6, getPanelExtendet().getWidth(), 1, Management.instance.colorBlue);
+				if (extendet) {
+					texty += 2;
+					for (String str : getItem().getModes()) {
+						texty += 12;
+						if (str.equals(getItem().getCurrent())) {
+							font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty,
+									Management.instance.colorBlue.getRGB());
+						} else {
+							font.drawString(str, (textx + 2) + getPanelExtendet().getWidth() / 2 - (font.getStringWidth2(str)), texty, Color.WHITE.getRGB());
+
+
+						}
+					}
+				}
+			}
 		}
-	    }
 	}
-    }
+
 
     @Override
     public void onMouseClicked(int x, int y, int button) {

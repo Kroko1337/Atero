@@ -95,12 +95,12 @@ public class GuiNewChat extends Gui
                                 GlStateManager.enableBlend();
                                 String s = chatline.getChatComponent().getUnformattedText();
 
-                               // FontManager.ROBOTOTHIN_20.drawString(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24),true);
+                                // FontManager.ROBOTOTHIN_20.drawString(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24),true);
                                 //System.out.println("Line: " + s);
                                 //cr.drawChat(s, i2, j2 - 12);
-				// cr.drawChat(s, i2, (j2 * 2 ) - 22);
-				// System.out.println("I2: " + i2);
-				// System.out.println("J2: " + j2);
+                                // cr.drawChat(s, i2, (j2 * 2 ) - 22);
+                                // System.out.println("I2: " + i2);
+                                // System.out.println("J2: " + j2);
                                 if(Management.instance.modulemgr.getModuleByName("Chat").isEnabled()) {
                                     String mode = Chat.setting.getItemByName("ChatMode").getCurrent();
                                     switch (mode) {
@@ -152,24 +152,24 @@ public class GuiNewChat extends Gui
         this.sentMessages.clear();
     }
 
-	public void printChatMessage(IChatComponent ichatcomponent) {
-		System.out.println("Type2: " + ichatcomponent.getChatStyle().getChatHoverEvent());
-		this.printChatMessageWithOptionalDeletion(ichatcomponent, 0);
+    public void printChatMessage(IChatComponent ichatcomponent) {
+        System.out.println("Type2: " + ichatcomponent.getChatStyle().getChatHoverEvent());
+        this.printChatMessageWithOptionalDeletion(ichatcomponent, 0);
 
-	}
+    }
 
-	public void addChatLine(IChatComponent ichatcomponent) {
-		setChatLine(ichatcomponent, 0, this.mc.ingameGUI.getUpdateCounter(), false);
-	}
+    public void addChatLine(IChatComponent ichatcomponent) {
+        setChatLine(ichatcomponent, 0, this.mc.ingameGUI.getUpdateCounter(), false);
+    }
 
     /**
      * prints the ChatComponent to Chat. If the ID is not 0, deletes an existing Chat Line of that ID from the GUI
      */
-	public void printChatMessageWithOptionalDeletion(IChatComponent ichatcomponent, int id) {
-		this.setChatLine(ichatcomponent, id, this.mc.ingameGUI.getUpdateCounter(), false);
-		logger.info("[CHAT] " + ichatcomponent.getUnformattedText());
-		System.out.println("Type3: " + ichatcomponent.getChatStyle().getChatHoverEvent());
-	}
+    public void printChatMessageWithOptionalDeletion(IChatComponent ichatcomponent, int id) {
+        this.setChatLine(ichatcomponent, id, this.mc.ingameGUI.getUpdateCounter(), false);
+        logger.info("[CHAT] " + ichatcomponent.getUnformattedText());
+        System.out.println("Type3: " + ichatcomponent.getChatStyle().getChatHoverEvent());
+    }
 
     private void setChatLine(IChatComponent ichatcomponent, int id, int p_146237_3_, boolean p_146237_4_)
     {
@@ -275,48 +275,48 @@ public class GuiNewChat extends Gui
      * Gets the chat component under the mouse
      */
     public IChatComponent getChatComponent(int p_146236_1_, int p_146236_2_) {
-	if (!this.getChatOpen()) {
-	    return null;
-	} else {
-	    ScaledResolution scaledresolution = new ScaledResolution(this.mc);
-	    int i = scaledresolution.getScaleFactor();
-	    float f = this.getChatScale();
-	    int j = p_146236_1_ / i - 3;
-	    int k = p_146236_2_ / i - 27;
-	    j = MathHelper.floor_float((float) j / f);
-	    k = MathHelper.floor_float((float) k / f);
+        if (!this.getChatOpen()) {
+            return null;
+        } else {
+            ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+            int i = scaledresolution.getScaleFactor();
+            float f = this.getChatScale();
+            int j = p_146236_1_ / i - 3;
+            int k = p_146236_2_ / i - 27;
+            j = MathHelper.floor_float((float) j / f);
+            k = MathHelper.floor_float((float) k / f);
 
-	    if (j >= 0 && k >= 0) {
-		int l = Math.min(this.getLineCount(), this.field_146253_i.size());
+            if (j >= 0 && k >= 0) {
+                int l = Math.min(this.getLineCount(), this.field_146253_i.size());
 
-		if (j <= MathHelper.floor_float((float) this.getChatWidth() / this.getChatScale())
-			&& k < this.mc.fontRendererObj.FONT_HEIGHT * l + l) {
-		    int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
+                if (j <= MathHelper.floor_float((float) this.getChatWidth() / this.getChatScale())
+                        && k < this.mc.fontRendererObj.FONT_HEIGHT * l + l) {
+                    int i1 = k / this.mc.fontRendererObj.FONT_HEIGHT + this.scrollPos;
 
-		    if (i1 >= 0 && i1 < this.field_146253_i.size()) {
-			ChatLine chatline = (ChatLine) this.field_146253_i.get(i1);
-			int j1 = 0;
+                    if (i1 >= 0 && i1 < this.field_146253_i.size()) {
+                        ChatLine chatline = (ChatLine) this.field_146253_i.get(i1);
+                        int j1 = 0;
 
-			for (IChatComponent ichatcomponent : chatline.getChatComponent()) {
-			    if (ichatcomponent instanceof ChatComponentText) {
-				j1 += ChatFontRenderer.getStringWidthClean(GuiUtilRenderComponents.func_178909_a(
-					((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false)) / 2;
-				if (j1 > j) {
-				    return ichatcomponent;
-				}
-			    }
-			}
+                        for (IChatComponent ichatcomponent : chatline.getChatComponent()) {
+                            if (ichatcomponent instanceof ChatComponentText) {
+                                j1 += ChatFontRenderer.getStringWidthClean(GuiUtilRenderComponents.func_178909_a(
+                                        ((ChatComponentText) ichatcomponent).getChatComponentText_TextValue(), false)) / 2;
+                                if (j1 > j) {
+                                    return ichatcomponent;
+                                }
+                            }
+                        }
 
-		    }
+                    }
 
-		    return null;
-		} else {
-		    return null;
-		}
-	    } else {
-		return null;
-	    }
-	}
+                    return null;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
     }
 
     /**

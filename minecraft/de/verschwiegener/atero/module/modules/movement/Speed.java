@@ -135,14 +135,14 @@ public class Speed extends Module {
 					//	if (mc.thePlayer.ticksExisted % 2 == 1) {
 					//	mc.thePlayer.motionY = 0.069F;
 					//		}
-					mc.gameSettings.keyBindJump.pressed = true;
+					mc.timer.timerSpeed = 0.8F;
+				//	mc.gameSettings.keyBindJump.pressed = true;
+					Util.setSpeed(0.6);
 					if (mc.thePlayer.onGround) {
-						mc.thePlayer.motionY = 0.42F;
-						if (mc.thePlayer.ticksExisted % 3 == 0) {
-							Util.setSpeed(0.3);
-						}
+						mc.thePlayer.motionY = 0.11F;
+
 					} else {
-						mc.thePlayer.motionY = -11F;
+						mc.thePlayer.motionY = -0.1F;
 					}
 
 
@@ -209,9 +209,13 @@ public class Speed extends Module {
 						Util.setSpeed(1.2);
 					}else{
 						if(mc.thePlayer.onGround){
-							mc.thePlayer.motionY = 0.42F;
+							if(mc.thePlayer.ticksExisted % 3 == 0) {
+								mc.thePlayer.motionY = 0.25F;
+							}else{
+								mc.thePlayer.motionY = 0.26F;
+							}
 						}
-						Util.setSpeed(0.5);
+						Util.setSpeed(0.55);
 					}
 
 
@@ -253,11 +257,6 @@ public class Speed extends Module {
 			}
 		}
 
-	}
-
-	public void addMotion(double speed, float yaw) {
-		Minecraft.thePlayer.motionX -= (MathHelper.sin((float) Math.toRadians(yaw)) * speed);
-		Minecraft.thePlayer.motionZ += (MathHelper.cos((float) Math.toRadians(yaw)) * speed);
 	}
 
 	public static void setSpeed(PlayerMoveEvent moveEvent, double moveSpeed, float rotationYaw, double speed, float yaw) {
@@ -309,9 +308,10 @@ public class Speed extends Module {
 			case "Mineplex":
 				float Y = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.0, -0.0);
 				float Y2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.040, 0.040);
-				float Y3 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.038, 0.032);
 				float slowdown1 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.007, 0.007);
+				mc.thePlayer.setSprinting(true);
 				if (mc.gameSettings.keyBindForward.pressed) {
+
 					double speed = 0;
 					mc.timer.timerSpeed = 1f;
 					stage++;
@@ -337,8 +337,6 @@ public class Speed extends Module {
 					}
 					Util.setSpeed1(emP, speed);
 				}
-
-
 				break;
 
 		}
@@ -349,16 +347,16 @@ public class Speed extends Module {
 		Packet p = ppe.getPacket();
 		//mc.getNetHandler().addToSendQueue(new C13PacketPlayerAbilities());
 		if (p instanceof S08PacketPlayerPosLook) {
-			String mode = setting.getItemByName("Modes").getCurrent();
-			switch (mode) {
-				case "Watchdog":
-					Management.instance.modulemgr.getModuleByName("Speed").setEnabled(false);
+
+				//	Management.instance.modulemgr.getModuleByName("Speed").setEnabled(false);
 					mc.timer.timerSpeed = 1F;
+					if (p instanceof C13PacketPlayerAbilities && !mc.thePlayer.isUsingItem()) {
+						ppe.setCancelled(true);
+
+
 			}
 		}
-		if (p instanceof C13PacketPlayerAbilities && !mc.thePlayer.isUsingItem()) {
-			ppe.setCancelled(true);
-		}
+
 	}
 
 	}

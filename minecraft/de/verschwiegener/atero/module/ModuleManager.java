@@ -38,6 +38,7 @@ public class ModuleManager {
 	modules.add(new AutoEagle());
 	modules.add(new Fucker());
 	modules.add(new Chat());
+	modules.add(new Design());
 	//modules.add(new ChestESP());
 	//modules.add(new Trajectories());
     }

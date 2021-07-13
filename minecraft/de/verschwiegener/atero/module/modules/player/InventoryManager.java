@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+//Reworken from SuperBlaubeere27
 public class InventoryManager extends Module {
     private static int[] bestArmorDamageReducement;
     private final TimeUtils timer = new TimeUtils();

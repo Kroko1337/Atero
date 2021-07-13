@@ -80,9 +80,9 @@ public class AutoEagle extends Module {
             pre.setYaw((mc.thePlayer.rotationYaw + 270F));
         }
         if (mc.gameSettings.keyBindForward.pressed) {
-            final float yaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 165, 168);
+            final float yaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 178, 180);
             if (setting.getItemByName("180").isState()) {
-                pre.setYaw((mc.thePlayer.rotationYaw + 180));
+                pre.setYaw((mc.thePlayer.rotationYaw + yaw));
             } else {
                 pre.setYaw((mc.thePlayer.rotationYaw + 175));
             }

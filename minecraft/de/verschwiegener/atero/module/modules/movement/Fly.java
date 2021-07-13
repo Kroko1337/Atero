@@ -37,40 +37,24 @@ super.onEnable();
         if (this.isEnabled()) {
             super.onUpdate();
             double value = 0.1;
-                if(mc.thePlayer.ticksExisted % 3 == 0){
-                    mc.thePlayer.motionY = 0.2;
-                }else{
-                    mc.thePlayer.motionY = -0.1;
+            mc.timer.timerSpeed = 1F;
+            if(mc.thePlayer.ticksExisted % 15 == 0){
+                mc.thePlayer.motionY = 0.05;
+            }else {
+                if (mc.thePlayer.ticksExisted % 3 == 0) {
+                    mc.thePlayer.motionY = 0.01;
+                } else {
+                    mc.thePlayer.motionY = -0.01;
                 }
+            }
          //   mc.thePlayer.motionY = 0F;
             Util.setSpeed(1);
             if(mc.gameSettings.keyBindJump.pressed){
-                mc.thePlayer.motionY = 0.42F;
+                mc.thePlayer.motionY = 1F;
             }
             if(mc.gameSettings.keyBindSneak.pressed){
-                mc.thePlayer.motionY = -0.42F;
+                mc.thePlayer.motionY = -1F;
             }
         }
-    }
-
-    public static float getDirection() {
-        float var1 = Minecraft.getMinecraft().thePlayer.rotationYaw;
-
-        if (Minecraft.getMinecraft().thePlayer.moveForward < 0)
-            var1 += 180F;
-        float forward = 2F;
-        if (Minecraft.getMinecraft().thePlayer.moveForward < 0)
-            forward = -.6F;
-        else if (Minecraft.getMinecraft().thePlayer.moveForward > 0)
-            forward = .6F;
-        else
-            forward = 3F;
-
-        if (Minecraft.getMinecraft().thePlayer.moveStrafing > 0)
-            var1 -= 90F * forward;
-        if (Minecraft.getMinecraft().thePlayer.moveStrafing < 0)
-            var1 += 90F * forward;
-        var1 *= .0173292F;
-        return var1;
     }
 }

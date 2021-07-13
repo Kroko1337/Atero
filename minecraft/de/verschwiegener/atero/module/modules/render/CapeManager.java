@@ -47,6 +47,7 @@ public class CapeManager extends Module {
         final ArrayList<String> teest = new ArrayList<>();
         teest.add("Dad");
         teest.add("Hentai");
+        teest.add("Main");
         teest.add("Fire");
        // teest.add("HAZE");
         items.add(new SettingsItem("Cape", teest, "Dad", "", ""));
