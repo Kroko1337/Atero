@@ -22,6 +22,7 @@ import god.buddy.aot.BCompiler;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
@@ -53,7 +54,8 @@ public class TargetStrafe extends Module {
         if (Killaura.instance.hasTarget()) {
             if (strafe) {
                 float[] rotations = getRotations(Killaura.instance.getTarget());
-                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= 1.5)
+                final float Strafe = (float) MathHelper.getRandomDoubleInRange(new Random(), 1.5, 2);
+                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= Strafe)
                     setSpeed(event, moveSpeed, rotations[0], direction, 0);
                 else setSpeed(event, moveSpeed, rotations[0], direction, 1);
             }

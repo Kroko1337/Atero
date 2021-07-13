@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import de.verschwiegener.atero.ui.guiingame.CustomGUIIngame;
 import de.verschwiegener.atero.ui.ingame.ConfigUI;
 import de.verschwiegener.atero.util.components.CustomChatTextField;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
@@ -90,8 +91,8 @@ public class GuiChat extends GuiScreen
      * KeyListener.keyTyped(KeyEvent e). Args : character (character on the key), keyCode (lwjgl Keyboard key code)
      */
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-    	
-    	
+
+
         this.waitingOnAutocomplete = false;
 
         if (keyCode == 15)
@@ -327,46 +328,46 @@ public class GuiChat extends GuiScreen
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      * On Mouse Input
      */
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
-		this.inputField.drawTextBox();
-		//Gets the IChatComponent by Position
-		IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+        this.inputField.drawTextBox();
+        //Gets the IChatComponent by Position
+        IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
-		if (ichatcomponent != null && ichatcomponent.getChatStyle().getChatHoverEvent() != null) {
-			//Handle Component Hover JULIUS
-			this.handleComponentHover(ichatcomponent, mouseX, mouseY);
-		}
+        if (ichatcomponent != null && ichatcomponent.getChatStyle().getChatHoverEvent() != null) {
+            //Handle Component Hover JULIUS
+            this.handleComponentHover(ichatcomponent, mouseX, mouseY);
+        }
 
-		super.drawScreen(mouseX, mouseY, partialTicks);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-	public void onAutocompleteResponse(String[] p_146406_1_) {
-		if (this.waitingOnAutocomplete) {
-			this.playerNamesFound = false;
-			this.foundPlayerNames.clear();
+    public void onAutocompleteResponse(String[] p_146406_1_) {
+        if (this.waitingOnAutocomplete) {
+            this.playerNamesFound = false;
+            this.foundPlayerNames.clear();
 
-			for (String s : p_146406_1_) {
-				if (s.length() > 0) {
-					this.foundPlayerNames.add(s);
-				}
-			}
+            for (String s : p_146406_1_) {
+                if (s.length() > 0) {
+                    this.foundPlayerNames.add(s);
+                }
+            }
 
-			String s1 = this.inputField.getText()
-					.substring(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false));
-			String s2 = StringUtils.getCommonPrefix(p_146406_1_);
+            String s1 = this.inputField.getText()
+                    .substring(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false));
+            String s2 = StringUtils.getCommonPrefix(p_146406_1_);
 
-			if (s2.length() > 0 && !s1.equalsIgnoreCase(s2)) {
-				this.inputField
-						.deleteFromCursor(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false)
-								- this.inputField.getCursorPosition());
-				this.inputField.writeText(s2);
-			} else if (this.foundPlayerNames.size() > 0) {
-				this.playerNamesFound = true;
-				this.autocompletePlayerNames();
-			}
-		}
-	}
+            if (s2.length() > 0 && !s1.equalsIgnoreCase(s2)) {
+                this.inputField
+                        .deleteFromCursor(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false)
+                                - this.inputField.getCursorPosition());
+                this.inputField.writeText(s2);
+            } else if (this.foundPlayerNames.size() > 0) {
+                this.playerNamesFound = true;
+                this.autocompletePlayerNames();
+            }
+        }
+    }
 
     /**
      * Returns true if this GUI should pause the game when it is displayed in single-player

@@ -79,15 +79,15 @@ public class Velocity extends Module {
                     //    }
                         break;
                     case "WallReverse":
-                       //     if (mc.thePlayer.isCollidedHorizontally) {
-                     //   if (Minecraft.thePlayer.hurtTime != 0) {
-                        ///        setSpeed(setting.getItemByName("WallStrength").getCurrentValue());
-                         //       if(mc.thePlayer.onGround) {
+                        if (mc.thePlayer.isCollidedHorizontally) {
+                      if (Minecraft.thePlayer.hurtTime != 0) {
+                              // setSpeed(0);
+                               if(mc.thePlayer.onGround) {
                                     //mc.thePlayer.motionY = 0.42;
-                          //      }
-                         //   }
+                               }
+                            }
 
-                       // }
+                       }
                         break;
                     case "NCP":
                         if (p instanceof S12PacketEntityVelocity) {
@@ -188,7 +188,8 @@ public class Velocity extends Module {
             final float speed = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.04, 0.08);
             if(!mc.thePlayer.isInLava()) {
                 setSpeed(speed);
-            if(mc.thePlayer.onGround && mc.thePlayer.ticksExisted % 10 == 0) {
+
+            if(mc.thePlayer.onGround && mc.thePlayer.ticksExisted % 15 == 0) {
                 mc.thePlayer.motionY = 0.42F;
             }
                 break;

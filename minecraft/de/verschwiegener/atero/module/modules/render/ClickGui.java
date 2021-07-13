@@ -32,7 +32,7 @@ public class ClickGui extends Module {
         final ArrayList<SettingsItem> items = new ArrayList<>();
         ArrayList<String> modes = new ArrayList<>();
         modes.add("AAC");
-        items.add(new SettingsItem("TEST", Color.red, ""));
+        items.add(new SettingsItem("TEST", Color.BLUE, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 

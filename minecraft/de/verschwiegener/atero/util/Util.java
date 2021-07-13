@@ -45,7 +45,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import sun.plugin2.util.ColorUtil;
 
 public class Util {
 
@@ -187,17 +186,75 @@ public class Util {
 	private static IntBuffer pixelBuffer;
 	private static int[] pixelValues;
 
-	    //ChatUtil.addIChatComponent(
-		    //new ChatComponentTranslation("screenshot.success", new Object[] { ichatcomponent }));
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    //ChatUtil.addIChatComponent(
-		   // new ChatComponentTranslation("screenshot.failure", new Object[] { e.getMessage() }));
+	public static void saveFramebuffer(Framebuffer frameBuffer) {
+		int width = mc.displayWidth;
+		int height = mc.displayHeight;
+		if (OpenGlHelper.isFramebufferEnabled()) {
+			width = frameBuffer.framebufferTextureWidth;
+			height = frameBuffer.framebufferTextureHeight;
+		}
+		int targetCapacity = width * height;
+		if (pixelBuffer == null || pixelBuffer.capacity() < targetCapacity) {
+			pixelBuffer = BufferUtils.createIntBuffer(targetCapacity);
+			pixelValues = new int[targetCapacity];
+		}
+		GL11.glPixelStorei(3333, 1);
+		GL11.glPixelStorei(3317, 1);
+		pixelBuffer.clear();
+		if (OpenGlHelper.isFramebufferEnabled()) {
+			GlStateManager.bindTexture(frameBuffer.framebufferTexture);
+			GL11.glGetTexImage(3553, 0, 32993, 33639, pixelBuffer);
+		} else {
+			GL11.glReadPixels(0, 0, width, height, 32993, 33639, pixelBuffer);
+		}
+		pixelBuffer.get(pixelValues);
+		TextureUtil.processPixelValues(pixelValues, width, height);
+		int[] pixelCopy = new int[pixelValues.length];
+		System.arraycopy(pixelValues, 0, pixelCopy, 0, pixelValues.length);
+
+		int[] pixels = pixelCopy;
+		String captureTime = (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date());
+		BufferedImage image = null;
+		if (OpenGlHelper.isFramebufferEnabled()) {
+			image = new BufferedImage(frameBuffer.framebufferWidth, frameBuffer.framebufferHeight, 1);
+			int diff = frameBuffer.framebufferTextureHeight - frameBuffer.framebufferHeight;
+			for (int i = diff; i < frameBuffer.framebufferTextureHeight; i++) {
+				for (int j = 0; j < frameBuffer.framebufferWidth; j++) {
+					int pixel = pixels[i * frameBuffer.framebufferTextureWidth + j];
+					image.setRGB(j, i - diff, pixel);
+				}
+			}
+		} else {
+			image = new BufferedImage(width, height, 1);
+			image.setRGB(0, 0, width, height, pixels, 0, width);
+		}
+		File ssDir = new File("screenshots");
+		File ssFile = new File("screenshots", captureTime + ".png");
+		int iterator = 0;
+		while (ssFile.exists()) {
+			iterator++;
+			ssFile = new File("screenshots", captureTime + "_" + iterator + ".png");
+		}
+
+		try {
+			ssDir.mkdirs();
+			ImageIO.write(image, "png", ssFile);
+			IChatComponent ichatcomponent = new ChatComponentText(ssFile.getName());
+			ichatcomponent.getChatStyle()
+					.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, ssFile.getAbsolutePath()));
+			ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+
+			//ChatUtil.addIChatComponent(
+			//new ChatComponentTranslation("screenshot.success", new Object[] { ichatcomponent }));
+		} catch (IOException e) {
+			e.printStackTrace();
+			//ChatUtil.addIChatComponent(
+			// new ChatComponentTranslation("screenshot.failure", new Object[] { e.getMessage() }));
+		}
 	}
-    }
-    public static float toRadians(float value) {
-	return (float) (value / 180.0F * Math.PI);
-    }
+	public static float toRadians(float value) {
+		return (float) (value / 180.0F * Math.PI);
+	}
 	public static void setSpeed1(PlayerMoveEvent moveEvent, double moveSpeed) {
 		setSpeed1(moveEvent, moveSpeed, mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
 	}
@@ -228,5 +285,26 @@ public class Util {
 		double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
 		moveEvent.setX((forward * moveSpeed * mx + strafe * moveSpeed * mz));
 		moveEvent.setZ((forward * moveSpeed * mz - strafe * moveSpeed * mx));
+	}
+	public static void drawRect(float g, float h, float i, float j, Color col2) {
+	    GL11.glColor4f(col2.getRed() / 255.0F, col2.getGreen() / 255.0F, col2.getBlue() / 255.0F, col2.getAlpha() / 255.0F);
+
+		GL11.glEnable(3042);
+		GL11.glDisable(3553);
+		GL11.glBlendFunc(770, 771);
+		GL11.glEnable(2848);
+
+		GL11.glPushMatrix();
+		GL11.glBegin(7);
+		GL11.glVertex2d(i, h);
+		GL11.glVertex2d(g, h);
+		GL11.glVertex2d(g, j);
+		GL11.glVertex2d(i, j);
+		GL11.glEnd();
+		GL11.glPopMatrix();
+
+		GL11.glEnable(3553);
+		GL11.glDisable(3042);
+		GL11.glDisable(2848);
 	}
 }

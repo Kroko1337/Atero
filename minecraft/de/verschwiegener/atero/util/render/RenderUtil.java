@@ -408,26 +408,7 @@ public class RenderUtil {
 
     }
 
-    private boolean isInViewFrustrum(Entity entity) {
-        return isInViewFrustrum(entity.getEntityBoundingBox()) || entity.ignoreFrustumCheck;
-    }
 
-    public static boolean isInViewFrustrum(AxisAlignedBB bb) {
-        Entity current = Minecraft.getMinecraft().getRenderViewEntity();
-        frustum.setPosition(current.posX, current.posY, current.posZ);
-        return frustum.isBoundingBoxInFrustum(bb);
-    }
-	public static Vector3d project2D(int scaleFactor, double x, double y, double z) {
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelview);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
-
-		if (GLU.gluProject((float) x, (float) y, (float) z, modelview, projection, viewport, vector)) {
-			return new Vector3d(vector.get(0) / scaleFactor, (Display.getHeight() - vector.get(1)) / scaleFactor, vector.get(2));
-		}
-
-		return null;
-	}
 	public static double interpolate(double current, double old, double scale) {
 		return old + (current - old) * scale;
 	}

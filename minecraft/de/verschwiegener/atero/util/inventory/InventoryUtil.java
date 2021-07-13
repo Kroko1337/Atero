@@ -15,8 +15,6 @@ public class InventoryUtil {
     static Minecraft mc = Minecraft.getMinecraft();
     //public static ArrayList<Integer> trashInventory = new ArrayList<>();
     private static ArrayList<Group> groups = new ArrayList<>();
-    public static int count;
-    public static int count2;
     public static ArrayList<Integer> blacklistSlot = new ArrayList<>();
     
     public static void addGroups() {

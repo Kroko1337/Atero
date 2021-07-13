@@ -41,9 +41,15 @@ public class ClickGUIButton {
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	    }
 		//TODO WhiteMODE
-	    Color color = Management.instance.modulemgr.getModuleByName(name).isEnabled() ? Management.instance.colorBlue : Color.WHITE;
-	    font.drawString(name, panel.getX() + panel.getWidth() / 2 - font.getStringWidth2(name), (panel.getY()) + y,
-		    color.getRGB());
+		if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+			Color color = Management.instance.modulemgr.getModuleByName(name).isEnabled() ? Management.instance.colorBlue : Color.WHITE;
+			font.drawString(name, panel.getX() + panel.getWidth() / 2 - font.getStringWidth2(name), (panel.getY()) + y,
+					color.getRGB());
+		}else{
+			Color color = Management.instance.modulemgr.getModuleByName(name).isEnabled() ? Management.instance.colorBlue : Color.WHITE;
+			font.drawString(name, panel.getX() + panel.getWidth() / 2 - font.getStringWidth2(name), (panel.getY()) + y,
+					color.getRGB());
+		}
 
 	    if (Management.instance.clickgui.getSettingByName(name) != null
 		    && Management.instance.clickgui.isHasSearched()) {

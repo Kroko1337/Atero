@@ -5,7 +5,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.font.FontManager;
-import de.verschwiegener.atero.util.chat.ChatRenderer;
+//import de.verschwiegener.atero.util.chat.ChatRenderer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
@@ -41,7 +41,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry {
     private long field_148298_f;
 
     private Font font;
-    private ChatRenderer chatRenderer;
+   // private ChatRenderer chatRenderer;
 
     protected ServerListEntryNormal(GuiMultiplayer p_i45048_1_, ServerData p_i45048_2_) {
         this.field_148303_c = p_i45048_1_;
@@ -50,7 +50,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry {
         this.field_148306_i = new ResourceLocation("servers/" + p_i45048_2_.serverIP + "/icon");
         this.field_148305_h = (DynamicTexture) this.mc.getTextureManager().getTexture(this.field_148306_i);
         font = Management.instance.font;
-        chatRenderer = new ChatRenderer();
+     //   chatRenderer = new ChatRenderer();
     }
 
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected) {

@@ -573,6 +573,7 @@ public abstract class Entity implements ICommandSender {
             boolean flag = this.onGround && this.isSneaking() && this instanceof EntityPlayer;
           //  if (Scaffold.instance.isEnabled() && Scaffold.instance.canSafewalk()) {
                 if (this instanceof EntityPlayer) {
+                    try{
                     if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
                         String mode = Scaffold.setting.getItemByName("RotationModes").getCurrent();
                         switch (mode) {
@@ -583,8 +584,11 @@ public abstract class Entity implements ICommandSender {
 
                     }else{
                         //flag = true;
+                    }   }catch (NullPointerException e) {
+
                     }
                 }
+
           //  }
             if (Scaffold.instance.isEnabled() && Scaffold.instance.allowdown) {
                 if (this instanceof EntityPlayer) {

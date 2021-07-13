@@ -37,7 +37,7 @@ public class Chat extends Module {
         ArrayList<String> modes = new ArrayList<>();
         modes.add("Broke");
         modes.add("Broke2");
-        items.add(new SettingsItem("ChatMode", modes, "Broke", "", ""));
+        items.add(new SettingsItem("ChatMode", modes, "Broke2", "", ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
         setting = Management.instance.settingsmgr.getSettingByName(getName());
     }

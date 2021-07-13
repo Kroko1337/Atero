@@ -3,6 +3,7 @@ package de.verschwiegener.atero.util.chat;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.util.render.RenderUtil;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -77,6 +78,7 @@ public class ChatRenderer {
                         str2 = str2.substring(2);
                     }
                     xoffset = xoffset / 2;
+                    System.out.println("MessageColor: " + messagecolor);
                     if (boldStyle) {
                         xoffset += ChatFontRenderer.drawString(str2, x + xoffset, y, messagecolor);
                         // fontRendererBold.drawString(str, x + xoffset, y, messagecolor.getRGB());
@@ -205,43 +207,43 @@ public class ChatRenderer {
                 if (effekt) {
                     if (boldStyle) {
                         if (str.startsWith("§")) {
-                            fontRendererBold.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-                            xoffset += fontRendererBold.getStringWidth(str.substring(2));
+                            Minecraft.getMinecraft().fontRendererObj.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+                            xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str.substring(2));
                         } else {
-                            fontRendererBold.drawString(str, x + xoffset, y, messagecolor.getRGB());
-                            xoffset += fontRendererBold.getStringWidth(str);
+                            Minecraft.getMinecraft().fontRendererObj.drawString(str, x + xoffset, y, messagecolor.getRGB());
+                            xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str);
                         }
                     } else if (italicStyle) {
                         if (str.startsWith("§")) {
-                            fontRendererItalic.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
-                            xoffset += fontRendererItalic.getStringWidth(str.substring(2));
+                            Minecraft.getMinecraft().fontRendererObj.drawString(str.substring(2), x + xoffset, y, messagecolor.getRed());
+                            xoffset += Minecraft.getMinecraft().fontRendererObj.getStringWidth(str.substring(2));
                         } else {
-                            fontRendererItalic.drawString(str, x + xoffset, y, messagecolor.getRed());
-                            xoffset += fontRendererItalic.getStringWidth(str);
+                            Minecraft.getMinecraft().fontRendererObj.drawString(str, x + xoffset, y, messagecolor.getRed());
+                            xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str);
                         }
                     } else if (randomStyle) {
-                        fontRenderer.drawString(getRandomString(str.length() - 2), x + xoffset, y,
+                        Minecraft.getMinecraft().fontRendererObj.drawString(getRandomString(str.length() - 2), x + xoffset, y,
                                 messagecolor.getRGB());
-                        xoffset += fontRenderer.getStringWidth(str);
+                        xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str);
                     }
                     if (underlineStyle) {
                         // drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight() * 2) - 3,
                         // fontRenderer.getStringWidth2(str.substring(2)), messagecolor);
-                        fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+                        Minecraft.getMinecraft().fontRendererObj.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
                     }
                     if (strikethroughStyle) {
                         // drawLine(x + xoffset, y + (fontRenderer.getBaseStringHeight()),
                         // fontRenderer.getStringWidth(str.substring(2)), messagecolor);
                         // System.out.println("Str: " + str.substring(2));
-                        fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+                        Minecraft.getMinecraft().fontRendererObj.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
                     }
                 } else {
                     if (str.startsWith("§")) {
-                        fontRenderer.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
-                        xoffset += fontRenderer.getStringWidth(str.substring(2));
+                        Minecraft.getMinecraft().fontRendererObj.drawString(str.substring(2), x + xoffset, y, messagecolor.getRGB());
+                        xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str.substring(2));
                     } else {
-                        fontRenderer.drawString(str, x + xoffset, y, messagecolor.getRGB());
-                        xoffset += fontRenderer.getStringWidth(str);
+                        Minecraft.getMinecraft().fontRendererObj.drawString(str, x + xoffset, y, messagecolor.getRGB());
+                        xoffset +=  Minecraft.getMinecraft().fontRendererObj.getStringWidth(str);
                     }
                 }
             }

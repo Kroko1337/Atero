@@ -37,17 +37,17 @@ public class ComponentTextField extends Component {
 
 		    font.drawString(split1, textX,
 			    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(),
-			    Color.white.getRGB());
+			    Color.BLACK.getRGB());
 		    font.drawString(split2, textX + font.getStringWidth2(split1) * 2 + 3,
 			    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(),
-			    Color.white.getRGB());
+			    Color.BLACK.getRGB());
 
 		    drawSelected(getComponentX() + 3 + font.getStringWidth2(split1));
 		} catch (final Exception e) {
 		}
 	    } else {
 		font.drawString(getItem().getCurrent(), textX,
-			getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+			getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.BLACK.getRGB());
 	    }
 	}
     }

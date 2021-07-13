@@ -13,6 +13,8 @@ import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.util.Util;
+import de.verschwiegener.atero.util.chat.ChatFontRenderer;
+import de.verschwiegener.atero.util.chat.ChatRenderer;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
 import de.verschwiegener.atero.util.components.CustomGuiTextField;
 import de.verschwiegener.atero.util.files.config.Config;
@@ -78,10 +80,12 @@ public class ConfigUI extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 	
-	float animationOffset = easeIn(time, beginning, change, duration);
-	
-	if (time < duration) time++;
-	//Animate textfields
+	float animationOffset = change;
+	if(time < duration) {
+	    animationOffset = easeIn(time, beginning, change, duration);
+	    time++;
+	    
+	}
 	
 	xPos = this.width / 2 - 200;
 	yPos = (int) (this.height / 4 + 24 + (400 - animationOffset));
@@ -91,6 +95,13 @@ public class ConfigUI extends GuiScreen {
 	font.drawString("Name:", xPos + 20, yPos + 25, Color.WHITE);
 	font.drawString("ServerIP:", xPos + 20, yPos + 75, Color.WHITE);
 	font.drawString("Description:", xPos + 20, yPos + 50, Color.WHITE);
+	
+	nametxt.setyPosition(yPos + 25);
+	descriptiontxt.setyPosition(yPos + 50);
+	servertxt.setyPosition(yPos + 75);
+	buttonList.get(0).yPosition = yPos -2;
+	buttonList.get(1).yPosition = yPos -2;
+	
 	nametxt.drawTextBox();
 	descriptiontxt.drawTextBox();
 	int settingItemyPos = yPos + 100;
@@ -104,9 +115,14 @@ public class ConfigUI extends GuiScreen {
 	GL11.glEnable(GL11.GL_SCISSOR_TEST);
 	final int scaleFactor = mc.gameSettings.guiScale;
 	RenderUtil.getScissor(xPos, height, 400, 273, scaleFactor);
-	items.forEach(item -> item.drawItem(xPos, (int) (scrollOffset - (400 - animationOffset))));
-	GL11.glDisable(GL11.GL_SCISSOR_TEST);
-	//TODO test warum die fps so schlecht sind und die animation nihct smooth	
+	int fontOffset = (25 / 2) - (font.getBaseStringHeight() / 2);
+	int yOffset = (int) (scrollOffset - (change - animationOffset));
+	for (int i = 0; i < items.size(); i++) {
+	    ConfigSettingItem item = items.get(i);
+	    item.drawItem(xPos, (int) (scrollOffset - (400 - animationOffset)));
+	    ChatFontRenderer.drawString(item.name, xPos + 5, item.yPos - yOffset + fontOffset, Color.WHITE);
+	}
+	GL11.glDisable(GL11.GL_SCISSOR_TEST);	
 
     }
 
@@ -235,9 +251,10 @@ public class ConfigUI extends GuiScreen {
 	    this.yOffset = yOffset;
 	    RenderUtil.fillRect(xPos, yPos - yOffset, 400, 25, Management.instance.colorGray);
 	    RenderUtil.drawRect(xPos, yPos - yOffset, 400, 25, Management.instance.colorBlack, 1F);
-	    font.drawString(name, xPos + 5, yPos - yOffset + (25 / 2) - (font.getBaseStringHeight() / 2), Color.WHITE);
-	    // RenderUtil.fillRect(xPos + 370, yPos + (25 / 2) - 6, 12, 12,
-	    // Management.instance.colorBlack);
+	    //ChatFontRenderer.drawString(name, xPos + 5, yPos - yOffset + (25 / 2) - (font.getBaseStringHeight() / 2), Color.WHITE);
+	    //font.drawString(name, xPos + 5, yPos - yOffset + (25 / 2) - (font.getBaseStringHeight() / 2), Color.WHITE);
+	     //RenderUtil.fillRect(xPos + 370, yPos + (25 / 2) - 6, 12, 12,
+	     //Management.instance.colorBlack);
 	    Color infillcolor = (selected ? Color.GREEN : Color.ORANGE);
 	    RenderUtil.fillRect(xPos + 370, yPos - yOffset + (25 / 2) - 6, 12, 12, infillcolor);
 	}

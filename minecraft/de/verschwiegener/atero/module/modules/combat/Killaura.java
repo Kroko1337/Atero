@@ -10,6 +10,7 @@ import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.TimeUtils;
+import de.verschwiegener.atero.util.chat.ChatUtil;
 import god.buddy.aot.BCompiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -17,12 +18,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.util.*;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -102,13 +103,13 @@ public class Killaura extends Module {
             return false;
         // if (player.deathTime != 0)
         // return false;
-		if (bots.contains(player))
-			return false;
-            if(player.getName().equalsIgnoreCase("liljoe107"))
-                return false;
-           // if(player)
-   //     if (friends.contains(player))
-     //       return false;
+        if (bots.contains(player))
+            return false;
+        if (player.getName().equalsIgnoreCase("liljoe107"))
+            return false;
+        // if(player)
+        //     if (friends.contains(player))
+        //       return false;
         return true;
     }
 
@@ -141,11 +142,11 @@ public class Killaura extends Module {
         double dist = range;
         EntityLivingBase target = null;
         for (Object object : Minecraft.theWorld.loadedEntityList) {
-            Entity entity = (Entity)object;
+            Entity entity = (Entity) object;
             if (entity instanceof EntityLivingBase) {
-                EntityLivingBase player = (EntityLivingBase)entity;
+                EntityLivingBase player = (EntityLivingBase) entity;
                 if (canAttack(player)) {
-                    double currentDist = Minecraft.thePlayer.getDistanceToEntity((Entity)player);
+                    double currentDist = Minecraft.thePlayer.getDistanceToEntity((Entity) player);
                     if (currentDist <= dist) {
                         dist = currentDist;
                         target = player;
@@ -288,13 +289,19 @@ public class Killaura extends Module {
         setting = Management.instance.settingsmgr.getSettingByName(getName());
         targetset = Management.instance.settingsmgr.getSettingByName("Target");
     }
+    @Override
+    public void onDisable() {
+        bots.clear();
+        super.onDisable();
+
+    }
 
     @EventTarget
 
     public void onEvent(final EventTest event) {
         if (setting.getItemByName("CorrectMM").isState() && (target != null || preaimtarget != null)) {
-             event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
-             event.setSilentMoveFix(true);
+            event.setYaw(EventPreMotionUpdate.getInstance.getYaw());
+            event.setSilentMoveFix(true);
         }
     }
 
@@ -302,11 +309,19 @@ public class Killaura extends Module {
 
     public void onPre(final EventPreMotionUpdate pre) {
         if ((target != null)) {
+            if(setting.getItemByName("AutoBlock").isState()){
+                if(mc.thePlayer.ticksExisted % 10 == 0) {
+                    if (Minecraft.thePlayer.getHeldItem() != null)
+                        if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                            mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
+                        }
+                }
+            }
             facing = Killaura.Intavee(Minecraft.thePlayer, target);
             pre.setYaw(yaw);
             pre.setPitch(pitch);
             //Minecraft.thePlayer.rotationPitch = pitch;
-           // Minecraft.thePlayer.rotationYaw = yaw ;
+            // Minecraft.thePlayer.rotationYaw = yaw ;
             if (setting.getItemByName("RotationSpeed").isState()) {
                 yaw = interpolateRotation(yaw, facing[0], setting.getItemByName("Speed").getCurrentValue());
                 pitch = interpolateRotation(pitch, facing[1], setting.getItemByName("Speed").getCurrentValue());
@@ -339,7 +354,7 @@ public class Killaura extends Module {
             minCPS = maxCPS - 1;
         }
         final float CCPS = (float) ((float) 1000 / MathHelper.getRandomDoubleInRange(new Random(), minCPS, maxCPS));
-        if(setting.getItemByName("AutoAttack").isState()) {
+        if (setting.getItemByName("AutoAttack").isState()) {
 
             if (timer.hasReached(CCPS)) {
                 mc.clickMouse();
@@ -374,16 +389,16 @@ public class Killaura extends Module {
 
             //final MovingObjectPosition t = getTarget(mc.timer.elapsedTicks, reach);
 
-           // final float CCPS = 1000 / random(minCPS, maxCPS);
+            // final float CCPS = 1000 / random(minCPS, maxCPS);
             if (target != null) {
                 if (timer.hasReached(CCPS)) {
                     if (setting.getItemByName("LegitAttack").isState()) {
                         mc.clickMouse();
                     } else {
-                    //    if (!(mc.thePlayer.fallDistance > 0.08F && Management.instance.modulemgr.getModuleByName("Speed").isEnabled() && Speed.setting.getItemByName("Cubecraft").isState())) {
-                            mc.thePlayer.swingItem();
-                            mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
-                      //  }
+                        //    if (!(mc.thePlayer.fallDistance > 0.08F && Management.instance.modulemgr.getModuleByName("Speed").isEnabled() && Speed.setting.getItemByName("Cubecraft").isState())) {
+                        mc.thePlayer.swingItem();
+                        mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
+                        //  }
                     }
                     timer.reset();
                 }
@@ -409,10 +424,7 @@ public class Killaura extends Module {
                 return;
 
             // AutoBlock
-            if (setting.getItemByName("AutoBlock").isState()) {
 
-            }
-	    
 
 	    
 		/*while (FrameClick > 0) {
@@ -481,5 +493,12 @@ public class Killaura extends Module {
         try {
         } catch (NullPointerException e) {
         }
+    }
+
+    @Override
+
+    public void onUpdate() {
+        super.onUpdate();
+
     }
 }

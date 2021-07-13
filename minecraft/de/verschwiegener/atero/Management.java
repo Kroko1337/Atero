@@ -51,7 +51,7 @@ public class Management {
     public static Management instance = new Management();
 
     public final String CLIENT_NAME = "Atero";
-    public final String CLIENT_VERSION = "B5";
+    public final String CLIENT_VERSION = "7";
     public String selectedDesign = "AteroDesign";
 
     public Color colorBlue = new Color(0, 161, 249);
@@ -106,6 +106,7 @@ public class Management {
 	GIFmgr.addGif(new GIF("Hentai", "test"));
 	//GIFmgr.addGif(new GIF("Hero", "hero"));
 	GIFmgr.addGif(new GIF("Fire", "tenor"));
+		GIFmgr.addGif(new GIF("Main", "Main"));
 	//GIFmgr.addGif(new GIF("HAZE", "HAZE"));
 	
 	font = fontmgr.getFontByName("Inter");

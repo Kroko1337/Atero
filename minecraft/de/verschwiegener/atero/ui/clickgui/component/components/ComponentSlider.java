@@ -48,8 +48,13 @@ public class ComponentSlider extends Component {
 	    }
 	    double percent = (getItem().getCurrentValue() - getItem().getMinValue())
 		    / (getItem().getMaxValue() - getItem().getMinValue());
-	    font.drawString(getName(), (getComponentX() + 3),
-		    getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.white.getRGB());
+	    if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+			font.drawString(getName(), (getComponentX() + 3),
+					getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
+		}else{
+			font.drawString(getName(), (getComponentX() + 3),
+					getComponentY() - getPanelExtendet().getPanel().getPanelYOffset(), Color.WHITE.getRGB());
+		}
 	    int textX = (getComponentX() + getPanelExtendet().getWidth()) - 25;
 	    if (textFieldSelected) {
 		try {
@@ -57,21 +62,37 @@ public class ComponentSlider extends Component {
 		    String split2 = currentValue.substring(textFieldEditPosition, currentValue.length());
 		    
 		    //System.out.println("TextX: " + textX);
-		   
-		    
-		    font.drawString(split1, textX - 1,
-			    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
-			    Color.WHITE.getRGB());
-		    
-		    if(textFieldEditPosition != 0) {
-			font.drawString(split2, textX + font.getStringWidth2(split1) + 4,
-				    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
-				    Color.WHITE.getRGB());
-		    }else {
-			font.drawString(split2, textX + font.getStringWidth(split1),
-				    (getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
-				    Color.WHITE.getRGB());
-		    }
+
+			if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+				font.drawString(split1, textX - 1,
+						(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+						Color.WHITE.getRGB());
+			}else{
+				font.drawString(split1, textX - 1,
+						(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+						Color.WHITE.getRGB());
+			}
+			if(Management.instance.modulemgr.getModuleByName("Design").isEnabled()) {
+				if (textFieldEditPosition != 0) {
+					font.drawString(split2, textX + font.getStringWidth2(split1) + 4,
+							(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+							Color.WHITE.getRGB());
+				} else {
+					font.drawString(split2, textX + font.getStringWidth(split1),
+							(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+							Color.WHITE.getRGB());
+				}
+			}else {
+				if (textFieldEditPosition != 0) {
+					font.drawString(split2, textX + font.getStringWidth2(split1) + 4,
+							(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+							Color.BLACK.getRGB());
+				} else {
+					font.drawString(split2, textX + font.getStringWidth(split1),
+							(getComponentY()) - getPanelExtendet().getPanel().getPanelYOffset(),
+							Color.BLACK.getRGB());
+				}
+			}
 		    
 		    drawSelected((getComponentX() + getPanelExtendet().getWidth() - 25)
 			    + font.getStringWidth(split1) / 2);
