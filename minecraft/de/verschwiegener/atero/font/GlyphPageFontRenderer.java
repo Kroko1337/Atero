@@ -346,6 +346,11 @@ public class GlyphPageFontRenderer {
         }
         int width = 0;
 
+        String alphabet = "0123456789abcdefklmnor";
+        for(int j = 0; j < alphabet.length(); j++) {
+            text = text.replace("§"+alphabet.charAt(j), "");
+        }
+
         GlyphPage currentPage;
 
         int size = text.length();

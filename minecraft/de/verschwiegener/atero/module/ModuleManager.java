@@ -5,14 +5,16 @@ import java.util.ArrayList;
 import de.verschwiegener.atero.module.modules.combat.*;
 import de.verschwiegener.atero.module.modules.misc.MusikPlayer;
 import de.verschwiegener.atero.module.modules.movement.*;
+import de.verschwiegener.atero.module.modules.player.ClientFriends;
 import de.verschwiegener.atero.module.modules.player.InventoryManager;
+import de.verschwiegener.atero.module.modules.player.NoFriends;
 import de.verschwiegener.atero.module.modules.render.*;
 import de.verschwiegener.atero.module.modules.world.*;
 import net.minecraft.client.Minecraft;
 
 public class ModuleManager {
 
-    public ArrayList<Module> modules = new ArrayList();
+    public static ArrayList<Module> modules = new ArrayList();
 
     public ModuleManager() {
 	modules.add(new MusikPlayer());
@@ -39,6 +41,11 @@ public class ModuleManager {
 	modules.add(new Fucker());
 	modules.add(new Chat());
 	modules.add(new Design());
+	modules.add(new NoSlowDown());
+	modules.add(new NoFriends());
+	modules.add(new ClientFriends());
+	modules.add(new AntiVoid());
+	modules.add(new FirstPersonModify());
 	//modules.add(new ChestESP());
 	//modules.add(new Trajectories());
     }
@@ -49,7 +56,7 @@ public class ModuleManager {
     public Module getModulebyStartsWith(final String name) {
 	return modules.stream().filter(module -> module.getName().toLowerCase().startsWith(name.toLowerCase())).findFirst().orElse(null);
     }
-    public ArrayList<Module> getModules() {
+    public static ArrayList<Module> getModules() {
 	return modules;
     }
     public void onKey(final int key) {

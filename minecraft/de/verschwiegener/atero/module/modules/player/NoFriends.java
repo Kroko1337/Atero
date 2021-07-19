@@ -1,9 +1,7 @@
-package de.verschwiegener.atero.module.modules.world;
+package de.verschwiegener.atero.module.modules.player;
 
 import net.minecraft.client.Minecraft;
 
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -14,20 +12,17 @@ import god.buddy.aot.BCompiler;
 
 import java.awt.*;
 
-public class Nofall extends Module {
+public class NoFriends extends Module {
     TimeUtils timeUtils;
 
-    public Nofall() {
-        super("Nofall", "Nofall", Keyboard.KEY_NONE, Category.World);
+    public NoFriends() {
+        super("NoFriends", "Sprint", Keyboard.KEY_NONE, Category.Player);
     }
 
     public void onEnable() {
-
-        super.onEnable();
     }
 
     public void onDisable() {
-
         super.onDisable();
     }
 
@@ -35,12 +30,7 @@ public class Nofall extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-            setExtraTag("Watchdog");
-            if (Minecraft.thePlayer.fallDistance > 2.7F) {
-                Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
-            }
-
-
+setExtraTag("True");
         }
     }
 

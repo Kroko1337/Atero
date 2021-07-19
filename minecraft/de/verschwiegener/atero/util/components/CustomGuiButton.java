@@ -68,8 +68,7 @@ public class CustomGuiButton extends GuiButton {
 		font.drawString(this.displayString, xPosition + width / 2 - font.getStringWidth2(displayString),
 			(this.yPosition) + (font.getBaseStringHeight() / 4),
 			Color.WHITE.getRGB());
-		RenderUtil.fillRect(this.xPosition, this.yPosition + this.height - 1, this.width, 1,
-			Management.instance.colorBlue);
+		RenderUtil.fillRect(this.xPosition, this.yPosition + this.height - 1, this.width, 1, Management.instance.colorBlue);
 	    } else {
 		font.drawString(this.displayString,
 			((this.xPosition)),

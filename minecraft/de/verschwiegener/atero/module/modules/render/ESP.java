@@ -44,6 +44,7 @@ public class ESP extends Module {
     public void onUpdate() {
 	if (this.isEnabled()) {
 	    super.onUpdate();
+	    setExtraTag("GlowShader");
 	    mc.gameSettings.gammaSetting = oldBrightness;
 
 	    mc.gameSettings.gammaSetting = 10F;

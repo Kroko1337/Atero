@@ -1,25 +1,22 @@
 package de.verschwiegener.atero.friend;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import de.verschwiegener.atero.Management;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FriendManager {
-    
-    private Map<String, String> friends = new LinkedHashMap<>();
-    
-    public void addFriend(String name, String synonym) {
-	friends.putIfAbsent(name, synonym);
-    }
-    public boolean isFriend(String username) {
-	return friends.containsKey(username);
+
+    public CopyOnWriteArrayList<String> friends = new CopyOnWriteArrayList<>();
+
+    public void addFriend(String name) {
+        this.friends.add(name);
     }
 
-    public String getSynonym(String username) {
-	if (isFriend(username)) {
-	    return friends.get(username);
-	}
-	return username;
+    public boolean isFriend(String name) {
+        return this.friends.contains(name) && !Management.instance.modulemgr.getModuleByName("NoFriends").isEnabled();
     }
 
+    public boolean removeFriend(String name) {
+        return friends.remove(name);
+    }
 }

@@ -4,6 +4,7 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventTest;
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.friend.FriendManager;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.modules.movement.Speed;
@@ -14,6 +15,7 @@ import de.verschwiegener.atero.util.chat.ChatUtil;
 import god.buddy.aot.BCompiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -25,7 +27,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,9 +47,11 @@ public class Killaura extends Module {
     private float[] facing;
     private double reach = 0;
     private boolean block;
-    private Setting setting, targetset;
+    public static Setting setting, targetset;
     private TimeUtils timer = new TimeUtils();
+    private long slide;
 
+    private boolean down;
     public Killaura() {
         super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
         instance = this;
@@ -81,7 +87,6 @@ public class Killaura extends Module {
     }
 
     private boolean canAttack(final EntityLivingBase player) {
-
         if (player == Minecraft.thePlayer)
             return false;
 
@@ -105,11 +110,6 @@ public class Killaura extends Module {
         // return false;
         if (bots.contains(player))
             return false;
-        if (player.getName().equalsIgnoreCase("liljoe107"))
-            return false;
-        // if(player)
-        //     if (friends.contains(player))
-        //       return false;
         return true;
     }
 
@@ -145,7 +145,7 @@ public class Killaura extends Module {
             Entity entity = (Entity) object;
             if (entity instanceof EntityLivingBase) {
                 EntityLivingBase player = (EntityLivingBase) entity;
-                if (canAttack(player)) {
+                if (canAttack(player) && !Management.instance.friendmgr.isFriend(player.getName())) {
                     double currentDist = Minecraft.thePlayer.getDistanceToEntity((Entity) player);
                     if (currentDist <= dist) {
                         dist = currentDist;
@@ -308,15 +308,43 @@ public class Killaura extends Module {
     @EventTarget
 
     public void onPre(final EventPreMotionUpdate pre) {
-        if ((target != null)) {
-            if(setting.getItemByName("AutoBlock").isState()){
-                if(mc.thePlayer.ticksExisted % 10 == 0) {
-                    if (Minecraft.thePlayer.getHeldItem() != null)
-                        if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
-                            mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
-                        }
+        if(setting.getItemByName("AutoBlock").isState()) {
+            if(!Killaura.instance.hasTarget()) {
+                if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                    mc.gameSettings.keyBindUseItem.pressed = false;
                 }
             }
+        }
+
+        if ((target != null)) {
+            if(setting.getItemByName("AutoBlock").isState()) {
+                //   if(mc.thePlayer.ticksExisted % 10 == 0) {
+                if (Minecraft.thePlayer.getHeldItem() != null)
+                    if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                        //   mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
+                        if (!setting.getItemByName("Inteligent").isState()) {
+                                mc.gameSettings.keyBindUseItem.pressed = true;
+                            //   }
+
+                        }
+                    }
+                if ((target != null)) {
+                    if (setting.getItemByName("AutoBlock").isState()) {
+                        //   if(mc.thePlayer.ticksExisted % 10 == 0) {
+                        if (Minecraft.thePlayer.getHeldItem() != null)
+                            if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                                //   mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
+                                if (setting.getItemByName("Inteligent").isState()) {
+                                    if (mc.thePlayer.hurtTime != 0) {
+                                        mc.gameSettings.keyBindUseItem.pressed = true;
+                                    }
+                                    //   }
+                                }
+                            }
+                    }
+                }
+            }
+
             facing = Killaura.Intavee(Minecraft.thePlayer, target);
             pre.setYaw(yaw);
             pre.setPitch(pitch);
@@ -466,6 +494,7 @@ public class Killaura extends Module {
 
     public void setup() {
         super.setup();
+
         final ArrayList<SettingsItem> items = new ArrayList<>();
         final ArrayList<String> targetModes = new ArrayList<>();
         targetModes.add("Nearest");
@@ -479,26 +508,72 @@ public class Killaura extends Module {
         items.add(new SettingsItem("PreAimRange", 1.0F, 6.0F, 3.0F, ""));
         items.add(new SettingsItem("KeepSprint", true, ""));
         items.add(new SettingsItem("LegitAttack", false, ""));
+        items.add(new SettingsItem("JumpFix", false, ""));
         items.add(new SettingsItem("AutoAttack", false, ""));
         items.add(new SettingsItem("ThroughWalls", false, ""));
         items.add(new SettingsItem("FakeBlock", true, ""));
-        items.add(new SettingsItem("AutoBlock", false, ""));
+        items.add(new SettingsItem("AutoBlock", false, "Inteligent"));
+        items.add(new SettingsItem("Inteligent", false, ""));
         items.add(new SettingsItem("CorrectMM", false, ""));
+        items.add(new SettingsItem("TargetESP", true, ""));
         items.add(new SettingsItem("RotationSpeed", false, "Speed"));
         items.add(new SettingsItem("Speed", 10F, 180F, 180F, ""));
+
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 
     public void onRender() {
         try {
+            if(setting.getItemByName("TargetESP").isState()) {
+                EntityLivingBase entityLivingBase = target;
+                mc.getRenderManager();
+                double x = (entityLivingBase).prevPosX + ((entityLivingBase).posX - (entityLivingBase).prevPosX) * mc.timer.renderPartialTicks - RenderManager.renderPosX;
+                mc.getRenderManager();
+                double y = (entityLivingBase).prevPosY + ((entityLivingBase).posY - (entityLivingBase).prevPosY) * mc.timer.renderPartialTicks - RenderManager.renderPosY;
+                mc.getRenderManager();
+                double z = (entityLivingBase).prevPosZ + ((entityLivingBase).posZ - (entityLivingBase).prevPosZ) * mc.timer.renderPartialTicks - RenderManager.renderPosZ;
+                Color color = Management.instance.colorBlue;
+                float rad = 0.5F;
+                GL11.glPushMatrix();
+                GL11.glDisable(3553);
+                GL11.glEnable(2848);
+                GL11.glDisable(2929);
+                GL11.glDepthMask(false);
+                GL11.glLineWidth(2.0F);
+                GL11.glBegin(3);
+                float r = 0.003921569F * color.getRed();
+                float g = 0.003921569F * color.getGreen();
+                float b = 0.003921569F * color.getBlue();
+                double pix2 = 6.283185307179586D;
+                if (this.slide < 200L && !this.down) {
+                    this.slide++;
+                } else {
+                    this.down = true;
+                    if (this.slide > 0L)
+                        this.slide--;
+                    if (this.slide == 0L)
+                        this.down = false;
+                }
+                for (int i = 0; i <= 90; i++) {
+                    GL11.glColor3f(r, g, b);
+                    GL11.glVertex3d(x + rad * Math.cos(i * pix2 / 45.0D), y + this.slide * 0.01D, z + rad * Math.sin(i * pix2 / 45.0D));
+                }
+                GL11.glEnd();
+                GL11.glDepthMask(true);
+                GL11.glEnable(2929);
+                GL11.glDisable(2848);
+                GL11.glEnable(3553);
+                GL11.glPopMatrix();
+            }
         } catch (NullPointerException e) {
         }
-    }
+            }
+
 
     @Override
 
     public void onUpdate() {
         super.onUpdate();
-
+        setExtraTag("Switch");
     }
 }

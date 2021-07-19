@@ -55,6 +55,7 @@ public class Velocity extends Module {
             try {
                 Packet p = ppe.getPacket();
                 String modes = setting.getItemByName("VelocityMode").getCurrent();
+                setExtraTag(modes);
                 switch (modes) {
                     case "AAC":
                    //     if (mc.thePlayer.isCollidedHorizontally) {

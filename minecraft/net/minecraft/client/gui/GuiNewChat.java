@@ -91,7 +91,7 @@ public class GuiNewChat extends Gui
                                 int j2 = -i1 * 9;
                                 drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
                                 GlStateManager.enableBlend();
-                                String s = chatline.getChatComponent().getUnformattedText();
+;                                String s = chatline.getChatComponent().getFormattedText();
                                 
                                 //this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
                                 //System.out.println("Line: " + s);
@@ -162,6 +162,7 @@ public class GuiNewChat extends Gui
 
     private void setChatLine(IChatComponent ichatcomponent, int id, int p_146237_3_, boolean p_146237_4_)
     {
+	System.out.println("Line: " + ichatcomponent.getFormattedText());
         if (id != 0)
         {
             this.deleteChatLine(id);

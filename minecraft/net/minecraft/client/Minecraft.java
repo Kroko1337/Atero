@@ -2256,9 +2256,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
                 //midclick friends
                 if (this.objectMouseOver.entityHit instanceof EntityPlayer) {
-                    System.out.println("Entity");
                     if (!Management.instance.friendmgr.isFriend(this.objectMouseOver.entityHit.getName())) {
-                        Management.instance.friendmgr.addFriend(this.objectMouseOver.entityHit.getName(), "");
+                        Management.instance.friendmgr.addFriend(this.objectMouseOver.entityHit.getName());
                         ChatUtil.sendMessageWithPrefix(this.objectMouseOver.entityHit.getName() + " is now your friend");
                     } else {
                         ChatUtil.sendMessageWithPrefix(this.objectMouseOver.entityHit.getName() + " is already your friend");

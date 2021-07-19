@@ -55,6 +55,7 @@ public class Management {
     public String selectedDesign = "AteroDesign";
 
     public Color colorBlue = new Color(0, 161, 249);
+	public Color colorBlue2 = new Color(0, 161, 249);
     public Color colorBlack = new Color(28, 28, 28);
     public Color colorGray = new Color(45, 45, 45);
     
@@ -174,6 +175,8 @@ public class Management {
 	InventoryUtil.addGroups();
 
 	colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
+	colorBlue2 = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST22").getColor();
+
 		String ign = Minecraft.getMinecraft().session.getUsername();
 		this.ircClient = IrcClientFactory.getDefault().createIrcClient(ClientType.ATERO, "UFXaV2gqvMhGZDNX", ign, instance.CLIENT_VERSION);
 		this.ircClient.getApiManager().registerApi(new IrcChatListener());

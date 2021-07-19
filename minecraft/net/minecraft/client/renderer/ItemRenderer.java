@@ -42,7 +42,11 @@ public class ItemRenderer
     /** A reference to the Minecraft object. */
     private final Minecraft mc;
     private ItemStack itemToRender;
-
+    private double Pos = 0;
+    private double BlockX = 0;
+    private double BlockZ = 0;
+    private double BlockY = 0;
+    private double Rotate = 0;
     /**
      * How far the current item has been equipped (0 disequipped and 1 fully up)
      */
@@ -285,7 +289,13 @@ public class ItemRenderer
         GlStateManager.rotate(f * -20.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(f1 * -20.0F, 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);
-        GlStateManager.scale(0.4F, 0.4F, 0.4F);
+        //
+        Pos= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Scale").getCurrentValue();
+        if(!Management.instance.modulemgr.getModuleByName("FirstPersonModify").isEnabled()) {
+            GlStateManager.scale(0.4, 0.4, 0.4);
+        }else {
+            GlStateManager.scale(Pos, Pos, Pos);
+        }
     }
 
     private void func_178098_a(float p_178098_1_, AbstractClientPlayer clientPlayer)
@@ -362,9 +372,15 @@ public class ItemRenderer
                         break;
 
                     case 4:
-                        this.transformFirstPersonItem(0.0f, f1 );
+                        BlockX= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
+                        BlockZ= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
+                        BlockY= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
+                        Rotate= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
+                        this.transformFirstPersonItem(f, 0.0F);
+                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
+                        GlStateManager.translate(0,0.4,0);
+                        GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
                         this.func_178103_d();
-                        GlStateManager.translate(-0.4f, 0.1f, -0.105f);
 
                         break;
 
@@ -375,12 +391,15 @@ public class ItemRenderer
             } else {
                 if (Killaura.instance.hasTarget()) {
                     if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
-
-                            this.transformFirstPersonItem2(f, f1);
-                            this.func_178103_d();
-
-
-
+                        BlockX= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
+                        BlockZ= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
+                        BlockY= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
+                        Rotate= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
+                        this.transformFirstPersonItem(f, 0.0F);
+                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
+                        GlStateManager.translate(0,0.4,0);
+                        GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
+                        this.func_178103_d();
 
                     }else {
                         this.func_178105_d(f1);

@@ -22,7 +22,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -42,8 +41,8 @@ public class InventoryManager extends Module {
     private float delay;
     private Setting setting;
     public InventoryManager() {
-	super("InventoryManager", "InventoryManager", Keyboard.KEY_NONE, Category.Player);
-	instance = this;
+        super("InventoryManager", "InventoryManager", Keyboard.KEY_NONE, Category.Player);
+        instance = this;
     }
     @Override
     public void setup() {
@@ -56,66 +55,66 @@ public class InventoryManager extends Module {
         items.add(new SettingsItem("Sort", true, ""));
         items.add(new SettingsItem("Hotbar", false, "HotbarDelay"));
         items.add(new SettingsItem("HotbarDelay", 0, 500, 0, ""));
-	Management.instance.settingsmgr.addSetting(new Setting(this, items));
-	setting = Management.instance.settingsmgr.getSettingByName(getName());
+        Management.instance.settingsmgr.addSetting(new Setting(this, items));
+        setting = Management.instance.settingsmgr.getSettingByName(getName());
     }
 
     @Override
     public void onEnable() {
-	super.onEnable();
-	setting = Management.instance.settingsmgr.getSettingByName(getName());
-	timer.reset();
+        super.onEnable();
+        setting = Management.instance.settingsmgr.getSettingByName(getName());
+        timer.reset();
     }
 
     @Override
     public void onDisable() {
-	super.onDisable();
+        super.onDisable();
     }
 
     @Override
     public void onUpdate() {
-	super.onUpdate();
-	random = setting.getItemByName("Random").isState();
-	autoarmor = setting.getItemByName("AutoArmor").isState();
-	openInv = setting.getItemByName("OpenInv").isState();
-	hotbar = setting.getItemByName("Hotbar").isState();
-	sort = setting.getItemByName("Sort").isState();
-	delay = setting.getItemByName("Delay").getCurrentValue();
-	hotbarDelay = setting.getItemByName("HotbarDelay").getCurrentValue();
-	if(!(Management.instance.modulemgr.getModuleByName("Cheststealer").isEnabled() || mc.thePlayer.openContainer instanceof ContainerChest)) {
-	    if (openInv) {
-		if (!(mc.currentScreen instanceof GuiContainer)) {
-		    if (hotbar) {
-			runLogic(true);
-		    }
-		    return;
-		}
-	    }
-	    runLogic(false);
-	}
+        super.onUpdate();
+        setExtraTag(""+ setting.getItemByName("Delay").getCurrentValue());
+        random = setting.getItemByName("Random").isState();
+        autoarmor = setting.getItemByName("AutoArmor").isState();
+        openInv = setting.getItemByName("OpenInv").isState();
+        hotbar = setting.getItemByName("Hotbar").isState();
+        sort = setting.getItemByName("Sort").isState();
+        delay = setting.getItemByName("Delay").getCurrentValue();
+        hotbarDelay = setting.getItemByName("HotbarDelay").getCurrentValue();
+
+        if(openInv) {
+            if(!(mc.currentScreen instanceof GuiContainer)) {
+                if(hotbar) {
+                    runLogic(true);
+                }
+                return;
+            }
+        }
+        runLogic(false);
     }
 
     public void runLogic(boolean hotbar) {
-	if (timer.hasReached((hotbar ? hotbarDelay : delay))) {
-	    timer.reset();
-	    ArrayList<Integer> garbageIDs = InventoryUtil.getGarbageItems(hotbar);
-	    if (!garbageIDs.isEmpty()) {
-		if (random) {
-		    Collections.shuffle(garbageIDs);
-		}
-		mc.playerController.windowClick(0, garbageIDs.get(0), 1, 4, mc.thePlayer);
+        if (timer.hasReached((hotbar ? hotbarDelay : delay))) {
+            timer.reset();
+            ArrayList<Integer> garbageIDs = InventoryUtil.getGarbageItems(hotbar);
+            if (!garbageIDs.isEmpty()) {
+                if (random) {
+                    Collections.shuffle(garbageIDs);
+                }
+                mc.playerController.windowClick(0, garbageIDs.get(0), 1, 4, mc.thePlayer);
 
-	    } else {
+            } else {
 
-		if (autoarmor) {
-		    InventoryUtil.putArmor(hotbar);
-		}
-		if(sort) {
-		    InventoryUtil.putInBestSlot(hotbar);
-		}
+                if (autoarmor) {
+                    InventoryUtil.putArmor(hotbar);
+                }
+                if(sort) {
+                    InventoryUtil.putInBestSlot(hotbar);
+                }
 
-	    }
-	}
+            }
+        }
 
     }
 }

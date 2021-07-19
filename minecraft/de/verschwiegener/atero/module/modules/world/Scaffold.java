@@ -7,13 +7,11 @@ import com.darkmagician6.eventapi.events.callables.EventSendPacket;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
-import de.verschwiegener.atero.module.modules.movement.Speed;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.RotationRecode2;
 import de.verschwiegener.atero.util.TimeUtils;
 import de.verschwiegener.atero.util.Util;
-import de.verschwiegener.atero.util.chat.ChatUtil;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -82,17 +80,17 @@ public class Scaffold extends Module {
     @Override
     public void onEnable() {
         try {
-        String mode = setting.getItemByName("RotationModes").getCurrent();
-        switch (mode) {
-            case "WatchdogFast":
-                Util.setSpeed(-0.7);
-                break;
+            String mode = setting.getItemByName("RotationModes").getCurrent();
+            switch (mode) {
+                case "WatchdogFast":
+                    Util.setSpeed(-0.7);
+                    break;
+
+            }
+        } catch (NullPointerException e) {
 
         }
-        }catch (NullPointerException e) {
-
-        }
-  //  Management.instance.modulemgr.getModuleByName("Speed").setEnabled(true);
+        //  Management.instance.modulemgr.getModuleByName("Speed").setEnabled(true);
 
         currentItem = -1;
 
@@ -110,18 +108,19 @@ public class Scaffold extends Module {
     }
 
     public void onDisable() {
-        try{
-        String mode = setting.getItemByName("RotationModes").getCurrent();
-        switch (mode) {
-            case "WatchdogFast":
-                Util.setSpeed(-0.5);
-                break;
+        try {
+            String mode = setting.getItemByName("RotationModes").getCurrent();
+            switch (mode) {
+                case "WatchdogFast":
+                    Util.setSpeed(-0.5);
+                    break;
 
-        }   }catch (NullPointerException e) {
+            }
+        } catch (NullPointerException e) {
 
         }
         mc.timer.timerSpeed = 1F;
-      //  mc.thePlayer.rotationYawHead = +170;
+        //  mc.thePlayer.rotationYawHead = +170;
         //mc.thePlayer.prevRotationPitch = +22;
         switched = false;
         if (mc.thePlayer.inventory.currentItem != currentItem) {
@@ -133,17 +132,19 @@ public class Scaffold extends Module {
 
 
     @Override
-    public void onUpdateClick(){
+    public void onUpdateClick() {
         super.onUpdateClick();
         String modes = setting.getItemByName("TowerModes").getCurrent();
+
         switch (modes) {
+
             case "TP":
                 if (mc.gameSettings.keyBindJump.pressed) {
                     Minecraft.thePlayer.setPosition(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY + 0.6D, Minecraft.thePlayer.posZ);
                     Minecraft.thePlayer.motionY = 0.4D;
                 }
                 break;
-            case  "TimerTP":
+            case "TimerTP":
                 if (mc.gameSettings.keyBindJump.pressed) {
                     Minecraft.thePlayer.setPosition(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY + 0.6D, Minecraft.thePlayer.posZ);
                     Minecraft.thePlayer.motionY = 0.4D;
@@ -162,9 +163,6 @@ public class Scaffold extends Module {
         }
 
     }
-
-
-
 
 
     @EventTarget
@@ -194,7 +192,8 @@ public class Scaffold extends Module {
                 }
             }
             if (switched) {
-                if (mc.thePlayer.inventory.getStackInSlot(currentItem) == null || mc.thePlayer.inventory.getStackInSlot(currentItem).stackSize == 0) {
+                if (mc.thePlayer.inventory.getStackInSlot(currentItem) == null
+                        || mc.thePlayer.inventory.getStackInSlot(currentItem).stackSize == 0) {
                     currentItem = -1;
                     switched = false;
                     return;
@@ -206,9 +205,11 @@ public class Scaffold extends Module {
                     .add((new Vec3(BlockData.getFacing().getDirectionVec())).multi(0.5D));
             if (currentItem != -1 && switched) {
                 //   mc.rightClickMouse();
-                if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer, mc.theWorld, mc.thePlayer.inventory.getStackInSlot(currentItem), BlockData.getPos(), BlockData.getFacing(), hitVec)) {
+                if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer,
+                        mc.theWorld, mc.thePlayer.inventory.getStackInSlot(currentItem),
+                        BlockData.getPos(), BlockData.getFacing(), hitVec)) {
                     mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
-                    if(setting.getItemByName("Swing").isState()) {
+                    if (setting.getItemByName("Swing").isState()) {
                         mc.thePlayer.swingItem();
                     }
                 }
@@ -230,19 +231,19 @@ public class Scaffold extends Module {
                     break;
                 case "NCP":
                     if (mc.gameSettings.keyBindJump.pressed) {
-                            mc.timer.timerSpeed = 1.0F;
-                             if (timer.hasReached(1500)) {
-                               timer.reset();
-                          } else if (mc.thePlayer.ticksExisted % 3 == 0)
-                              mc.thePlayer.motionY = 0.4196;
-                        }
-                           timer.reset();
+                        mc.timer.timerSpeed = 1.0F;
+                        if (timer.hasReached(1500)) {
+                            timer.reset();
+                        } else if (mc.thePlayer.ticksExisted % 3 == 0)
+                            mc.thePlayer.motionY = 0.4196;
+                    }
+                    timer.reset();
 
                     break;
                 case "Legit":
                     if (mc.gameSettings.keyBindJump.pressed) {
                         mc.timer.timerSpeed = 1.0F;
-                        if(mc.thePlayer.onGround) {
+                        if (mc.thePlayer.onGround) {
                             mc.thePlayer.motionY = 0.42F;
                         }
                     }
@@ -251,16 +252,15 @@ public class Scaffold extends Module {
         }
 
 
-
-           //     if (mc.gameSettings.keyBindJump.pressed) {
-                //    mc.timer.timerSpeed = 1.0F;
-              //      if (timer.hasReached(1500)) {
-                //        timer.reset();
-                //    } else if (mc.thePlayer.ticksExisted % 3 == 0)
-                 //       mc.thePlayer.motionY = 0.4196;
-               // }
-             //   timer.reset();
-           // }
+        //     if (mc.gameSettings.keyBindJump.pressed) {
+        //    mc.timer.timerSpeed = 1.0F;
+        //      if (timer.hasReached(1500)) {
+        //        timer.reset();
+        //    } else if (mc.thePlayer.ticksExisted % 3 == 0)
+        //       mc.thePlayer.motionY = 0.4196;
+        // }
+        //   timer.reset();
+        // }
 
         Minecraft.getMinecraft().thePlayer.setSprinting(false);
     }
@@ -299,12 +299,14 @@ public class Scaffold extends Module {
         final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
 
         String mode = setting.getItemByName("RotationModes").getCurrent();
+        setExtraTag(mode);
+
         switch (mode) {
             case "NCP":
                 mc.timer.timerSpeed = 1;
-              //  if(!mc.thePlayer.onGround) {
-                    pre.setYaw(rotation[0]);
-               // }
+                //  if(!mc.thePlayer.onGround) {
+                pre.setYaw(rotation[0]);
+                // }
                 lastYaw = rotation[0];
                 pre.setPitch(rotation[1]);
                 lastPitch = (rotation[1]);
@@ -374,9 +376,9 @@ public class Scaffold extends Module {
     }
 
     private Scaffold.BlockData find(Vec3 offset3) {
-if(setting.getItemByName("SameY").isState() && mc.thePlayer.onGround && !Management.instance.modulemgr.getModuleByName("Speed").isEnabled()){
+        if (setting.getItemByName("SameY").isState() && mc.thePlayer.onGround && !Management.instance.modulemgr.getModuleByName("Speed").isEnabled()) {
 
-}
+        }
         double x = Minecraft.getMinecraft().thePlayer.posX;
         double y = setting.getItemByName("SameY").isState() ? posY : mc.thePlayer.posY;
 

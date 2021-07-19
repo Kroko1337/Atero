@@ -13,6 +13,16 @@ public abstract class Module implements Wrapper{
 	int key;
 	public final Minecraft mc = Minecraft.getMinecraft();
 
+	public String getExtraTag() {
+		return extraTag == null ? name : name + " \2477"+ extraTag;
+	}
+
+	public void setExtraTag(String extraTag) {
+		this.extraTag = extraTag;
+	}
+
+	public String extraTag;
+
 	String name, description;
 
 	/**

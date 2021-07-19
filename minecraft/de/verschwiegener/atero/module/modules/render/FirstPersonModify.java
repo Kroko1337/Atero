@@ -16,11 +16,12 @@ import god.buddy.aot.BCompiler;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Design extends Module {
+public class FirstPersonModify extends Module {
     TimeUtils timeUtils;
     public static Setting setting;
-    public Design() {
-        super("Design", "Design", Keyboard.KEY_NONE, Category.Render);
+    private double sslow = 0;
+    public FirstPersonModify() {
+        super("FirstPersonModify", "FirstPersonModify", Keyboard.KEY_NONE, Category.Render);
     }
 
     public void onEnable() {
@@ -32,17 +33,25 @@ public class Design extends Module {
     }
 
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+    @Override
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-            setExtraTag("Normal");
+
+            sslow = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Slow").getCurrentValue();
+           setExtraTag("Delay "  + Math.round(sslow));
         }
     }
     public void setup() {
         final ArrayList<SettingsItem> items = new ArrayList<>();
         ArrayList<String> modes = new ArrayList<>();
-        items.add(new SettingsItem("Alpha", 0F, 255F, 100F, ""));
-        items.add(new SettingsItem("Design", modes, "Dark", "", ""));
+        items.add(new SettingsItem("Slow", 6F, 50, 6, ""));
+        items.add(new SettingsItem("Scale", 0.1F, 0.9F, 0.3F, ""));
+        items.add(new SettingsItem("BlockHitX", 0.01F, 80F, 0.05F, ""));
+        items.add(new SettingsItem("BlockHitZ", 0.1F, 80F, 0.3F, ""));
+        items.add(new SettingsItem("BlockHitY", 0.1F, 80F, 0.3F, ""));
+        items.add(new SettingsItem("Rotate", 0.1F, 100F, 70F, ""));
+
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 

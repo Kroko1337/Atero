@@ -1,10 +1,7 @@
 package net.minecraft.client.multiplayer;
 
 import de.verschwiegener.atero.Management;
-import de.verschwiegener.atero.module.modules.world.Cheststealer;
-import de.verschwiegener.atero.util.inventory.InventoryUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -404,11 +401,6 @@ public class PlayerControllerMP
             if (this.currentGameType != WorldSettings.GameType.SPECTATOR)
             {
                 IBlockState iblockstate = worldIn.getBlockState(hitPos);
-                
-                if(iblockstate.getBlock() instanceof BlockChest) {
-                    Cheststealer.instance.currentChest = hitPos;
-                    InventoryUtil.blacklistSlot.clear();
-                }
 
                 if ((!player.isSneaking() || player.getHeldItem() == null) && iblockstate.getBlock().onBlockActivated(worldIn, hitPos, iblockstate, player, side, f, f1, f2))
                 {

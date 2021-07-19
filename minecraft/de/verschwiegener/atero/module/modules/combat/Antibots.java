@@ -31,6 +31,7 @@ public class Antibots extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
+            setExtraTag("Mineplex");
             for (final Object entity : mc.theWorld.getLoadedEntityList())
                 if (entity instanceof EntityPlayer)
                     if ((isBot((EntityPlayer) entity) || ((EntityPlayer) entity).isInvisible()) && entity != mc.thePlayer) {

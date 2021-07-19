@@ -59,6 +59,7 @@ public class AutoEagle extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
+            setExtraTag("Legit");
         }
     }
 
@@ -82,7 +83,7 @@ public class AutoEagle extends Module {
         if (mc.gameSettings.keyBindForward.pressed) {
             final float yaw = (float) MathHelper.getRandomDoubleInRange(new Random(), 178, 180);
             if (setting.getItemByName("180").isState()) {
-                pre.setYaw((mc.thePlayer.rotationYaw + yaw));
+                pre.setYaw((mc.thePlayer.rotationYaw + 180));
             } else {
                 pre.setYaw((mc.thePlayer.rotationYaw + 175));
             }

@@ -1,6 +1,9 @@
 package net.minecraft.client.model;
 
 import de.verschwiegener.atero.Management;
+import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.util.TimeUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -178,7 +181,15 @@ public class ModelBiped extends ModelBase
         }
 
         this.bipedLeftArm.rotateAngleY = 0.0F;
+        if ((entityIn.equals(Minecraft.getMinecraft().thePlayer) && Minecraft.getMinecraft().gameSettings.thirdPersonView > 0) && !Killaura.instance.hasTarget() && Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && !Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
 
+           // this.bipedHead.rotateAngleX = 0.5f;
+         //   this.bipedHead.rotateAngleY = (float) 1;
+        //    this.bipedRightArm.rotateAngleX = (float) 4.5;
+        //    this.bipedRightArm.rotateAngleY = (float) -0.8;
+         //   this.bipedLeftArm.rotateAngleX = (float) 4.5;
+         //   this.bipedLeftArm.rotateAngleY = (float) -1.25;
+        }
         if (this.swingProgress > -9990.0F)
         {
             float f = this.swingProgress;

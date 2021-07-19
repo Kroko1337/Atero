@@ -73,6 +73,7 @@ public class Speed extends Module {
 		modes.add("Mineplex");
 		//TODO Child Mode setting fixen im Speed
 		//So das wenn man Cubecraft auswählt, der CCBoost slider kommt
+		items.add(new SettingsItem("DamageBoost", true, ""));
 		items.add(new SettingsItem("Modes", modes, "Watchdog", "CCBoost", "Watchdog"));
 		items.add(new SettingsItem("WatchdogBoost", 1.0F, 1.4F, 1.0F, ""));
 		items.add(new SettingsItem("High", 0.12F, 0.50F, 0.42F, ""));
@@ -84,30 +85,37 @@ public class Speed extends Module {
 		if (this.isEnabled()) {
 			super.onUpdate();
 			String mode = setting.getItemByName("Modes").getCurrent();
+			setExtraTag(mode);
 			switch (mode) {
 				case "HypixelOnGround":
 					hypixelOnGround();
 					break;
 
 				case "Watchdog":
-
 					mc.thePlayer.setSprinting(true);
 					boostCC = setting.getItemByName("WatchdogBoost").getCurrentValue();
 					boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if ((mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed || mc.gameSettings.keyBindBack.pressed) && mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = true;
+						mc.timer.timerSpeed = (float) 1;
 					} else {
 						mc.gameSettings.keyBindJump.pressed = false;
 							mc.timer.timerSpeed = (float) boostCC;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
 						double direction = getDirection();
-						mc.thePlayer.motionX = -Math.sin(direction) * 1 * currentSpeed;
-						mc.thePlayer.motionZ = Math.cos(direction) * 1 * currentSpeed;
-
+						final float Hypixel = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.999, 1);
+						mc.thePlayer.motionX = -Math.sin(direction) * Hypixel * currentSpeed;
+						mc.thePlayer.motionZ = Math.cos(direction) * Hypixel * currentSpeed;
+						if(setting.getItemByName("DamageBoost").isState()){
+						if(mc.thePlayer.hurtTime!= 0 && Killaura.instance.hasTarget() && !mc.thePlayer.isBurning() && !mc.thePlayer.isInLava()) {
+							//mc.timer.timerSpeed = 50F;
+							//Util.setSpeed(0.4);
+						}else{
+							mc.timer.timerSpeed = (float) boostCC;
+						}
+						}
 					}
-
 					break;
-
 				case "Cubecraft1vs1":
 					boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if (mc.thePlayer.onGround) {
@@ -121,13 +129,18 @@ public class Speed extends Module {
 						mc.thePlayer.motionX = -Math.sin(direction) * speed * currentSpeed;
 						mc.thePlayer.motionZ = Math.cos(direction) * speed * currentSpeed;
 
+						//if(Management.instance.modulemgr.getModuleByName("TargetStrafe").)
+
 					}
 
 					break;
 				case "Vanilla":
-
+					mc.thePlayer.setSprinting(true);
 					//	mc.timer.timerSpeed =2.5F;
-							Util.setSpeed( 1);
+					if(mc.thePlayer.onGround) {
+						mc.thePlayer.motionY = 0.42F;
+					}
+							Util.setSpeed(0.3);
 
 
 					break;
@@ -346,7 +359,7 @@ public class Speed extends Module {
 	public void onUpdate(EventReceivedPacket ppe) {
 		Packet p = ppe.getPacket();
 		//mc.getNetHandler().addToSendQueue(new C13PacketPlayerAbilities());
-		if (p instanceof S08PacketPlayerPosLook) {
+	//	if (p instanceof S08PacketPlayerPosLook) {
 
 				//	Management.instance.modulemgr.getModuleByName("Speed").setEnabled(false);
 					mc.timer.timerSpeed = 1F;
@@ -354,7 +367,7 @@ public class Speed extends Module {
 						ppe.setCancelled(true);
 
 
-			}
+		//	}
 		}
 
 	}

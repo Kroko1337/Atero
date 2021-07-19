@@ -55,7 +55,7 @@ public class TargetStrafe extends Module {
             if (strafe) {
                 float[] rotations = getRotations(Killaura.instance.getTarget());
                 final float Strafe = (float) MathHelper.getRandomDoubleInRange(new Random(), 1.5, 2);
-                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= Strafe)
+                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= 1)
                     setSpeed(event, moveSpeed, rotations[0], direction, 0);
                 else setSpeed(event, moveSpeed, rotations[0], direction, 1);
             }
@@ -67,11 +67,13 @@ public class TargetStrafe extends Module {
 
     @EventTarget
     private void onUpdate(PlayerMoveEvent event) {
-        doStrafeAtSpeed(event, getSpeed());
+
+        doStrafeAtSpeed(event, getSpeed(event));
     }
 
 
     public void  onUpdate() {
+        setExtraTag("Motion");
         space = (Keyboard.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindJump.getKeyCode()) && Killaura.instance.hasTarget());
 
      if(Minecraft.getMinecraft().gameSettings.keyBindRight.pressed){
@@ -92,8 +94,11 @@ public class TargetStrafe extends Module {
     public boolean canStrafe() {
         return Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && Killaura.instance.hasTarget();
     }
-    public static double getSpeed() {
-        return Math.sqrt(Minecraft.getMinecraft().thePlayer.motionX * Minecraft.getMinecraft().thePlayer.motionX + Minecraft.getMinecraft().thePlayer.motionZ * Minecraft.getMinecraft().thePlayer.motionZ);
+    public static double getSpeed(PlayerMoveEvent em) {
+        double x = em.getX();
+        double z = em.getZ();
+
+        return Math.sqrt(x * x + z * z);
     }
     public static void setSpeed(PlayerMoveEvent moveEvent, double moveSpeed, float pseudoYaw, double pseudoStrafe, double pseudoForward) {
         double forward = pseudoForward;

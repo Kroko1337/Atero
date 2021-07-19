@@ -60,12 +60,12 @@ public class Util {
 
 			@Override
 			public int compare(Module o1, Module o2) {
-				if (font.getFontrenderer().getStringWidth(o1.getName()) > font.getFontrenderer()
-						.getStringWidth(o2.getName())) {
+				if (font.getFontrenderer().getStringWidth(o1.getExtraTag()) > font.getFontrenderer()
+						.getStringWidth(o2.getExtraTag())) {
 					return -1;
 				}
-				if (font.getFontrenderer().getStringWidth(o1.getName()) < font.getFontrenderer()
-						.getStringWidth(o2.getName())) {
+				if (font.getFontrenderer().getStringWidth(o1.getExtraTag()) < font.getFontrenderer()
+						.getStringWidth(o2.getExtraTag())) {
 					return 1;
 				}
 				return 0;

@@ -107,7 +107,7 @@ public class SettingsItem {
 	
 	public enum Category{
 
-		SLIDER, COMBO_BOX, CHECKBOX, TEXT_FIELD, COLOR_PICKER;
+		SLIDER, COMBO_BOX, CHECKBOX, TEXT_FIELD, COLOR_PICKER, COLOR_PICKER2;
 		
 	}
 

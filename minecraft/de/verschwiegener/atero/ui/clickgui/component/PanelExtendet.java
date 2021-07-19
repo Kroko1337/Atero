@@ -83,6 +83,7 @@ public class PanelExtendet {
             case COLOR_PICKER:
         	offset = 85;
         	break;
+
         }
         for (int i = count; i < components.size(); i++) {
             try {

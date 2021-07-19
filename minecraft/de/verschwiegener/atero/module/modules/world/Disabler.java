@@ -43,7 +43,7 @@ public class Disabler extends Module {
     @EventTarget
     public void onUpdate(EventReceivedPacket ppe) {
         Packet p = ppe.getPacket();
-
+setExtraTag("Watchdog");
 
 
             if (p instanceof C13PacketPlayerAbilities && !mc.thePlayer.isUsingItem()) {

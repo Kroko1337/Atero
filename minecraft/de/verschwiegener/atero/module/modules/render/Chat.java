@@ -46,6 +46,7 @@ public class Chat extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
+            setExtraTag("Broke");
 
         }
     }

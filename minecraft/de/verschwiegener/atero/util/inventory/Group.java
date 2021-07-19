@@ -30,189 +30,162 @@ public class Group implements Wrapper{
     private ArrayList<Integer> inventoryIDs = new ArrayList<>();
 
     public Group(String name, int algorithm, int preferedCell, int maxCellAmount, Integer[] ids) {
-	this.name = name;
-	this.algorithm = algorithm;
-	this.preferedCell = preferedCell;
-	this.maxCellAmount = maxCellAmount;
-	this.itemIDs = new ArrayList<>();
-	itemIDs.addAll(Arrays.asList(ids));
+        this.name = name;
+        this.algorithm = algorithm;
+        this.preferedCell = preferedCell;
+        this.maxCellAmount = maxCellAmount;
+        this.itemIDs = new ArrayList<>();
+        itemIDs.addAll(Arrays.asList(ids));
     }
     public ArrayList<Integer> getItemIDs() {
-	return itemIDs;
+        return itemIDs;
     }
     public void reset() {
-	inventoryIDs.clear();
+        inventoryIDs.clear();
     }
 
     public ArrayList<Integer> getBest() {
-	ArrayList<Integer> trashIds = new ArrayList<>();
-	if (!inventoryIDs.isEmpty()) {
-	    if (inventoryIDs.size() > 0) {
-		switch (algorithm) {
-		case 0:
-		    Collections.sort(inventoryIDs, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-			    ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o1).getStack();
-			    ItemStack beststack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o2).getStack();
-			    if (itemStack.stackSize != beststack.stackSize) {
-				if (itemStack.stackSize >= beststack.stackSize) {
-				    return -1;
-				} else {
-				    return 0;
-				}
-			    }
-			    return 0;
-			}
-		    });
-		    break;
-		case 1:
-		    Collections.sort(inventoryIDs, new Comparator<Integer>() {
+        ArrayList<Integer> trashIds = new ArrayList<>();
+        if (!inventoryIDs.isEmpty()) {
+            if (inventoryIDs.size() > 0) {
+                switch (algorithm) {
+                    case 0:
+                        Collections.sort(inventoryIDs, new Comparator<Integer>() {
+                            @Override
+                            public int compare(Integer o1, Integer o2) {
+                                ItemStack itemStack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o1)
+                                        .getStack();
+                                ItemStack beststack = Minecraft.getMinecraft().thePlayer.inventoryContainer.getSlot(o2)
+                                        .getStack();
+                                if (itemStack.stackSize > beststack.stackSize) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+                        break;
+                    case 1:
+                        Collections.sort(inventoryIDs, new Comparator<Integer>() {
 
-			@Override
-			public int compare(Integer o1, Integer o2) {
-			    if (compareDamage(o1, o2)) {
-				return -1;
-			    } else {
-				return 1;
-			    }
-			}
-		    });
-		    break;
-		case 2:
-		    Collections.sort(inventoryIDs, new Comparator<Integer>() {
+                            @Override
+                            public int compare(Integer o1, Integer o2) {
+                                if (compareDamage(o1, o2)) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+                        break;
+                    case 2:
+                        Collections.sort(inventoryIDs, new Comparator<Integer>() {
 
-			@Override
-			public int compare(Integer o1, Integer o2) {
-			    if (compareArmor(o1, o2)) {
-				return -1;
-			    } else {
-				return 1;
-			    }
-			}
-		    });
-		    break;
-		}
-	    }
-	    
-	    if (inventoryIDs.size() > maxCellAmount && maxCellAmount != 0) {
-		for (int i = maxCellAmount; i < inventoryIDs.size(); i++) {
-		    trashIds.add(inventoryIDs.get(i));
-		}
-	    }
-	}
-	return trashIds;
+                            @Override
+                            public int compare(Integer o1, Integer o2) {
+                                if (compareArmor(o1, o2)) {
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }
+                            }
+                        });
+                        break;
+                }
+            }
+
+            if (inventoryIDs.size() > maxCellAmount && maxCellAmount != 0) {
+                for (int i = maxCellAmount; i < inventoryIDs.size(); i++) {
+                    trashIds.add(inventoryIDs.get(i));
+                }
+            }
+        }
+        return trashIds;
     }
-    
-    public boolean compareBestItems(ItemStack item1) {
-	if (!inventoryIDs.isEmpty() && inventoryIDs.size() > 0) {
-	    System.out.println("Algo: " + algorithm);
-	    ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(inventoryIDs.get(0)).getStack();
-	    switch (algorithm) {
-	    case 0:
-		if (maxCellAmount == 0 || inventoryIDs.size() < maxCellAmount) {
-		    return true;
-		}
-		break;
-	    case 1:
-		return compareDamage(item1, item2);
-	    case 2:
-		return compareArmor(item1, item2);
-	    default:
-		return false;
-	    }
-	    return false;
-	} else {
-	    return true;
-	}
-    }
-    
+
     public void putArmor(boolean hotbar) {
-	String[] armorType = new String[] { "item.helmet", "item.chestplate", "item.leggings", "item.boots" };
-	if (algorithm == 2) {
-	    if (!inventoryIDs.isEmpty()) {
-		ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(inventoryIDs.get(0)).getStack();
-		String name = itemStack.getItem().getUnlocalizedName();
-		int offset = 0;
-		for (String str : armorType) {
-		    if (name.startsWith(str)) {
-			offset = Arrays.asList(armorType).indexOf(str);
-		    }
-		}
+        String[] armorType = new String[] { "item.helmet", "item.chestplate", "item.leggings", "item.boots" };
+        if (algorithm == 2) {
+            if (!inventoryIDs.isEmpty()) {
+                ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(inventoryIDs.get(0)).getStack();
+                String name = itemStack.getItem().getUnlocalizedName();
+                int offset = 0;
+                for (String str : armorType) {
+                    if (name.startsWith(str)) {
+                        offset = Arrays.asList(armorType).indexOf(str);
+                    }
+                }
 
-		ItemStack armorStack = Minecraft.thePlayer.inventoryContainer.getSlot(offset + 5).getStack();
+                ItemStack armorStack = Minecraft.thePlayer.inventoryContainer.getSlot(offset + 5).getStack();
 
-		if (armorStack == null) {
-		    this.mc.playerController.windowClick(0, offset + 5, 1, 4, Minecraft.thePlayer);
-		    this.mc.playerController.windowClick(0, inventoryIDs.get(0), 0, 1, Minecraft.thePlayer);
-		} else {
-		    if (compareArmor(itemStack, armorStack)) {
-			if(!hotbar) {
-			    this.mc.playerController.windowClick(0, offset + 5, 1, 4, Minecraft.thePlayer);
-			    this.mc.playerController.windowClick(0, inventoryIDs.get(0), 0, 1, Minecraft.thePlayer);
-			}
-		    }else if(itemStack != armorStack){
-			mc.playerController.windowClick(0, inventoryIDs.get(0), 1, 4, mc.thePlayer);
-		    }
-		}
-	    }
-	}
+                if (armorStack == null) {
+                    this.mc.playerController.windowClick(0, offset + 5, 1, 4, Minecraft.thePlayer);
+                    this.mc.playerController.windowClick(0, inventoryIDs.get(0), 0, 1, Minecraft.thePlayer);
+                } else {
+                    if (compareArmor(itemStack, armorStack)) {
+                        if(!hotbar) {
+                            this.mc.playerController.windowClick(0, offset + 5, 1, 4, Minecraft.thePlayer);
+                            this.mc.playerController.windowClick(0, inventoryIDs.get(0), 0, 1, Minecraft.thePlayer);
+                        }
+                    }else if(itemStack != armorStack){
+                        mc.playerController.windowClick(0, inventoryIDs.get(0), 1, 4, mc.thePlayer);
+                    }
+                }
+            }
+        }
     }
-    
+
     public void putInBestSlot(boolean hotbar) {
-	if(hotbar) {
-	    if(preferedCell > 1 || preferedCell < 9)
-		return;
-	}
-	if(algorithm == 2 || inventoryIDs.isEmpty())
-	    return;
-	this.mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, inventoryIDs.get(0), preferedCell - 1, 2, Minecraft.thePlayer);
+        if(hotbar) {
+            if(preferedCell > 1 || preferedCell < 9)
+                return;
+        }
+        if(algorithm == 2 || inventoryIDs.isEmpty())
+            return;
+        this.mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, inventoryIDs.get(0), preferedCell - 1, 2, Minecraft.thePlayer);
     }
-    
+
     private boolean compareDamage(int id, int id2) {
-	ItemStack item1 = mc.thePlayer.inventoryContainer.getSlot(id).getStack();
-	ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(id2).getStack();
-	return compareArmor(item1, item2);
-    }
-    
-    private boolean compareDamage(ItemStack item1, ItemStack item2) {
-	float damageWeapon1 = item1.getItem() instanceof ItemSword ? getDamageEnchant(item1) : ((ItemTool) item1.getItem()).getDamageVsEntity();
+        ItemStack item1 = mc.thePlayer.inventoryContainer.getSlot(id).getStack();
+        ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(id2).getStack();
+
+        float damageWeapon1 = item1.getItem() instanceof ItemSword ? getDamageEnchant(item1) : ((ItemTool) item1.getItem()).getDamageVsEntity();
         float damageWeapon2 = item2.getItem() instanceof ItemSword ? getDamageEnchant(item2) : ((ItemTool) item2.getItem()).getDamageVsEntity();
 
         return damageWeapon1 > damageWeapon2 || (damageWeapon1 == damageWeapon2 && item1.getItemDamage() < item2.getItemDamage());
     }
-    
+
     private boolean compareArmor(int id, int id2) {
-	ItemStack item1 = mc.thePlayer.inventoryContainer.getSlot(id).getStack();
-	ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(id2).getStack();
-	return compareArmor(item1, item2);
+        ItemStack item1 = mc.thePlayer.inventoryContainer.getSlot(id).getStack();
+        ItemStack item2 = mc.thePlayer.inventoryContainer.getSlot(id2).getStack();
+        return compareArmor(item1, item2);
     }
 
     private boolean compareArmor(ItemStack item1, ItemStack item2) {
-	if (item2 != null) {
-	    ItemArmor armor = (ItemArmor) item1.getItem();
-	    ItemArmor armor2 = (ItemArmor) item2.getItem();
-	    float damageReduceAmount = armor.damageReduceAmount
-		    + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[] { item1 }, DamageSource.generic);
-	    float damageReduceAmount2 = armor2.damageReduceAmount
-		    + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[] { item2 }, DamageSource.generic);
-	    if (damageReduceAmount > damageReduceAmount2
-		    || (damageReduceAmount == damageReduceAmount2 && item1.getItemDamage() < item2.getItemDamage())) {
-		return true;
-	    }
-	    return false;
-	}
-	return true;
+        if (item2 != null) {
+            ItemArmor armor = (ItemArmor) item1.getItem();
+            ItemArmor armor2 = (ItemArmor) item2.getItem();
+            float damageReduceAmount = armor.damageReduceAmount
+                    + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[] { item1 }, DamageSource.generic);
+            float damageReduceAmount2 = armor2.damageReduceAmount
+                    + EnchantmentHelper.getEnchantmentModifierDamage(new ItemStack[] { item2 }, DamageSource.generic);
+            if (damageReduceAmount > damageReduceAmount2
+                    || (damageReduceAmount == damageReduceAmount2 && item1.getItemDamage() < item2.getItemDamage())) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     private float getDamageEnchant(ItemStack stack) {
-	ItemSword sword = (ItemSword) stack.getItem();
-	float sharpness = (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25F;
-	float fireAspect = (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack) * 1.5F;
-	return sword.getDamageVsEntity() + sharpness + fireAspect;
+        ItemSword sword = (ItemSword) stack.getItem();
+        float sharpness = (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.sharpness.effectId, stack) * 1.25F;
+        float fireAspect = (float) EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack) * 1.5F;
+        return sword.getDamageVsEntity() + sharpness + fireAspect;
     }
     public ArrayList<Integer> getInventoryIDs() {
-	return inventoryIDs;
+        return inventoryIDs;
     }
 
 }

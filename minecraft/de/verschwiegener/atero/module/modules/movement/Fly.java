@@ -36,6 +36,7 @@ super.onEnable();
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
+            setExtraTag("AntiVanillaKick");
             double value = 0.1;
             mc.timer.timerSpeed = 1F;
             if(mc.thePlayer.ticksExisted % 15 == 0){

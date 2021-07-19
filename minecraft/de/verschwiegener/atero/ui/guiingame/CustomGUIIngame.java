@@ -7,7 +7,9 @@ import de.verschwiegener.atero.audio.Stream;
 import de.verschwiegener.atero.design.font.Font;
 import de.verschwiegener.atero.design.font.Fontrenderer;
 import de.verschwiegener.atero.font.FontManager;
+import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
+import de.verschwiegener.atero.module.modules.combat.Antibots;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
 import de.verschwiegener.atero.module.modules.render.Design;
 import de.verschwiegener.atero.settings.Setting;
@@ -42,7 +44,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 public class CustomGUIIngame {
@@ -60,38 +62,60 @@ public class CustomGUIIngame {
     public static int posY = 23;
     public static double width = 75;
     public static double height = 75;
-
+	private static double Alpha = 0;
     public static void drawArrayList() {
 	Fontrenderer fontRenderer = Management.instance.fontmgr.getFontByName("ArrayListFont").getFontrenderer();
 	if (Management.instance.modulechange) {
 	    Management.instance.modulechange = false;
-	    Util.sortModuleList(Management.instance.modulemgr.modules,
-		    Management.instance.fontmgr.getFontByName("ArrayListFont"));
+	   // Util.sortModuleList(Management.instance.modulemgr.modules,
+		//    Management.instance.fontmgr.getFontByName("ArrayListFont"));
+		final List<Module> moduleList = ModuleManager.modules;
+		int moduleIndex = 0;
+		List<Module> activeList = new ArrayList<>();
+		for (Module module : moduleList) {
+			if (module.isEnabled())
+				activeList.add(module);
+		}
+		Collections.sort(ModuleManager.getModules(), new Comparator<Module>() {
+			public int compare(Module mod1, Module mod2) {
+				if (FontManager.VistolSans_Light.getStringWidth(mod1.getExtraTag()) > FontManager.VistolSans_Light.getStringWidth(mod2.getExtraTag()))
+					return -1;
+				if (FontManager.VistolSans_Light.getStringWidth(mod1.getExtraTag()) < FontManager.VistolSans_Light.getStringWidth(mod2.getExtraTag()))
+					return 1;
+				return 0;
+			}
+
+		});
+	    System.out.println("HEY");
 	}
 	int yoffset = 0;
 	int xoffset = 3;
 	int rainbow = 0;
+	int index = 0;
 	ModuleManager mm = Management.instance.modulemgr;
 	ScaledResolution sr = new ScaledResolution(mc);
 	for (int i = 0; i < Management.instance.modulemgr.modules.size(); i++) {
 	    if (Management.instance.modulemgr.modules.get(i).isEnabled()) {
+
+			Alpha = Management.instance.settingsmgr.getSettingByName("Design").getItemByName("Alpha").getCurrentValue();
 		RenderUtil.fillRect(
-			((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()))
+			((sr.getScaledWidth()) - FontManager.VistolSans_Light.getStringWidth(mm.modules.get(i).getExtraTag()))
 				- xoffset - 2,
-			yoffset, xoffset + FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()),
-			FontManager.ROBOTOTHIN_20.getFontHeight() + 4, new Color(0, 0, 0, 170));
+			yoffset, xoffset + FontManager.VistolSans_Light.getStringWidth(mm.modules.get(i).getExtraTag()),
+			FontManager.VistolSans_Light.getFontHeight() + 4, new Color(0,0,0, (int) Alpha));
 		// FontManager.ROBOTOTHIN_20.drawString(mm.modules.get(i).getName(),
 		// ((sr.getScaledWidth()) -
 		// FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) -
 		// xoffset +1, yoffset + 2, rainbow2( 500 ,rainbow *2 ), true);
-		FontManager.ROBOTOTHIN_20.drawString(mm.modules.get(i).getName(),
-			((sr.getScaledWidth()) - FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName()))
-				- xoffset - 1,
-			yoffset + 2, Color.WHITE.getRGB(), false);
-
-		rainbow++;
-		RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, FontManager.ROBOTOTHIN_20.getFontHeight() + 4,
-			Management.instance.colorBlue);
+		//FontManager.VistolSans_Light.drawString(mm.modules.get(i).getExtraTag(),
+		//	((sr.getScaledWidth()) - FontManager.VistolSans_Light.getStringWidth(mm.modules.get(i).getExtraTag())) - xoffset - 1, yoffset + 2, getGradientOffset(new Color(31, 191, 186),new Color(221, 7, 232), index / 12.4).getRGB(), true);
+			FontManager.VistolSans_Light.drawString(mm.modules.get(i).getExtraTag(),
+					((sr.getScaledWidth()) - FontManager.VistolSans_Light.getStringWidth(mm.modules.get(i).getExtraTag())) - xoffset - 1, yoffset + 2, getGradientOffset(new Color(Management.instance.colorBlue.getRGB()),new Color(Management.instance.colorBlue2.getRGB()), index / 12.4).getRGB(), true);
+		index++;
+		//RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, FontManager.ROBOTOTHIN_20.getFontHeight() + 3,
+		//		getGradientOffset(new Color(31, 191, 186),new Color(221, 7, 232), index / 12.4));
+			RenderUtil.fillRect(sr.getScaledWidth() - 2, yoffset, 2, FontManager.ROBOTOTHIN_20.getFontHeight() + 3,
+					getGradientOffset(new Color(Management.instance.colorBlue.getRGB()),new Color(Management.instance.colorBlue2.getRGB()), index / 12.4));
 		// RenderUtil.fillRect(((sr.getScaledWidth()) -
 		// FontManager.ROBOTOTHIN_20.getStringWidth(mm.modules.get(i).getName())) -
 		// xoffset - 3, yoffset, xoffset +
@@ -103,13 +127,14 @@ public class CustomGUIIngame {
 		// - xoffset,
 		// yoffset,
 		// Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor().getRGB());
-		yoffset += FontManager.ROBOTOTHIN_20.getFontHeight() + 4;
+		yoffset += FontManager.VistolSans_Light.getFontHeight() + 4;
 
 	    }
 	}
     }
 
     public static void renderRadar(int mouseX, int mouseY) {
+		int index = 0;
 	if (dragging) {
 	    CustomGUIIngame.mouseX = mouseX - lastMouseX;
 	    CustomGUIIngame.mouseY = mouseY - lastMouseY;
@@ -124,7 +149,8 @@ public class CustomGUIIngame {
 	// .5, 0.5, new Color(100,100,255,160).getRGB(), new
 	// Color(100,100,255,160).getRGB(), true);
 	drawBorderedRect(posX, posY + 2, posX + width, posY + height - 2, 0.3, new Color(22, 22, 22, 255).getRGB(),
-		new Color(255, 255, 255, 30).getRGB(), true);
+			getGradientOffset(new Color(Management.instance.colorBlue.getRGB()),new Color(Management.instance.colorBlue2.getRGB()), index / 12.4).getRGB(), true);
+	index++;
 	// RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width - .5, posY + 4.5,
 	// new Color(100,100,255,160).getRGB());
 
@@ -139,7 +165,7 @@ public class CustomGUIIngame {
 	RenderUtil.drawRect(posX + halfWidth, posY + halfHeight, posX + halfWidth + 1, posY + halfHeight + 1,
 		new Color(205, 205, 205, 255).getRGB());
 
-	for (EntityPlayer player : mc.theWorld.playerEntities) {
+	for (EntityPlayer player : mc.theWorld.playerEntities ) {
 	    if (player != mc.thePlayer) {
 		double playerX = player.posX;
 		double playerZ = player.posZ;
@@ -339,22 +365,22 @@ public class CustomGUIIngame {
 	GlStateManager.disableBlend();
 	final String server = mc.isSingleplayer() ? "local" : mc.getCurrentServerData().serverIP.toLowerCase();
 	// mc.thePlayer.getUniqueID();
-	final String text = "Atero";
+	//final String text = "Atero";
 	// final String text = "Atero.cc | " + server + " | " + Minecraft.getDebugFPS()
 	// + " fps | " + "0" + " ms" + " | " + "Build " +
 	// Management.instance.CLIENT_VERSION;
 
-	final float width1 = FontManager.ROBOTOTHIN_20.getStringWidth(text) + 8;
+	//final float width1 = FontManager.ROBOTOTHIN_20.getStringWidth(text) + 8;
 	final int height1 = 18;
 	final int posX = 2;
 	final int posY = 2;
 
 	// RenderUtil.drawRect(posX, posY, posX + width1 + 2, posY + height1,
 	// Management.instance.colorBlue.getRGB());
-	drawBorderedRect(posX + .5, posY + .5, posX + width1 + 1.5, posY + height1 - .5, 0.5,
-		new Color(40, 40, 40, 255).getRGB(), new Color(255, 255, 255, 30).getRGB(), true);
-	drawBorderedRect(posX + 2, posY + 2, posX + width1, posY + height1 - 2, 0.5,
-		new Color(22, 22, 22, 255).getRGB(), new Color(22, 22, 22, 255).getRGB(), true);
+	//drawBorderedRect(posX + .5, posY + .5, posX + width1 + 1.5, posY + height1 - .5, 0.5,
+	//	new Color(40, 40, 40, 255).getRGB(), new Color(255, 255, 255, 30).getRGB(), true);
+	//drawBorderedRect(posX + 2, posY + 2, posX + width1, posY + height1 - 2, 0.5,
+		//new Color(22, 22, 22, 255).getRGB(), new Color(22, 22, 22, 255).getRGB(), true);
 	// RenderUtil.drawRect(posX + 2.5, posY + 2.5, posX + width1 - .5, posY + 4.5,
 	// new Color(9, 9, 9, 255).getRGB());
 
@@ -363,8 +389,8 @@ public class CustomGUIIngame {
 	// RenderUtil.drawRect(-1 + i, posY + 3, i + 2, posY + 4, rainbow.getRGB());
 	// }
 
-	FontManager.ROBOTOTHIN_20.drawString(text, 4 + posX, posY + FontManager.ROBOTOTHIN_20.getFontHeight() - 9, -1,
-		true);
+//	FontManager.ROBOTOTHIN_20.drawString(text, 4 + posX, posY + FontManager.ROBOTOTHIN_20.getFontHeight() - 9, -1,
+	//	true);
 
 	GlStateManager.enableBlend();
 	GlStateManager.popMatrix();
@@ -478,5 +504,21 @@ public class CustomGUIIngame {
 	    }
 	}
     }
+	public static Color getGradientOffset(Color color1, Color color2, double index) {
+		double offs = (Math.abs(((System.currentTimeMillis()) / 13)) / 60D) + index;
+		if(offs >1)
+
+		{
+			double left = offs % 1;
+			int off = (int) offs;
+			offs = off % 2 == 0 ? left : 1 - left;
+		}
+
+		double inverse_percent = 1 - offs;
+		int redPart = (int) (color1.getRed() * inverse_percent + color2.getRed() * offs);
+		int greenPart = (int) (color1.getGreen() * inverse_percent + color2.getGreen() * offs);
+		int bluePart = (int) (color1.getBlue() * inverse_percent + color2.getBlue() * offs);
+		return new Color(redPart, greenPart, bluePart);
+	}
 
 }

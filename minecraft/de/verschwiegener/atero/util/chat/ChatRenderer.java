@@ -74,12 +74,13 @@ public class ChatRenderer {
             for (String str2 : str.replace("§", "#§").split("#")) {
                 if (str2.length() > 0) {
                     if (str2.startsWith("§")) {
+                        System.out.println("ColorCode: " + str2.substring(1,2));
                         messagecolor = getColorCode(str2.substring(1, 2));
                         str2 = str2.substring(2);
                     }
                     xoffset = xoffset / 2;
                     System.out.println("MessageColor: " + messagecolor);
-                    if (boldStyle) {
+                    if (boldStyle) { 
                         xoffset += ChatFontRenderer.drawString(str2, x + xoffset, y, messagecolor);
                         // fontRendererBold.drawString(str, x + xoffset, y, messagecolor.getRGB());
                         // xoffset += fontRendererBold.getStringWidth(str);
@@ -99,7 +100,6 @@ public class ChatRenderer {
             }
         }
     }
-
     public Color getColorCode(String character) {
         int i = "0123456789abcdefg".indexOf(character);
         if (i >= 0 && i < this.codes.length) {
