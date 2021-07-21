@@ -62,8 +62,10 @@ public class Scaffold extends Module {
         ArrayList<String> modess = new ArrayList<>();
         //RotationModes
         modes.add("NCPStatic");
+        modes.add("MemePlex");
         modes.add("AAC");
         modes.add("NCP");
+        modes.add("Watchdog");
         modes.add("WatchdogFast");
         //TowerModes
         modess.add("Watchdog");
@@ -109,6 +111,7 @@ public class Scaffold extends Module {
 
     public void onDisable() {
         try {
+            mc.gameSettings.keyBindSneak.pressed = false;
             String mode = setting.getItemByName("RotationModes").getCurrent();
             switch (mode) {
                 case "WatchdogFast":
@@ -134,10 +137,15 @@ public class Scaffold extends Module {
     @Override
     public void onUpdateClick() {
         super.onUpdateClick();
+        if(setting.getItemByName("Sprint").isState()){
+            mc.thePlayer.setSprinting(true);
+            if(mc.gameSettings.keyBindJump.pressed){
+                mc.thePlayer.setSprinting(false);
+            }
+        }
         String modes = setting.getItemByName("TowerModes").getCurrent();
 
         switch (modes) {
-
             case "TP":
                 if (mc.gameSettings.keyBindJump.pressed) {
                     Minecraft.thePlayer.setPosition(Minecraft.thePlayer.posX, Minecraft.thePlayer.posY + 0.6D, Minecraft.thePlayer.posZ);
@@ -151,9 +159,7 @@ public class Scaffold extends Module {
 
                 }
                 break;
-
         }
-
         String mode = setting.getItemByName("RotationModes").getCurrent();
         switch (mode) {
             case "WatchdogFast":
@@ -294,6 +300,8 @@ public class Scaffold extends Module {
     @EventTarget
     public void onPre(EventPreMotionUpdate pre) {
         float[] rotation = data == null ? lastRot : RotationRecode2.rotationrecode7(this.data);
+        float[] rotation2 = data == null ? lastRot : RotationRecode2.rotationrecodeMEME(this.data);
+        float[] rotation3 = data == null ? lastRot : RotationRecode2.rotationrecodeWatchdog(this.data);
 
         //if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
         final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
@@ -310,6 +318,26 @@ public class Scaffold extends Module {
                 lastYaw = rotation[0];
                 pre.setPitch(rotation[1]);
                 lastPitch = (rotation[1]);
+                break;
+            case "Watchdog":
+                mc.timer.timerSpeed = 1;
+                //  if(!mc.thePlayer.onGround) {
+                pre.setYaw(rotation3[0]);
+                // }
+                lastYaw = rotation3[0];
+                pre.setPitch(rotation3[1]);
+                lastPitch = (rotation3[1]);
+                break;
+            case "MemePlex":
+                mc.gameSettings.keyBindSneak.pressed = true;
+                if(mc.gameSettings.keyBindJump.pressed){
+                    mc.thePlayer.setSprinting(false);
+                }
+                pre.setYaw(rotation2[0]);
+                lastYaw = rotation2[0];
+                pre.setPitch(rotation2[1]);
+                lastPitch = (rotation2[1]);
+
                 break;
 
             case "WatchdogFast":

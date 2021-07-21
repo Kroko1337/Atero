@@ -25,6 +25,7 @@ public class Cheststealer extends Module {
     TimeUtils timer = new TimeUtils();
     public static Setting setting;
     private float delay;
+    private double DELAY = 0;
     public Cheststealer() {
         super("ChestStealer", "ChestStealer", Keyboard.KEY_NONE, Category.World);
     }
@@ -36,12 +37,10 @@ public class Cheststealer extends Module {
     public void onDisable() {
         super.onDisable();
     }
-    @Override
     public void setup() {
-        super.setup();
-
         final ArrayList<SettingsItem> items = new ArrayList<>();
-        //items.add(new SettingsItem("Delay", 0, 500, 0, ""));
+        ArrayList<String> modes = new ArrayList<>();
+        items.add(new SettingsItem("Delay", 1F, 500, 80, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 
@@ -49,15 +48,16 @@ public class Cheststealer extends Module {
     public void onUpdate() {
         if (this.isEnabled()) {
             super.onUpdate();
-setExtraTag("80");
+            setExtraTag(""+ Math.round(DELAY));
             try {
+                DELAY= Management.instance.settingsmgr.getSettingByName("Cheststealer").getItemByName("Delay").getCurrentValue();
                 if (Minecraft.thePlayer.openContainer != null
                         && Minecraft.thePlayer.openContainer instanceof ContainerChest) {
                     ContainerChest container = (ContainerChest) Minecraft.thePlayer.openContainer;
                     int i = 0;
                     while (i < container.getLowerChestInventory().getSizeInventory()) {
                         final float MAAD = (float) MathHelper.getRandomDoubleInRange(new Random(), 300, 450);
-                        if (container.getLowerChestInventory().getStackInSlot(i) != null && timer.hasReached((long) 90)) {
+                        if (container.getLowerChestInventory().getStackInSlot(i) != null && timer.hasReached((long) DELAY)) {
 
                             Minecraft.playerController.windowClick(container.windowId, i, 0, 1, Minecraft.thePlayer);
                             timer.reset();

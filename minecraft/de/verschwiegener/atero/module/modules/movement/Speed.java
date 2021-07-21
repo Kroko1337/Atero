@@ -97,23 +97,15 @@ public class Speed extends Module {
 					boolean boost = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
 					if ((mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindRight.pressed || mc.gameSettings.keyBindBack.pressed) && mc.thePlayer.onGround) {
 						mc.gameSettings.keyBindJump.pressed = true;
-						mc.timer.timerSpeed = (float) 1;
+						//mc.timer.timerSpeed = (float) 1.1;
 					} else {
 						mc.gameSettings.keyBindJump.pressed = false;
-							mc.timer.timerSpeed = (float) boostCC;
+						//	mc.timer.timerSpeed = (float) 1.1;
 						double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
 						double direction = getDirection();
 						final float Hypixel = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.999, 1);
-						mc.thePlayer.motionX = -Math.sin(direction) * Hypixel * currentSpeed;
-						mc.thePlayer.motionZ = Math.cos(direction) * Hypixel * currentSpeed;
-						if(setting.getItemByName("DamageBoost").isState()){
-						if(mc.thePlayer.hurtTime!= 0 && Killaura.instance.hasTarget() && !mc.thePlayer.isBurning() && !mc.thePlayer.isInLava()) {
-							//mc.timer.timerSpeed = 50F;
-							//Util.setSpeed(0.4);
-						}else{
-							mc.timer.timerSpeed = (float) boostCC;
-						}
-						}
+						mc.thePlayer.motionX = -Math.sin(direction) * 1 * currentSpeed;
+						mc.thePlayer.motionZ = Math.cos(direction) * 1 * currentSpeed;
 					}
 					break;
 				case "Cubecraft1vs1":
@@ -296,9 +288,11 @@ public class Speed extends Module {
 		float forward = 1.0F;
 
 		if (mc.thePlayer.moveForward < 0.0F) {
-			forward = -0.50F;
+			final float strafe = (float) MathHelper.getRandomDoubleInRange(new Random(), -0.50, -0.55);
+			forward = -strafe;
 		} else if (mc.thePlayer.moveForward > 0.0F) {
-			forward = 0.50F;
+			final float strafe2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.50, 0.55);
+			forward = strafe2;
 		}
 
 		if (mc.thePlayer.moveStrafing > 0.0F) {

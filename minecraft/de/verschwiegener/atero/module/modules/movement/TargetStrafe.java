@@ -5,6 +5,8 @@ import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.PlayerMoveEvent;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.settings.Setting;
+import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 
@@ -21,6 +23,7 @@ import de.verschwiegener.atero.util.TimeUtils;
 import god.buddy.aot.BCompiler;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
@@ -31,7 +34,7 @@ public class TargetStrafe extends Module {
     TimeUtils timeUtils;
     public static boolean space;
     private int direction = -1;
-
+    private double Range = 0;
     public TargetStrafe() {
         super("TargetStrafe", "TargetStrafe", Keyboard.KEY_NONE, Category.Movement);
     }
@@ -55,7 +58,8 @@ public class TargetStrafe extends Module {
             if (strafe) {
                 float[] rotations = getRotations(Killaura.instance.getTarget());
                 final float Strafe = (float) MathHelper.getRandomDoubleInRange(new Random(), 1.5, 2);
-                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= 1)
+                Range = Management.instance.settingsmgr.getSettingByName("TargetStrafe").getItemByName("Range").getCurrentValue();
+                if (Minecraft.thePlayer.getDistanceToEntity(Killaura.instance.getTarget()) <= Range)
                     setSpeed(event, moveSpeed, rotations[0], direction, 0);
                 else setSpeed(event, moveSpeed, rotations[0], direction, 1);
             }
@@ -159,6 +163,13 @@ public class TargetStrafe extends Module {
         float pitch = (float)-(Math.atan2(diffY, dist) * 180.0D / Math.PI);
         return new float[] { yaw, pitch };
     }
+    public void setup() {
+        final ArrayList<SettingsItem> items = new ArrayList<>();
+        ArrayList<String> modes = new ArrayList<>();
+        items.add(new SettingsItem("Range", 0.2F, 6, 3, ""));
+        Management.instance.settingsmgr.addSetting(new Setting(this, items));
+    }
+
 }
 
 

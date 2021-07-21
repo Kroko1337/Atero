@@ -46,12 +46,11 @@ public class FirstPersonModify extends Module {
         final ArrayList<SettingsItem> items = new ArrayList<>();
         ArrayList<String> modes = new ArrayList<>();
         items.add(new SettingsItem("Slow", 6F, 50, 6, ""));
-        items.add(new SettingsItem("Scale", 0.1F, 0.9F, 0.3F, ""));
-        items.add(new SettingsItem("BlockHitX", 0.01F, 80F, 0.05F, ""));
+        items.add(new SettingsItem("Scale", 0.1F, 0.9F, 0.2F, ""));
+        items.add(new SettingsItem("BlockHitX", 0.01F, 80F, 80F, ""));
         items.add(new SettingsItem("BlockHitZ", 0.1F, 80F, 0.3F, ""));
         items.add(new SettingsItem("BlockHitY", 0.1F, 80F, 0.3F, ""));
         items.add(new SettingsItem("Rotate", 0.1F, 100F, 70F, ""));
-
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
     }
 

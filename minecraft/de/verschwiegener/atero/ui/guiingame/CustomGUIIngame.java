@@ -11,6 +11,9 @@ import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.module.ModuleManager;
 import de.verschwiegener.atero.module.modules.combat.Antibots;
 import de.verschwiegener.atero.module.modules.combat.Killaura;
+import de.verschwiegener.atero.module.modules.combat.Target;
+import de.verschwiegener.atero.module.modules.movement.Speed;
+import de.verschwiegener.atero.module.modules.movement.TargetStrafe;
 import de.verschwiegener.atero.module.modules.render.Design;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.util.Util;
@@ -164,7 +167,7 @@ public class CustomGUIIngame {
 
 	RenderUtil.drawRect(posX + halfWidth, posY + halfHeight, posX + halfWidth + 1, posY + halfHeight + 1,
 		new Color(205, 205, 205, 255).getRGB());
-
+		//FontManager.VistolSans_Light.drawString("BPS " +  Math.round(getSpeed() * 24 * mc.timer.timerSpeed), 2, 15, Management.instance.colorBlue.getRGB(),true);
 	for (EntityPlayer player : mc.theWorld.playerEntities ) {
 	    if (player != mc.thePlayer) {
 		double playerX = player.posX;
@@ -520,5 +523,7 @@ public class CustomGUIIngame {
 		int bluePart = (int) (color1.getBlue() * inverse_percent + color2.getBlue() * offs);
 		return new Color(redPart, greenPart, bluePart);
 	}
-
+	public static float getSpeed() {
+		return (float) Math.sqrt(Minecraft.getMinecraft().thePlayer.motionX * Minecraft.getMinecraft().thePlayer.motionX + Minecraft.getMinecraft().thePlayer.motionZ * Minecraft.getMinecraft().thePlayer.motionZ);
+	}
 }

@@ -56,8 +56,8 @@ public class Killaura extends Module {
         super("KillAura", "KillAura", Keyboard.KEY_NONE, Category.Combat);
         instance = this;
     }
-
     @BCompiler(aot = BCompiler.AOT.AGGRESSIVE)
+
     public static float[] Intavee(final EntityPlayerSP player, final EntityLivingBase target) {
         final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 90, 92);
         final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationPitch, 94);
@@ -71,6 +71,45 @@ public class Killaura extends Module {
         final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
         float yaw = (float) (Math.atan2(posZ, posX) * RotationY2 / Math.PI) - RotationYaw;
         float pitch = (float) -(Math.atan2(posY, var14) * RotationY2 / Math.PI);
+        final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+        final float f3 = f2 * f2 * f2 * 1.2F;
+        yaw -= yaw % f3;
+        pitch -= pitch % (f3 * f2);
+        return new float[]{yaw, MathHelper.clamp_float(pitch, -90, 90)};
+    }
+    public static float[] Watchdog(final EntityPlayerSP player, final EntityLivingBase target) {
+        final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 90, 92);
+        final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationPitch, 94);
+        final double posX = target.posX - player.posX;
+        final float RotationY2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 178, 180);
+        final float RotationY4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.3);
+        final float RotationY5 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.02, 0.03);
+        final float RotationY3 = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationY4, 0.1);
+        final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getAge() + player.getEyeHeight()+RotationY5 );
+        final double posZ = target.posZ - player.posZ;
+        final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
+        float yaw = (float) (Math.atan2(posZ, posX) * RotationY2 / Math.PI) - RotationPitch;
+
+        float pitch = (float) -(Math.atan2(posY, var14) * 180 / Math.PI);
+        final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
+        final float f3 = f2 * f2 * f2 * 1.2F;
+        yaw -= yaw % f3;
+        pitch -= pitch % (f3 * f2);
+        return new float[]{yaw, MathHelper.clamp_float(pitch, -90, 90)};
+    }
+    public static float[] NCP(final EntityPlayerSP player, final EntityLivingBase target) {
+        final float RotationPitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 90, 92);
+        final float RotationYaw = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationPitch, 94);
+        final double posX = target.posX - player.posX;
+        final float RotationY2 = (float) MathHelper.getRandomDoubleInRange(new Random(), 178, 180);
+        final float RotationY4 = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.3);
+        final float RotationY3 = (float) MathHelper.getRandomDoubleInRange(new Random(), RotationY4, 0.1);
+        final double posY = target.posY + target.getEyeHeight() - (player.posY + player.getAge() + player.getEyeHeight());
+        final double posZ = target.posZ - player.posZ;
+        final double var14 = MathHelper.sqrt_double(posX * posX + posZ * posZ);
+        float yaw = (float) (Math.atan2(posZ, posX) * 180 / Math.PI) - 90;
+
+        float pitch = (float) -(Math.atan2(posY, var14) * 180 / Math.PI);
         final float f2 = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6F + 0.2F;
         final float f3 = f2 * f2 * f2 * 1.2F;
         yaw -= yaw % f3;
@@ -304,11 +343,25 @@ public class Killaura extends Module {
             event.setSilentMoveFix(true);
         }
     }
+    @Override
 
+    public void onUpdate() {
+        super.onUpdate();
+        final String modes = setting.getItemByName("RotationMode").getCurrent();
+        setExtraTag("" + modes);
+    }
     @EventTarget
 
     public void onPre(final EventPreMotionUpdate pre) {
+
         if(setting.getItemByName("AutoBlock").isState()) {
+            if(!Killaura.instance.hasTarget()) {
+                if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                    mc.gameSettings.keyBindUseItem.pressed = false;
+                }
+            }
+        }
+        if(setting.getItemByName("Watchdog").isState()) {
             if(!Killaura.instance.hasTarget()) {
                 if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
                     mc.gameSettings.keyBindUseItem.pressed = false;
@@ -322,7 +375,7 @@ public class Killaura extends Module {
                 if (Minecraft.thePlayer.getHeldItem() != null)
                     if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
                         //   mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
-                        if (!setting.getItemByName("Inteligent").isState()) {
+                        if (!setting.getItemByName("Watchdog").isState()) {
                                 mc.gameSettings.keyBindUseItem.pressed = true;
                             //   }
 
@@ -330,14 +383,11 @@ public class Killaura extends Module {
                     }
                 if ((target != null)) {
                     if (setting.getItemByName("AutoBlock").isState()) {
-                        //   if(mc.thePlayer.ticksExisted % 10 == 0) {
-                        if (Minecraft.thePlayer.getHeldItem() != null)
-                            if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
-                                //   mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
-                                if (setting.getItemByName("Inteligent").isState()) {
-                                    if (mc.thePlayer.hurtTime != 0) {
-                                        mc.gameSettings.keyBindUseItem.pressed = true;
-                                    }
+                                if (setting.getItemByName("Watchdog").isState()) {
+                                    if (Minecraft.thePlayer.getHeldItem() != null)
+                                        if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                                                mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
+
                                     //   }
                                 }
                             }
@@ -345,7 +395,18 @@ public class Killaura extends Module {
                 }
             }
 
-            facing = Killaura.Intavee(Minecraft.thePlayer, target);
+            final String modes = setting.getItemByName("RotationMode").getCurrent();
+            if(modes.equalsIgnoreCase("AAC")) {
+                facing = Killaura.Intavee(Minecraft.thePlayer, target);
+            }else {
+                if (modes.equalsIgnoreCase("Watchdog")) {
+                    facing = Killaura.Watchdog(Minecraft.thePlayer, target);
+                } else {
+                    if (modes.equalsIgnoreCase("NCP")) {
+                        facing = Killaura.NCP(Minecraft.thePlayer, target);
+                    }
+                }
+            }
             pre.setYaw(yaw);
             pre.setPitch(pitch);
             //Minecraft.thePlayer.rotationPitch = pitch;
@@ -497,10 +558,15 @@ public class Killaura extends Module {
 
         final ArrayList<SettingsItem> items = new ArrayList<>();
         final ArrayList<String> targetModes = new ArrayList<>();
+        final ArrayList<String> rotationMode = new ArrayList<>();
         targetModes.add("Nearest");
         targetModes.add("Lowest");
         targetModes.add("Highest");
+        rotationMode.add("AAC");
+        rotationMode.add("NCP");
+        rotationMode.add("Watchdog");
         items.add(new SettingsItem("TargetMode", targetModes, "Nearest", "", ""));
+        items.add(new SettingsItem("RotationMode", rotationMode, "AAC", "", ""));
         items.add(new SettingsItem("Range", 1.0F, 6.0F, 3.0F, ""));
         items.add(new SettingsItem("MAXCPS", 1, 50, 4, ""));
         items.add(new SettingsItem("MINCPS", 1, 50, 3, ""));
@@ -512,8 +578,8 @@ public class Killaura extends Module {
         items.add(new SettingsItem("AutoAttack", false, ""));
         items.add(new SettingsItem("ThroughWalls", false, ""));
         items.add(new SettingsItem("FakeBlock", true, ""));
-        items.add(new SettingsItem("AutoBlock", false, "Inteligent"));
-        items.add(new SettingsItem("Inteligent", false, ""));
+        items.add(new SettingsItem("AutoBlock", false, "Watchdog"));
+        items.add(new SettingsItem("Watchdog", false, ""));
         items.add(new SettingsItem("CorrectMM", false, ""));
         items.add(new SettingsItem("TargetESP", true, ""));
         items.add(new SettingsItem("RotationSpeed", false, "Speed"));
@@ -570,10 +636,5 @@ public class Killaura extends Module {
             }
 
 
-    @Override
 
-    public void onUpdate() {
-        super.onUpdate();
-        setExtraTag("Switch");
-    }
 }

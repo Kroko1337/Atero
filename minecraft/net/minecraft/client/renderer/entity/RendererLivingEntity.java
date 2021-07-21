@@ -313,12 +313,12 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
         }
 
-        float f1 = (float)(i >> 16 & 255) / 255.0F;
-        float f2 = (float)(i >> 8 & 255) / 255.0F;
-        float f = (float)(i & 255) / 255.0F;
+        float c1 = (float) (Management.instance.colorBlue3.getRGB() >> 16 & 255) / 255.0F;
+        float c2 = (float) (Management.instance.colorBlue3.getRGB() >> 8 & 255) / 255.0F;
+        float c = (float) (Management.instance.colorBlue3.getRGB() & 255) / 255.0F;
         GlStateManager.disableLighting();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        GlStateManager.color(f1, f2, f, 1.0F);
+        GlStateManager.color(c1, c2, c, 1.0F);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();

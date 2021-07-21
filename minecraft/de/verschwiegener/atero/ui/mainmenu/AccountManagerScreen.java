@@ -87,7 +87,7 @@ public class AccountManagerScreen extends GuiScreen {
             } else {
                 loginUtil.generate(this.clipboard.getText());
             }
-            //this.mc.displayGuiScreen((GuiScreen)new GuiAltening(this));
+          //  this.mc.displayGuiScreen((GuiScreen)new GuiAltening(this));
         } else {
             String[] args = this.clipboard.getText().split(":");
             if (args[1].isEmpty()) {

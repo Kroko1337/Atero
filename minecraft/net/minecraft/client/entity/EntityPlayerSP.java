@@ -175,8 +175,10 @@ public class EntityPlayerSP extends AbstractClientPlayer {
      */
     public void onUpdate() {
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ))) {
+            //hier ColorPickerRege
             Management.instance.colorBlue = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST").getColor();
             Management.instance.colorBlue2 = Management.instance.settingsmgr.getSettingByName("ClickGui").getItemByName("TEST22").getColor();
+            Management.instance.colorBlue3 = Management.instance.settingsmgr.getSettingByName("ESP").getItemByName("TEST222").getColor();
             super.onUpdate();
 
             if (this.isRiding()) {

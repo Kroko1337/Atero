@@ -89,13 +89,17 @@ public class GuiNewChat extends Gui
                             {
                                 int i2 = 0;
                                 int j2 = -i1 * 9;
-                                drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
+                                if(Management.instance.modulemgr.getModuleByName("Chat").isEnabled()) {
+                                    drawRect(i2, j2 - 9, i2 + l + 4, j2, l1 / 2 << 24);
+                                }
                                 GlStateManager.enableBlend();
 ;                                String s = chatline.getChatComponent().getFormattedText();
                                 
                                 //this.mc.fontRendererObj.drawStringWithShadow(s, (float)i2, (float)(j2 - 8), 16777215 + (l1 << 24));
                                 //System.out.println("Line: " + s);
-                                cr.drawChat(s, i2, j2 - 12);
+                                if(Management.instance.modulemgr.getModuleByName("Chat").isEnabled()) {
+                                    cr.drawChat(s, i2, j2 - 12);
+                                }
 				// cr.drawChat(s, i2, (j2 * 2 ) - 22);
 				// System.out.println("I2: " + i2);
 				// System.out.println("J2: " + j2);

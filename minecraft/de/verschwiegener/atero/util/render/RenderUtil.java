@@ -400,7 +400,7 @@ public class RenderUtil {
 	RenderUtil.fillRect(0, 0, width, height, new Color(0, 0, 0, 220));
 	GlStateManager.disableTexture2D();
     }
-    
+
     public static void getScissor(int x, int yBottom, int width, int height, int guiScaleFactor) {
 	GL11.glScissor((int) (x * guiScaleFactor),
 		(int) (Minecraft.getMinecraft().getFramebuffer().framebufferHeight - (yBottom * guiScaleFactor)),

@@ -61,6 +61,15 @@ public class ESP extends Module {
                         //new Color(0, 255, 0, 255).getRGB()
                      //   RenderUtil.drawRect(posX - 2, endPosY - (health / maxHealth) * (endPosY - posY), posX - 0.5, endPosY, Management.instance.colorBlue.getRGB());
                     }
+    @Override
+    public void setup() {
+
+        final ArrayList<SettingsItem> items = new ArrayList<>();
+        ArrayList<String> modes = new ArrayList<>();
+        modes.add("AAC");
+        items.add(new SettingsItem("TEST222", Color.RED, ""));
+        Management.instance.settingsmgr.addSetting(new Setting(this, items));
+    }
                 }
 
 
