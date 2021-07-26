@@ -29,7 +29,6 @@ public class GuiScreenAltening extends GuiScreen {
        // this.tokenField
         mc.getTextureManager().bindTexture( new ResourceLocation("atero/assets/background.jpg"));
         Gui.drawScaledCustomSizeModalRect(0,0,0,0, width, height,width,height,width,height);
-    //   mc.getTextureManager().bindTexture( new ResourceLocation("atero/assets/Altening.png"));
      //   Gui.drawScaledCustomSizeModalRect(100,100,0,0, width, height,width,height,width - 50,height-50);
         tokenField.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);

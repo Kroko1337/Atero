@@ -46,6 +46,7 @@ public class ModuleManager {
 	modules.add(new ClientFriends());
 	modules.add(new AntiVoid());
 	modules.add(new FirstPersonModify());
+	modules.add(new NoFov());
 	//modules.add(new ChestESP());
 	//modules.add(new Trajectories());
     }

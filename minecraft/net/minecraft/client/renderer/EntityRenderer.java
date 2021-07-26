@@ -599,11 +599,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
             if (p_78481_2_)
             {
                 f = this.mc.gameSettings.fovSetting;
-
-                if (Config.isDynamicFov())
-                {
-                    f *= this.fovModifierHandPrev + (this.fovModifierHand - this.fovModifierHandPrev) * partialTicks;
-                }
+                if(!Management.instance.modulemgr.getModuleByName("NoFov").isEnabled()) {
+                if (Config.isDynamicFov()) {
+                 f *= this.fovModifierHandPrev + (this.fovModifierHand - this.fovModifierHandPrev) * partialTicks;
+            }
+            }
             }
 
             boolean flag = false;

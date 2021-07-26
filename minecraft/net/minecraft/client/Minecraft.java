@@ -1482,7 +1482,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
 
     public void rightClickMouse() {
-        if (!this.playerController.func_181040_m()) {
+        if (!this.playerController.getIsHittingBlock()) {
             this.rightClickDelayTimer = 4;
             boolean flag = true;
             ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
@@ -1492,7 +1492,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             } else {
                 switch (this.objectMouseOver.typeOfHit) {
                     case ENTITY:
-                        if (this.playerController.func_178894_a(this.thePlayer, this.objectMouseOver.entityHit,
+                        if (this.playerController.isPlayerRightClickingOnEntity(this.thePlayer, this.objectMouseOver.entityHit,
                                 this.objectMouseOver)) {
                             flag = false;
                         } else if (this.playerController.interactWithEntitySendPacket(this.thePlayer,

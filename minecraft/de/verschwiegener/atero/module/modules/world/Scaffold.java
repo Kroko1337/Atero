@@ -3,7 +3,7 @@ package de.verschwiegener.atero.module.modules.world;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
-import com.darkmagician6.eventapi.events.callables.EventSendPacket;
+import com.darkmagician6.eventapi.events.callables.EventSycItem;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
@@ -19,8 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
@@ -41,8 +39,7 @@ public class Scaffold extends Module {
     private float[] lastrotation;
     private int[] forbiddenBlocks = {5};
     private TimeUtils timer = new TimeUtils();
-    private int currentItem;
-    private boolean switched;
+    private int slot;
     private double posY;
 
     public Scaffold() {
@@ -93,11 +90,6 @@ public class Scaffold extends Module {
 
         }
         //  Management.instance.modulemgr.getModuleByName("Speed").setEnabled(true);
-
-        currentItem = -1;
-
-        switched = false;
-
         super.onEnable();
 
         setting = Management.instance.settingsmgr.getSettingByName(getName());
@@ -123,23 +115,23 @@ public class Scaffold extends Module {
 
         }
         mc.timer.timerSpeed = 1F;
-        //  mc.thePlayer.rotationYawHead = +170;
-        //mc.thePlayer.prevRotationPitch = +22;
-        switched = false;
-        if (mc.thePlayer.inventory.currentItem != currentItem) {
-            mc.thePlayer.sendQueue.addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
-        }
 
         super.onDisable();
     }
 
+    @EventTarget
+    public void onEventSync(EventSycItem sync) {
+        if (getBlockSlot() != -1) {
+            sync.slot = this.slot = getBlockSlot();
+        }
+    }
 
     @Override
     public void onUpdateClick() {
         super.onUpdateClick();
-        if(setting.getItemByName("Sprint").isState()){
+        if (setting.getItemByName("Sprint").isState()) {
             mc.thePlayer.setSprinting(true);
-            if(mc.gameSettings.keyBindJump.pressed){
+            if (mc.gameSettings.keyBindJump.pressed) {
                 mc.thePlayer.setSprinting(false);
             }
         }
@@ -183,36 +175,14 @@ public class Scaffold extends Module {
                 break;
         }
 
-//System.out.println(getSpeed());
-
-        //  mc.timer.timerSpeed = 25F;
-
         data = find(new Vec3(0, 0, 0));
         if (this.data != null && getBlockSlot() != -1) {
-            if (!switched) {
-                currentItem = getBlockSlot();
-                if (mc.thePlayer.inventory.currentItem != currentItem) {
-                    mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(getBlockSlot()));
-                } else {
-                    switched = true;
-                }
-            }
-            if (switched) {
-                if (mc.thePlayer.inventory.getStackInSlot(currentItem) == null
-                        || mc.thePlayer.inventory.getStackInSlot(currentItem).stackSize == 0) {
-                    currentItem = -1;
-                    switched = false;
-                    return;
-                }
-            }
-            //mc.thePlayer.inventory.getStackInSlot(currentItem)
             mc.playerController.updateController();
             Vec3 hitVec = (new Vec3(BlockData.getPos())).addVector(0.5D, 0.5D, 0.5D)
                     .add((new Vec3(BlockData.getFacing().getDirectionVec())).multi(0.5D));
-            if (currentItem != -1 && switched) {
-                //   mc.rightClickMouse();
+            if (slot != -1) {
                 if (mc.playerController.onPlayerRightClick(Minecraft.thePlayer,
-                        mc.theWorld, mc.thePlayer.inventory.getStackInSlot(currentItem),
+                        mc.theWorld, mc.thePlayer.inventory.getStackInSlot(slot),
                         BlockData.getPos(), BlockData.getFacing(), hitVec)) {
                     mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
                     if (setting.getItemByName("Swing").isState()) {
@@ -220,7 +190,6 @@ public class Scaffold extends Module {
                     }
                 }
             }
-
 
             switch (modes) {
                 case "Watchdog":
@@ -257,33 +226,7 @@ public class Scaffold extends Module {
             }
         }
 
-
-        //     if (mc.gameSettings.keyBindJump.pressed) {
-        //    mc.timer.timerSpeed = 1.0F;
-        //      if (timer.hasReached(1500)) {
-        //        timer.reset();
-        //    } else if (mc.thePlayer.ticksExisted % 3 == 0)
-        //       mc.thePlayer.motionY = 0.4196;
-        // }
-        //   timer.reset();
-        // }
-
         Minecraft.getMinecraft().thePlayer.setSprinting(false);
-    }
-
-    @EventTarget
-    public void onPacketSend(EventSendPacket eventSendPacket) {
-        Packet<?> packet = eventSendPacket.getPacket();
-        if (packet instanceof C09PacketHeldItemChange) {
-            C09PacketHeldItemChange c09PacketHeldItemChange = (C09PacketHeldItemChange) packet;
-            if (getBlockSlot() == c09PacketHeldItemChange.getSlotId() && !switched) {
-                switched = true;
-            } else {
-                if (switched) {
-                    eventSendPacket.setCancelled(true);
-                }
-            }
-        }
     }
 
     @EventTarget
@@ -304,7 +247,7 @@ public class Scaffold extends Module {
         float[] rotation3 = data == null ? lastRot : RotationRecode2.rotationrecodeWatchdog(this.data);
 
         //if (!Management.instance.modulemgr.getModuleByName("TEst").isEnabled()) {
-        final float Pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
+        final float pitch = (float) MathHelper.getRandomDoubleInRange(new Random(), 85, 100);
 
         String mode = setting.getItemByName("RotationModes").getCurrent();
         setExtraTag(mode);
@@ -330,7 +273,7 @@ public class Scaffold extends Module {
                 break;
             case "MemePlex":
                 mc.gameSettings.keyBindSneak.pressed = true;
-                if(mc.gameSettings.keyBindJump.pressed){
+                if (mc.gameSettings.keyBindJump.pressed) {
                     mc.thePlayer.setSprinting(false);
                 }
                 pre.setYaw(rotation2[0]);
@@ -367,11 +310,7 @@ public class Scaffold extends Module {
                 pre.setPitch(85);
                 lastPitch = (rotation[1]);
                 break;
-            //}
         }
-
-
-        //lastPitch = rotation[1];
 
     }
 

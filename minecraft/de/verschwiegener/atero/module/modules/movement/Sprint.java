@@ -2,6 +2,7 @@ package de.verschwiegener.atero.module.modules.movement;
 
 import net.minecraft.client.Minecraft;
 
+import net.minecraft.util.MinecraftError;
 import org.lwjgl.input.Keyboard;
 
 import de.verschwiegener.atero.Management;
@@ -37,7 +38,7 @@ public class Sprint extends Module {
 	    if (Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled() || Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled() ) {
 		Minecraft.getMinecraft().thePlayer.setSprinting(false);
 	    } else {
-		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown()) {
+		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isKeyDown() && !Minecraft.thePlayer.isCollidedHorizontally) {
 		    Minecraft.getMinecraft().thePlayer.setSprinting(true);
 		}
 	    }

@@ -43,13 +43,13 @@ super.onEnable();
                 mc.thePlayer.motionY = 0.05;
             }else {
                 if (mc.thePlayer.ticksExisted % 3 == 0) {
-                    mc.thePlayer.motionY = 0.01;
+                    mc.thePlayer.motionY = 0.1;
                 } else {
-                    mc.thePlayer.motionY = -0.01;
+                    mc.thePlayer.motionY = -0.05;
                 }
             }
          //   mc.thePlayer.motionY = 0F;
-            Util.setSpeed(1);
+            Util.setSpeed(2);
             if(mc.gameSettings.keyBindJump.pressed){
                 mc.thePlayer.motionY = 1F;
             }

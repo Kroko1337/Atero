@@ -4,6 +4,7 @@ package de.verschwiegener.atero.module.modules.world;
 import com.darkmagician6.eventapi.EventTarget;
 import com.darkmagician6.eventapi.events.callables.EventPostMotionUpdate;
 import com.darkmagician6.eventapi.events.callables.EventPreMotionUpdate;
+import com.darkmagician6.eventapi.events.callables.EventSycItem;
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.module.Category;
 import de.verschwiegener.atero.module.Module;
@@ -13,18 +14,24 @@ import de.verschwiegener.atero.util.TimeUtils;
 import god.buddy.aot.BCompiler;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class AutoEagle extends Module {
     public static float[] lastRot;
     public static float lastPitch;
+    private final int[] forbiddenBlocks = {5};
+    public int slot;
     TimeUtils timeUtils;
     private Setting setting;
     private Scaffold.BlockData blockData;
@@ -34,7 +41,10 @@ public class AutoEagle extends Module {
     }
 
     public void onEnable() {
-        mc.gameSettings.keyBindSneak.pressed = false;
+        if (!setting.getItemByName("Sprinting").isState()) {
+            mc.gameSettings.keyBindSneak.pressed = true;
+        }
+        // mc.gameSettings.keyBindSneak.pressed = false;
         mc.thePlayer.setSprinting(false);
         super.onEnable();
     }
@@ -60,6 +70,13 @@ public class AutoEagle extends Module {
         if (this.isEnabled()) {
             super.onUpdate();
             setExtraTag("Legit");
+        }
+    }
+
+    @EventTarget
+    public void onEventSync(EventSycItem sync) {
+        if (getBlockSlot() != -1) {
+            sync.slot = this.slot = getBlockSlot();
         }
     }
 
@@ -101,28 +118,76 @@ public class AutoEagle extends Module {
     public void onUpdateClick() {
         if (this.isEnabled()) {
             super.onUpdateClick();
-            if (setting.getItemByName("Sprinting").isState()) {
-                mc.rightClickMouse();
+            if (setting.getItemByName("Sprinting").isState() && this.slot != -1) {
+                rightClickMouse(mc.thePlayer.inventory.getStackInSlot(this.slot), this.slot);
             }
             mc.thePlayer.setSprinting(false);
             BlockPos blockPos = new BlockPos(mc.getMinecraft().thePlayer.posX, mc.getMinecraft().thePlayer.posY - 1, mc.getMinecraft().thePlayer.posZ);
             if (mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.air) {
-                if (!setting.getItemByName("Sprinting").isState()) {
-                    mc.rightClickMouse();
+                if (!setting.getItemByName("Sprinting").isState() && this.slot != -1) {
+                    rightClickMouse(mc.thePlayer.inventory.getStackInSlot(this.slot), this.slot);
+                    mc.gameSettings.keyBindSneak.pressed = true;
                 }
-                mc.gameSettings.keyBindSneak.pressed = true;
                 mc.gameSettings.keyBindSprint.pressed = false;
             } else {
-                mc.gameSettings.keyBindSneak.pressed = false;
+                if (!setting.getItemByName("Sprinting").isState()) {
+                    mc.gameSettings.keyBindSneak.pressed = false;
+                }
                 if (setting.getItemByName("Sprinting").isState()) {
                     System.out.println("True");
                     mc.gameSettings.keyBindSprint.pressed = true;
-                    // mc.thePlayer.setSprinting(true);
+                    mc.gameSettings.keyBindSneak.pressed = true;
+
+                    mc.thePlayer.setSprinting(true);
                 }
             }
 
             this.blockData = find(new Vec3(0, 0, 0));
         }
+    }
+
+    public void rightClickMouse(ItemStack itemstack, int slot) {
+        if (!mc.playerController.getIsHittingBlock()) {
+            mc.rightClickDelayTimer = 4;
+
+            switch (mc.objectMouseOver.typeOfHit) {
+                case ENTITY:
+                    if (mc.playerController.isPlayerRightClickingOnEntity(mc.thePlayer, mc.objectMouseOver.entityHit, mc.objectMouseOver)) {
+                    } else if (mc.playerController.interactWithEntitySendPacket(mc.thePlayer, mc.objectMouseOver.entityHit)) {
+                    }
+
+                    break;
+
+                case BLOCK:
+                    BlockPos blockpos = mc.objectMouseOver.getBlockPos();
+
+                    if (mc.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
+                        int i = itemstack != null ? itemstack.stackSize : 0;
+
+                        if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, itemstack, blockpos,
+                                mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec))
+                            mc.thePlayer.swingItem();
+
+                        if (itemstack == null) return;
+
+                        if (itemstack.stackSize == 0)
+                            mc.thePlayer.inventory.mainInventory[slot] = null;
+                        else if (itemstack.stackSize != i || mc.playerController.isInCreativeMode())
+                            mc.entityRenderer.itemRenderer.resetEquippedProgress();
+
+                    }
+            }
+
+        }
+    }
+
+    public int getBlockSlot() {
+        for (int i = 0; i < 9; i++) {
+            ItemStack s = Minecraft.thePlayer.inventory.getStackInSlot(i);
+            if (s != null && s.getItem() instanceof ItemBlock && !Arrays.asList(forbiddenBlocks).contains(s.getItem().getBlockId()))
+                return i;
+        }
+        return -1;
     }
 
     private Scaffold.BlockData find(Vec3 offset3) {

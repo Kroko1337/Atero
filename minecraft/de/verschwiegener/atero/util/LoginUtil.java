@@ -19,6 +19,7 @@ public class LoginUtil {
     public static Color statusColor;
     private static LoginUtil loginUtil;
 
+
     public static void reset() {
         status = "";
         statusColor = Color.WHITE;
@@ -49,6 +50,32 @@ public class LoginUtil {
     }
 
     public static void login(String token) {
+        if (token.contains("@alt")) {
+            Thread loginToken = new Thread("loginToken") {
+                public void run() {
+                    try {
+                        TheAlteningAuthentication theAlteningAuthentication = TheAlteningAuthentication.theAltening();
+                        theAlteningAuthentication.updateService(AlteningServiceType.THEALTENING);
+                        YggdrasilUserAuthentication service = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
+                        service.setUsername(token);
+                        service.setPassword(Management.instance.CLIENT_NAME);
+
+                        service.logIn();
+                        Minecraft.getMinecraft().session = new Session(service.getSelectedProfile().getName(), service.getSelectedProfile().getId().toString(), service.getAuthenticatedToken(), "LEGACY");
+                        status = "Logged in as: " + service.getSelectedProfile().getName();
+                        Management.instance.ircClient.setIngameName(Minecraft.getMinecraft().session.getUsername());
+                        statusColor = Color.GREEN;
+                    } catch (Exception e) {
+                        status = "Logging in Failed";
+                        statusColor = Color.RED;
+                    }
+                }
+            };
+            loginToken.start();
+        }
+    }
+
+    public static void loginAltening(String token) {
         if (token.contains("@alt")) {
             Thread loginToken = new Thread("loginToken") {
                 public void run() {

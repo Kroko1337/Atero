@@ -24,14 +24,18 @@ public class AccountLogin extends GuiScreen {
     private Font font;
     private String mode;
     private String email, passwort;
-    
-    public AccountLogin(AccountManagerScreen2 parent, String mode) {
+
+    private boolean altening;
+
+    public AccountLogin(AccountManagerScreen2 parent, String mode, boolean altening) {
 	this.parent = parent;
 	this.font = Management.instance.font;
 	this.mode = mode;
 	email = "";
 	passwort = "";
+	this.altening = altening;
     }
+
     public AccountLogin(AccountManagerScreen2 parent, String mode, String email, String passwort) {
 	this.parent = parent;
 	this.font = Management.instance.font;
@@ -92,7 +96,7 @@ public class AccountLogin extends GuiScreen {
         switch (button.id) {
 	case 1:
 	    if(emailField.getText().contains("@")) {
-		 parent.handleArgs(mode, emailField.getText(), passwordField.getText());
+		 parent.handleArgs(mode, emailField.getText(), passwordField.getText(), this.altening);
 		 mc.displayGuiScreen(parent);
 	    }else {
 		emailField.setTextColor(Color.RED.getRGB());
@@ -107,10 +111,16 @@ public class AccountLogin extends GuiScreen {
 	    if (getClipboardString().contains(":")) {
 		String[] args = getClipboardString().split(":");
 		if (args.length == 2) {
-		    parent.handleArgs(mode, args[0], args[1]);
+		    parent.handleArgs(mode, args[0], !this.altening ? args[1] : Management.instance.CLIENT_NAME, this.altening);
 		    mc.displayGuiScreen(parent);
-		}
-	    }
+		}else{
+            parent.handleArgs(mode, args[0], Management.instance.CLIENT_NAME, this.altening);
+            mc.displayGuiScreen(parent);
+        }
+	    }else{
+            parent.handleArgs(mode, getClipboardString(), Management.instance.CLIENT_NAME, this.altening);
+            mc.displayGuiScreen(parent);
+        }
 	default:
 	    break;
 	}

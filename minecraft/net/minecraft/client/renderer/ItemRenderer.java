@@ -372,17 +372,24 @@ public class ItemRenderer
                         break;
 
                     case 4:
-                        BlockX= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
-                        BlockZ= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
-                        BlockY= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
-                        Rotate= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
-                        this.transformFirstPersonItem(f, 0.0F);
-                        float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
-                        GlStateManager.translate(0,0.4,0);
-                        GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
-                        this.func_178103_d();
+                        if(Management.instance.modulemgr.getModuleByName("FirstPersonModify").isEnabled()) {
+                            BlockX = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
+                            BlockZ = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
+                            BlockY = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
+                            Rotate = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
+                            this.transformFirstPersonItem(f, 0.0F);
+                            float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
+                            GlStateManager.translate(0, 0.4, 0);
+                            GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
+                            this.func_178103_d();
 
-                        break;
+                            break;
+                        }else{
+                            this.transformFirstPersonItem(f, 0.0F);
+                            this.func_178103_d();
+                            break;
+
+                        }
 
                     case 5:
                         this.transformFirstPersonItem(f, 0.0F);
@@ -390,16 +397,21 @@ public class ItemRenderer
                 }
             } else {
                 if (Killaura.instance.hasTarget()) {
+                    if(Management.instance.modulemgr.getModuleByName("FirstPersonModify").isEnabled()) {
                     if (Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("FakeBlock").isState()) {
-                        BlockX= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
-                        BlockZ= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
-                        BlockY= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
-                        Rotate= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
+                        BlockX = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitX").getCurrentValue();
+                        BlockZ = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitZ").getCurrentValue();
+                        BlockY = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("BlockHitY").getCurrentValue();
+                        Rotate = Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Rotate").getCurrentValue();
                         this.transformFirstPersonItem(f, 0.0F);
                         float rot = MathHelper.sin(MathHelper.sqrt_float(f1) * (float) Math.PI);
-                        GlStateManager.translate(0,0.4,0);
+                        GlStateManager.translate(0, 0.4, 0);
                         GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
                         this.func_178103_d();
+                    }else{
+                        this.transformFirstPersonItem(f, 0.0F);
+                        this.func_178103_d();
+                    }
 
                     }else {
                         this.func_178105_d(f1);

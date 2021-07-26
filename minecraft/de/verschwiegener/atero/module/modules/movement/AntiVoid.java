@@ -38,7 +38,7 @@ public class AntiVoid extends Module {
             super.onUpdate();
             setExtraTag("Watchdog");
             if (!isBlockUnder()) 	 {
-                if (Minecraft.thePlayer.fallDistance > 2.5F) {
+                if (Minecraft.thePlayer.fallDistance > 4.5F) {
                     Minecraft.thePlayer.sendQueue.addToSendQueue((Packet) new C03PacketPlayer(true));
                 }
                     if(mc.thePlayer.hurtTime != 0){

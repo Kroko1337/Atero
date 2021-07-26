@@ -354,11 +354,32 @@ public class Killaura extends Module {
 
     public void onPre(final EventPreMotionUpdate pre) {
 
+
+
+            if (setting.getItemByName("DMGBlockHit").isState()) {
+                if(Killaura.instance.hasTarget()){
+                if(mc.thePlayer.hurtTime != 0) {
+                    mc.gameSettings.keyBindUseItem.pressed = true;
+                }else{
+                    if(setting.getItemByName("SwingProgress").isState()) {
+                        if (target.isSwingInProgress) {
+                            mc.gameSettings.keyBindUseItem.pressed = true;
+                        }
+                    }
+                    }
+                }
+            }
+
         if(setting.getItemByName("AutoBlock").isState()) {
             if(!Killaura.instance.hasTarget()) {
                 if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
                     mc.gameSettings.keyBindUseItem.pressed = false;
                 }
+            }
+        }
+        if (setting.getItemByName("DMGBlockHit").isState()) {
+            if(!Killaura.instance.hasTarget()) {
+                mc.gameSettings.keyBindUseItem.pressed = false;
             }
         }
         if(setting.getItemByName("Watchdog").isState()) {
@@ -376,23 +397,24 @@ public class Killaura extends Module {
                     if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
                         //   mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
                         if (!setting.getItemByName("Watchdog").isState()) {
-                                mc.gameSettings.keyBindUseItem.pressed = true;
+                            mc.gameSettings.keyBindUseItem.pressed = true;
                             //   }
 
                         }
                     }
                 if ((target != null)) {
                     if (setting.getItemByName("AutoBlock").isState()) {
-                                if (setting.getItemByName("Watchdog").isState()) {
-                                    if (Minecraft.thePlayer.getHeldItem() != null)
-                                        if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
-                                                mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
+                        if (setting.getItemByName("Watchdog").isState()) {
+                            if (Minecraft.thePlayer.getHeldItem() != null)
+                                if (Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemSword) {
+                                    mc.playerController.sendUseItem((EntityPlayer) Minecraft.thePlayer, (World) Minecraft.theWorld, Minecraft.thePlayer.getHeldItem());
 
                                     //   }
                                 }
-                            }
+                        }
                     }
                 }
+
             }
 
             final String modes = setting.getItemByName("RotationMode").getCurrent();
@@ -580,7 +602,10 @@ public class Killaura extends Module {
         items.add(new SettingsItem("FakeBlock", true, ""));
         items.add(new SettingsItem("AutoBlock", false, "Watchdog"));
         items.add(new SettingsItem("Watchdog", false, ""));
-        items.add(new SettingsItem("CorrectMM", false, ""));
+        items.add(new SettingsItem("DMGBlockHit", false, "SwingProgress"));
+        items.add(new SettingsItem("SwingProgress", false, ""));
+        items.add(new SettingsItem("HardMoveFix", false, "SilentMoveFix"));
+        items.add(new SettingsItem("SilentMoveFix", true, ""));
         items.add(new SettingsItem("TargetESP", true, ""));
         items.add(new SettingsItem("RotationSpeed", false, "Speed"));
         items.add(new SettingsItem("Speed", 10F, 180F, 180F, ""));
@@ -590,6 +615,7 @@ public class Killaura extends Module {
 
     public void onRender() {
         try {
+
             if(setting.getItemByName("TargetESP").isState()) {
                 EntityLivingBase entityLivingBase = target;
                 mc.getRenderManager();

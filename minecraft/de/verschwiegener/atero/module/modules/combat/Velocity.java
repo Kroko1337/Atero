@@ -57,7 +57,7 @@ public class Velocity extends Module {
                 String modes = setting.getItemByName("VelocityMode").getCurrent();
                 setExtraTag(modes);
                 switch (modes) {
-                    case "AAC":
+                    case "AAC3.3.12":
                    //     if (mc.thePlayer.isCollidedHorizontally) {
 
                                 if (!Management.instance.modulemgr.getModuleByName("HighJump").isEnabled()) {
@@ -79,7 +79,26 @@ public class Velocity extends Module {
                             }
                     //    }
                         break;
-                    case "WallReverse":
+                    case "AAC3.3.13":
+                        //     if (mc.thePlayer.isCollidedHorizontally) {
+                        if (Minecraft.thePlayer.hurtTime != 0) {
+                            if(!mc.thePlayer.onGround){
+                                setSpeed(0.3);
+                            }else {
+                                setSpeed(0.1);
+                            }
+                                if (Minecraft.thePlayer.onGround) {
+                                    Minecraft.thePlayer.motionY = 0.42F;
+                            }
+                        }
+                        //    }
+                        break;
+                    case "AAC3.3.14":
+                        if (Minecraft.thePlayer.hurtTime != 0) {
+                         setSpeed(0);
+                        }
+                        break;
+                    case "Intave":
                         if (mc.thePlayer.isCollidedHorizontally) {
                       if (Minecraft.thePlayer.hurtTime != 0) {
                               // setSpeed(0);
@@ -103,13 +122,12 @@ public class Velocity extends Module {
 
                     case "Cubecraft":
                         if (Minecraft.thePlayer.hurtTime != 0) {
-
-                            boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
-                            if (mc.thePlayer.onGround) {
-                                mc.thePlayer.motionY = 0.42F;
-                            //    mc.timer.timerSpeed = 2F;
-                                //	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
+                            if(mc.thePlayer.onGround){
+                              mc.thePlayer.motionY = 0.42F;
+                                mc.timer.timerSpeed = 1F;
+                                	Minecraft.getMinecraft().gameSettings.keyBindJump.pressed = true;
                             } else {
+                            boolean boost2 = (Math.abs(mc.thePlayer.rotationYawHead - mc.thePlayer.rotationYaw) < 90.0F);
                                 mc.timer.timerSpeed = 1F;
                                 double currentSpeed = Math.sqrt(mc.thePlayer.motionX * mc.thePlayer.motionX + mc.thePlayer.motionZ * mc.thePlayer.motionZ);
                                 double speed = boost2 ? 1 : 1D;
@@ -117,6 +135,16 @@ public class Velocity extends Module {
                                 mc.thePlayer.motionX = -Math.sin(direction) * speed * currentSpeed;
                                 mc.thePlayer.motionZ = Math.cos(direction) * speed * currentSpeed;
 
+                            }
+                        }
+                        break;
+                    case "Mineman":
+                        if (Minecraft.thePlayer.hurtTime != 0) {
+                            setSpeed(0.1);
+                            if (mc.thePlayer.onGround) {
+                                mc.thePlayer.motionY= 0.42F;
+                                mc.thePlayer.motionX *= -1F;
+                                mc.thePlayer.motionZ *= -1F;
                             }
                         }
                         break;
@@ -132,11 +160,14 @@ public class Velocity extends Module {
     public void setup() {
         final ArrayList<SettingsItem> items = new ArrayList<>();
         ArrayList<String> modes = new ArrayList<>();
-        modes.add("AAC");
         modes.add("NCP");
+        modes.add("Intave");
+        modes.add("Mineman");
         modes.add("Cubecraft");
-        modes.add("WallReverse");
-        items.add(new SettingsItem("VelocityMode", modes, "AAC", "Jump", "AAC"));
+        modes.add("AAC3.3.12");
+        modes.add("AAC3.3.13");
+        modes.add("AAC3.3.14");
+        items.add(new SettingsItem("VelocityMode", modes, "AAC", "Jump", "AAC3.3.12"));
         items.add(new SettingsItem("WallStrength", 0, 0.4F, 0.4F, ""));
         items.add(new SettingsItem("AACStrength", 0, 0.7F, 0.4F, ""));
         items.add(new SettingsItem("Jump", false, ""));
@@ -184,7 +215,7 @@ public class Velocity extends Module {
     public void onPost(EventPreMotionUpdate pre) {
         String modes = setting.getItemByName("VelocityMode").getCurrent();
         switch (modes) {
-            case "WallReverse":
+            case "Intave":
         if (Minecraft.thePlayer.hurtTime != 0) {
             final float speed = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.04, 0.08);
             if(!mc.thePlayer.isInLava()) {

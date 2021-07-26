@@ -8,11 +8,17 @@ import de.verschwiegener.atero.util.account.Account;
 import de.verschwiegener.atero.util.account.GuiScreenAltening;
 import de.verschwiegener.atero.util.chat.ChatFontRenderer;
 import de.verschwiegener.atero.util.components.CustomGuiButton;
+import de.verschwiegener.atero.util.components.CustomGuiImageButton;
 import de.verschwiegener.atero.util.render.RenderUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Resource;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -54,11 +60,11 @@ public class AccountManagerScreen2 extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(new CustomGuiButton(1, width - 60, height - 56, 33, 30, "Login", true));
-        this.buttonList.add(new CustomGuiButton(2, width - 74, height - 20, 70, 30, "Add Account", true));
-        this.buttonList.add(new CustomGuiButton(3, 10, height - 25, 35, 30, "Back", true));
-        this.buttonList.add(new CustomGuiButton(4, width - 72, height -37, 35, 30, "Import:List", true));
-        this.buttonList.add(new CustomGuiButton(5, width - 72, height -80, 35, 30, "Altening", true));
+        this.buttonList.add(new CustomGuiImageButton(1, width - 70, (3*(height/4))-100, 65, 65, "", new ResourceLocation("atero/assets/Login.png")));
+        this.buttonList.add(new CustomGuiImageButton(2, width - 62, height - 80, 63, 47, "", new ResourceLocation("atero/assets/Add.png")));
+        this.buttonList.add(new CustomGuiImageButton(3, 10, height - 50, 30, 30, "" ,new ResourceLocation("atero/assets/BackArrow.png")));
+        this.buttonList.add(new CustomGuiImageButton(4, width - 72, height/4+10, 65, 65, "", new ResourceLocation("atero/assets/Import.png")));
+        this.buttonList.add(new CustomGuiImageButton(5, width-60, 10, 50, 50, "", new ResourceLocation("atero/assets/Altening.png")));
         items.forEach(item -> item.setExtension(false));
         items2.forEach(item -> item.setExtension(false));
     }
@@ -114,7 +120,13 @@ public class AccountManagerScreen2 extends GuiScreen {
             }
 
         }
+    }
 
+    private void drawImage(int x, int y, int width, int height, ResourceLocation resourceLocation) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @Override
@@ -199,11 +211,11 @@ public class AccountManagerScreen2 extends GuiScreen {
                 if (selectedAccountSlot != -1) {
                     LoginUtil.LoginAccount(select == 1 ? items.get(selectedAccountSlot).getAccount() : items2.get(selectedAccountSlot).getAccount());
                 } else {
-                    mc.displayGuiScreen(new AccountLogin(this, "Login"));
+                    mc.displayGuiScreen(new AccountLogin(this, "Login", false));
                 }
                 break;
             case 2:
-                mc.displayGuiScreen(new AccountLogin(this, "Add"));
+                mc.displayGuiScreen(new AccountLogin(this, "Add", false));
                 break;
 
             case 3:
@@ -236,14 +248,18 @@ public class AccountManagerScreen2 extends GuiScreen {
                 }
                 break;
             case 5:
-                mc.displayGuiScreen(new GuiScreenAltening(this));
+                mc.displayGuiScreen(new AccountLogin(this, "Login", true));
                 break;
         }
     }
 
-    public void handleArgs(String mode, String email, String passwort) {
+    public void handleArgs(String mode, String email, String passwort, boolean altening) {
         if (mode.equalsIgnoreCase("Login")) {
-            LoginUtil.login(email, passwort);
+            if(!altening) {
+                LoginUtil.login(email, passwort);
+            }else {
+                LoginUtil.loginAltening(email);
+            }
         } else if (mode.equalsIgnoreCase("Add")) {
             Account account = new Account(email, passwort);
             Management.instance.accountmgr.getAccounts().add(account);

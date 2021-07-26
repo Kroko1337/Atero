@@ -1099,7 +1099,7 @@ public abstract class Entity implements ICommandSender {
         float yaw = 0;
 
 
-        if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.instance.getTarget() != null)) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("CorrectMM").isState())
+        if (Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.instance.getTarget() != null)) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("HardMoveFix").isState() ||Objects.requireNonNull(Management.instance.modulemgr.getModuleByName("Killaura")).isEnabled() && ((Killaura.instance.getTarget() != null)) && Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("SilentMoveFix").isState() )
             yaw = Killaura.yaw;
 
         else
