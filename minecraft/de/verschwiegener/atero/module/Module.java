@@ -4,10 +4,13 @@ import com.darkmagician6.eventapi.EventManager;
 
 import de.verschwiegener.atero.Management;
 import de.verschwiegener.atero.util.Wrapper;
+import me.superblaubeere27.client.notifications.Notification;
+import me.superblaubeere27.client.notifications.NotificationManager;
+import me.superblaubeere27.client.notifications.NotificationType;
 import net.minecraft.client.Minecraft;
 
 public abstract class Module implements Wrapper{
-
+	boolean toggled;
 	Category category;
 	boolean enabled;
 	int key;
@@ -82,12 +85,23 @@ public abstract class Module implements Wrapper{
 	public void onUpdateClick() {}
 
 	public void toggle() {
+		toggled = !toggled;
+		onToggle();
+		if (toggled) {
+			NotificationManager.show(new Notification(NotificationType.INFO, "\247FModule", "\247F" + getName() + " Toggled", 10));
+			onEnable();
+		} else {
+			NotificationManager.show(new Notification(NotificationType.INFO, "\247FModule", "\247F" + getName() + " Toggled", 10));
+			onDisable();
+
+		}
 	    enabled = !enabled;
 	    if (enabled)
 		onEnable();
 	    else
 		onDisable();
 	    Management.instance.modulechange = true;
+
 	}
 	public void toggle(boolean state) {
 	    enabled = state;
@@ -96,6 +110,13 @@ public abstract class Module implements Wrapper{
 	    else
 		onDisable();
 	    Management.instance.modulechange = true;
+
+
 	}
+	public boolean onToggle() {
+		return toggled;
+	}
+
+
 
 }

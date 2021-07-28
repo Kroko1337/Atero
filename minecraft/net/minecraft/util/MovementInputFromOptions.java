@@ -94,13 +94,28 @@ public class MovementInputFromOptions extends MovementInput {
 
         if (this.sneak) {
             final float RandomSneak = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.8, 1);
-            this.moveStrafe = (float) ((double) this.moveStrafe * 1);
-            this.moveForward = (float) ((double) this.moveForward * 1);
-        }
-        //System.out.println("MoveStrafe: " + moveStrafe);
-        //System.out.println("MoveForward: " + moveForward);
-    }
+            final float RandomSneakMinesucht = (float) MathHelper.getRandomDoubleInRange(new Random(), 0.2, 0.3);
+            if (Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) {
+                if ( Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()&& Management.instance.settingsmgr.getSettingByName("AutoEagle").getItemByName("Minesucht").isState() ) {
+                    this.moveStrafe = (float) ((double) this.moveStrafe * RandomSneakMinesucht);
+                    this.moveForward = (float) ((double) this.moveForward * RandomSneakMinesucht);
+                }
+            }else {
+                if ( Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()&& !Management.instance.settingsmgr.getSettingByName("AutoEagle").getItemByName("Minesucht").isState() ) {
+                    this.moveStrafe = (float) ((double) this.moveStrafe * RandomSneak);
+                    this.moveForward = (float) ((double) this.moveForward * RandomSneak);
 
+                }else {
+                    if (!Management.instance.modulemgr.getModuleByName("Scaffold").isEnabled()) {
+                        this.moveStrafe = (float) ((double) this.moveStrafe * 0.3);
+                        this.moveForward = (float) ((double) this.moveForward * 0.3);
+                    }
+                }
+            }
+            //System.out.println("MoveStrafe: " + moveStrafe);
+            //System.out.println("MoveForward: " + moveForward);
+        }
+    }
     private boolean useCorrectMovement() {
         return (Management.instance.modulemgr.getModuleByName("Killaura").isEnabled() && Killaura.instance.hasTarget());
     }
@@ -182,7 +197,7 @@ public class MovementInputFromOptions extends MovementInput {
 
 
     private void testFix(float forward, float strafe) {
-        if (!Killaura.instance.hasTarget() || !isMoving() ||  !Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("HardMoveFix").isState()) return;
+        if (!Killaura.instance.hasTarget() || !isMoving() ||  !Management.instance.settingsmgr.getSettingByName("Killaura").getItemByName("HardMoveFix").isState() || Management.instance.modulemgr.getModuleByName("AutoEagle").isEnabled()) return;
         float slipperiness = 0.91F;
         if (mc.thePlayer.onGround) {
             slipperiness = mc.theWorld.getBlockState(new BlockPos(MathHelper.floor_double(mc.thePlayer.posX),

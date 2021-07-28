@@ -291,12 +291,17 @@ public class ItemRenderer
         GlStateManager.rotate(f1 * -80.0F, 1.0F, 0.0F, 0.0F);
         //
         Pos= Management.instance.settingsmgr.getSettingByName("FirstPersonModify").getItemByName("Scale").getCurrentValue();
-        if(!Management.instance.modulemgr.getModuleByName("FirstPersonModify").isEnabled()) {
+
+
+
+        
+        if(!Management.instance.modulemgr.getModuleByName("FirstPersonModify").isEnabled() ) {
             GlStateManager.scale(0.4, 0.4, 0.4);
         }else {
             GlStateManager.scale(Pos, Pos, Pos);
         }
-    }
+
+}
 
     private void func_178098_a(float p_178098_1_, AbstractClientPlayer clientPlayer)
     {
@@ -385,8 +390,10 @@ public class ItemRenderer
 
                             break;
                         }else{
-                            this.transformFirstPersonItem(f, 0.0F);
+                            this.transformFirstPersonItem(0.0f, f1 );
                             this.func_178103_d();
+                            GlStateManager.translate(-0.2f, 0.2f, -0.5f);
+
                             break;
 
                         }
@@ -409,13 +416,17 @@ public class ItemRenderer
                         GlStateManager.rotate((float) (-rot * Rotate), (float) BlockX, (float) BlockY, (float) BlockZ);
                         this.func_178103_d();
                     }else{
-                        this.transformFirstPersonItem(f, 0.0F);
+                        this.transformFirstPersonItem(0.0f, f1 );
                         this.func_178103_d();
+                        GlStateManager.translate(-0.2f, 0.2f, -0.5f);
+
                     }
 
                     }else {
-                        this.func_178105_d(f1);
-                        this.transformFirstPersonItem(f, f1);
+                        this.transformFirstPersonItem(0.0f, f1 );
+                        this.func_178103_d();
+                        GlStateManager.translate(-0.2f, 0.2f, -0.5f);
+
                     }
                 } else {
                this.func_178105_d(f1);

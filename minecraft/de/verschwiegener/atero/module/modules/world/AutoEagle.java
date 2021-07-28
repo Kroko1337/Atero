@@ -11,18 +11,22 @@ import de.verschwiegener.atero.module.Module;
 import de.verschwiegener.atero.settings.Setting;
 import de.verschwiegener.atero.settings.SettingsItem;
 import de.verschwiegener.atero.util.TimeUtils;
+import de.verschwiegener.atero.util.Util;
 import god.buddy.aot.BCompiler;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -59,8 +63,9 @@ public class AutoEagle extends Module {
     public void setup() {
         super.setup();
         final ArrayList<SettingsItem> items = new ArrayList<>();
-        items.add(new SettingsItem("Sprinting", true, ""));
-        items.add(new SettingsItem("180", false, ""));
+        items.add(new SettingsItem("Sprinting", false, ""));
+        items.add(new SettingsItem("180", true, ""));
+        items.add(new SettingsItem("Minesucht", false, ""));
         Management.instance.settingsmgr.addSetting(new Setting(this, items));
         setting = Management.instance.settingsmgr.getSettingByName(getName());
     }
@@ -118,6 +123,7 @@ public class AutoEagle extends Module {
     public void onUpdateClick() {
         if (this.isEnabled()) {
             super.onUpdateClick();
+            mc.gameSettings.keyBindSneak.pressed = true;
             if (setting.getItemByName("Sprinting").isState() && this.slot != -1) {
                 rightClickMouse(mc.thePlayer.inventory.getStackInSlot(this.slot), this.slot);
             }
@@ -136,7 +142,9 @@ public class AutoEagle extends Module {
                 if (setting.getItemByName("Sprinting").isState()) {
                     System.out.println("True");
                     mc.gameSettings.keyBindSprint.pressed = true;
+
                     mc.gameSettings.keyBindSneak.pressed = true;
+
 
                     mc.thePlayer.setSprinting(true);
                 }
@@ -166,14 +174,15 @@ public class AutoEagle extends Module {
 
                         if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, itemstack, blockpos,
                                 mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec))
-                            mc.thePlayer.swingItem();
+                            mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+
 
                         if (itemstack == null) return;
 
                         if (itemstack.stackSize == 0)
                             mc.thePlayer.inventory.mainInventory[slot] = null;
-                        else if (itemstack.stackSize != i || mc.playerController.isInCreativeMode())
-                            mc.entityRenderer.itemRenderer.resetEquippedProgress();
+                        // else if (itemstack.stackSize != i || mc.playerController.isInCreativeMode())
+                        //    mc.entityRenderer.itemRenderer.resetEquippedProgress();
 
                     }
             }
@@ -189,6 +198,19 @@ public class AutoEagle extends Module {
         }
         return -1;
     }
+
+
+    public static int getBlockCount() {
+        int itemCount = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack stack = Minecraft.thePlayer.inventory.getStackInSlot(i);
+            if ( stack != null && stack.getItem() != null && stack.getItem() instanceof ItemBlock) {
+                itemCount += stack.stackSize;
+            }
+        }
+        return itemCount;
+    }
+
 
     private Scaffold.BlockData find(Vec3 offset3) {
 
@@ -246,6 +268,19 @@ public class AutoEagle extends Module {
         return false;
     }
 
+    public void onRender() {
+        try {
+            ScaledResolution s = new ScaledResolution(mc);
+            int left = s.getScaledWidth() / 2 + 5;
+            int right2 = 120;
+            int right = s.getScaledWidth() / 2 + right2;
+            int top = s.getScaledHeight() / 2 - 25;
+            int bottom = s.getScaledHeight() / 2 + 25;
+            int rectRight = right / 2 - 5;
+            Util.drawRect(left, top, rectRight, bottom, new Color(0, 0, 0, 255));
+        } catch (NullPointerException e) {
+        }
+    }
 }
 
 

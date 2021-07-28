@@ -79,7 +79,7 @@ public class ChatRenderer {
                         str2 = str2.substring(2);
                     }
                     xoffset = xoffset / 2;
-                    System.out.println("MessageColor: " + messagecolor);
+                    //System.out.println("MessageColor: " + messagecolor);
                     if (boldStyle) { 
                         xoffset += ChatFontRenderer.drawString(str2, x + xoffset, y, messagecolor);
                         // fontRendererBold.drawString(str, x + xoffset, y, messagecolor.getRGB());

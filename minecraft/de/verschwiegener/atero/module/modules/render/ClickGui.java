@@ -24,8 +24,12 @@ public class ClickGui extends Module {
     public void onEnable() {
 	super.onEnable();
 	Minecraft.getMinecraft().displayGuiScreen(Management.instance.clickgui);
-	toggle();
+	toggle(false);
     }
+
+
+
+
     @Override
     public void setup() {
 
