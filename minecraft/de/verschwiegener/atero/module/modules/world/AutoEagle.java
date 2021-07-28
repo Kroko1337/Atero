@@ -175,6 +175,9 @@ public class AutoEagle extends Module {
                         if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, itemstack, blockpos,
                                 mc.objectMouseOver.sideHit, mc.objectMouseOver.hitVec))
                             mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+                        if(Minecraft.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemBlock){
+                            mc.thePlayer.swingItem();
+                        }
 
 
                         if (itemstack == null) return;
